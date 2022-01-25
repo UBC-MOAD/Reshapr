@@ -1,0 +1,4 @@
+# Python packages and versions used in development environment
+#
+# Create/update this file with:
+#   (reshapr-dev)$ python3 -m pip list --format=freeze >> envs/requirements.txt

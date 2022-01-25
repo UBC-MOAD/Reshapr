@@ -1,0 +1,29 @@
+# conda environment description file for Reshapr package
+# testing environment
+#
+# Creates a conda environment in which the Reshapr package
+# unit tests and coverage analysis can be run.
+# Primarily intended for creation of a conda env for use in a GitHub Actions workflow.
+
+name: reshapr-dev-test
+
+channels:
+  - conda-forge
+  - nodefaults
+
+dependencies:
+  - pip
+  - python=3.10
+
+  # For unit tests and coverage monitoring
+  - coverage
+  - pytest-cov
+  - tomli
+
+  # For documentation links checking
+  - sphinx
+  - sphinx_rtd_theme
+
+  - pip:
+    # For unit tests
+    - pytest-randomly

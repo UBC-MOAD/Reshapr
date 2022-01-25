@@ -1,0 +1,40 @@
+# conda environment description file for Reshapr package
+# development environment
+#
+# Create a conda environment for development, testing and documentation of the package
+# with:
+#
+#   $ conda env create -f Reshapr/envs/environment-dev.yaml
+#   $ conda activate reshapr-dev
+#   (reshapr-dev)$ python3 -m pip install --editable Reshapr
+#
+# See the envs/requirements.txt file for an exhaustive list of all of the
+# packages installed in the environment and their versions used in
+# recent development.
+
+name: reshapr-dev
+
+channels:
+  - conda-forge
+  - nodefaults
+
+dependencies:
+  - pip
+  - python=3.10
+
+  # For code style & repo QA
+  - black
+  - pre-commit
+
+  # For unit tests
+  - coverage
+  - pytest-cov
+  - tomli
+
+  # For documentation
+  - sphinx
+  - sphinx_rtd_theme
+
+  - pip:
+    # For unit tests
+    - pytest-randomly
