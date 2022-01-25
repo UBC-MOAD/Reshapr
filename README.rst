@@ -27,6 +27,8 @@ Reshapr
 Command-line tool based on Xarray and Dask for extraction of model variable time series
 from model products like SalishSeaCast, HRDPS & CANESM2/CGCM4.
 
+The documentation for this package is contained in the ``docs/`` directory,
+and it is rendered at https://reshapr.readthedocs.io/en/latest/.
 
 License
 =======
