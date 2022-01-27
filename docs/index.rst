@@ -21,12 +21,13 @@ Reshapr Documentation
 
 This is the documentation for the :kbd:`Reshapr` Python package.
 
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    pkg_development
+   design_notes/index
+
 
 Indices
 =======
