@@ -24,17 +24,12 @@ setup_cfg = configparser.ConfigParser()
 setup_cfg.read(os.path.abspath("../setup.cfg"))
 project = setup_cfg["metadata"]["name"]
 
-author = "Doug Latornell"
-
-
-import datetime
-
 pkg_creation_year = 2022
-copyright_years = (
-    "{pkg_creation_year} – present".format(pkg_creation_year=pkg_creation_year)
+copyright_years = "{pkg_creation_year} – present".format(
+    pkg_creation_year=pkg_creation_year
 )
-copyright = "{copyright_years}, {author}".format(
-    copyright_years=copyright_years, author=author
+copyright = "{copyright_years} by the UBC EOAS MOAD Group and The University of British Columbia".format(
+    copyright_years=copyright_years
 )
 
 # The full version, including alpha/beta/rc tags
