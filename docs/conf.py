@@ -47,6 +47,7 @@ extensions = ["sphinx.ext.intersphinx"]
 
 intersphinx_mapping = {
     "moaddocs": ("https://ubc-moad-docs.readthedocs.io/en/latest/", None),
+    "xarray": ("http://xarray.pydata.org/en/latest/", None),
 }
 
 # Add any paths that contain templates here, relative to this directory.

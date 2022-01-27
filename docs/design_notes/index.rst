@@ -23,3 +23,5 @@ This section is a collection of notes about the design and implementation of :kb
 
 .. toctree::
    :caption: Contents:
+
+   motivation
