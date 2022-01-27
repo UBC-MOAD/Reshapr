@@ -194,11 +194,40 @@ The output looks something like:
 
 .. code-block:: text
 
-    **add example Sphinx output**
+    Removing everything under '_build'...
+    Running Sphinx v4.4.0
+    making output directory... done
+    loading intersphinx inventory from https://ubc-moad-docs.readthedocs.io/en/latest/objects.inv...
+    loading intersphinx inventory from http://xarray.pydata.org/en/latest/objects.inv...
+    intersphinx inventory has moved: http://xarray.pydata.org/en/latest/objects.inv -> https://xarray.pydata.org/en/latest/objects.inv
+    building [mo]: targets for 0 po files that are out of date
+    building [html]: targets for 4 source files that are out of date
+    updating environment: [new config] 4 added, 0 changed, 0 removed
+    reading sources... [100%] pkg_development
+    looking for now-outdated files... none found
+    pickling environment... done
+    checking consistency... done
+    preparing documents... done
+    writing output... [100%] pkg_development
+    generating indices... genindex done
+    writing additional pages... search done
+    copying static files... done
+    copying extra files... done
+    dumping search index in English (code: en)... done
+    dumping object inventory... done
+    build succeeded.
+
+    The HTML pages are in _build/html.
 
 The HTML rendering of the docs ends up in :file:`docs/_build/html/`.
 You can open the :file:`index.html` file in that directory tree in your browser
 to preview the results of the build.
+If you use Firefox,
+you can probably accomplish that with:
+
+.. code-block:: bash
+
+    (reshapr-dev)$ firefox docs/_build/html/index.html
 
 If you have write access to the `repository`_ on GitHub,
 whenever you push changes to GitHub the documentation is automatically re-built
@@ -224,7 +253,54 @@ The output looks something like:
 
 .. code-block:: text
 
-    **add example linkcheck output**
+    Running Sphinx v4.4.0
+    making output directory... done
+    loading pickled environment... done
+    building [mo]: targets for 0 po files that are out of date
+    building [linkcheck]: targets for 4 source files that are out of date
+    updating environment: 0 added, 1 changed, 0 removed
+    reading sources... [100%] pkg_development
+    looking for now-outdated files... none found
+    pickling environment... done
+    checking consistency... done
+    preparing documents... done
+    writing output... [100%] pkg_development
+
+    ( pkg_development: line   22) ok        https://black.readthedocs.io/en/stable/
+    ( pkg_development: line  286) ok        https://coverage.readthedocs.io/en/latest/
+    ( pkg_development: line  266) ok        https://docs.pytest.org/en/latest/
+    (design_notes/motivation: line   53) ok        https://docs.dask.org/en/latest/
+    ( pkg_development: line   22) ok        https://docs.python.org/3.10/
+    ( pkg_development: line   62) ok        https://docs.python.org/3/reference/lexical_analysis.html#f-strings
+    ( pkg_development: line  322) ok        https://git-scm.com/
+    ( pkg_development: line  108) ok        https://docs.conda.io/en/latest/miniconda.html
+    ( pkg_development: line  108) ok        https://conda.io/en/latest/
+    ( pkg_development: line   22) ok        https://img.shields.io/badge/code%20style-black-000000.svg
+    (           index: line   40) ok        https://img.shields.io/badge/license-Apache%202-cb2533.svg
+    ( pkg_development: line   22) ok        https://img.shields.io/badge/python-3.10+-blue.svg
+    ( pkg_development: line   22) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
+    ( pkg_development: line   95) ok        https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+    ( pkg_development: line   22) ok        https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
+    (design_notes/motivation: line   53) ok        https://pangeo.io
+    (design_notes/motivation: line   53) ok        https://pangeo.io/packages.html#why-xarray-and-dask
+    ( pkg_development: line  286) ok        https://pytest-cov.readthedocs.io/en/latest/
+    ( pkg_development: line  331) ok        https://img.shields.io/github/issues/MIDOSS/WWatch3-Cmd?logo=github
+    ( pkg_development: line   22) ok        https://reshapr.readthedocs.io/en/latest/
+    ( pkg_development: line   95) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#copyyourpublicsshkeytogithub
+    ( pkg_development: line   95) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#secureremoteaccess
+    (           index: line   40) ok        https://www.apache.org/licenses/LICENSE-2.0
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/issues
+    ( pkg_development: line   58) ok        https://www.python.org/
+    ( pkg_development: line  145) ok        https://www.python.org/dev/peps/pep-0008/
+    ( pkg_development: line   66) ok        https://www.python.org/dev/peps/pep-0636/
+    ( pkg_development: line  178) ok        https://www.sphinx-doc.org/en/master/
+    ( pkg_development: line   22) ok        https://readthedocs.org/projects/Reshapr/badge/?version=latest
+    ( pkg_development: line  178) ok        https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
+    (design_notes/motivation: line   53) ok        https://xarray.pydata.org/en/latest/
+    (design_notes/motivation: line   65) ok        https://xarray.pydata.org/en/latest/generated/xarray.open_mfdataset.html#xarray.open_mfdataset
+    ( pkg_development: line  172) ok        https://readthedocs.org/projects/reshapr/badge/?version=latest
+    (design_notes/motivation: line  128) ok        https://github.com/UBC-MOAD/Reshapr
+    build succeeded.
 
 Look for any errors in the above output or in _build/linkcheck/output.txt
 
