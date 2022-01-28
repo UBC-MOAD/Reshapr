@@ -25,3 +25,4 @@ This section is a collection of notes about the design and implementation of :kb
    :caption: Contents:
 
    motivation
+   history
