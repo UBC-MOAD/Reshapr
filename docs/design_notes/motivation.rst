@@ -116,6 +116,7 @@ research task needs like:
 
 * extraction of time series of diatoms biomass from the 2007 to present SalishSeaCast
   hindcast to be used to nudge the Atlantis ecosystem model
+  (:ref:`DiatomsNudgingForAtlantisEcosystemModel`)
 
 * extraction of time series of variables from SalishSeaCast models for cluster analysis
   to inform the partitioning of the Salish Sea in to similar regions for various research

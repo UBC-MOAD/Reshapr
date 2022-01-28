@@ -41,6 +41,7 @@ a motivator for :kbd:`Reshapr`:
 
 * extraction of time series of diatoms biomass from the 2007 to present SalishSeaCast
   hindcast to be used to nudge the Atlantis ecosystem model
+  (:ref:`DiatomsNudgingForAtlantisEcosystemModel`)
 
 in `this atlantis_nudge_diatoms notebook`_
 (best viewed via nbviewer.org at `atlantis_nudge_diatoms.ipynb`_).

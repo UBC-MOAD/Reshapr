@@ -26,3 +26,4 @@ This section is a collection of notes about the design and implementation of :kb
 
    motivation
    history
+   use_cases
