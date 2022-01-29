@@ -12,6 +12,7 @@ channels:
   - nodefaults
 
 dependencies:
+  - click
   - pip
   - python=3.10
 
