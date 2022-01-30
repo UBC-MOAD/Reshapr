@@ -22,6 +22,8 @@ dependencies:
   - click
   - pip
   - python=3.10
+  - rich
+  - structlog
 
   # For code style & repo QA
   - black
