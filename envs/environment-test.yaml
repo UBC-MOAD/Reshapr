@@ -14,7 +14,9 @@ channels:
 dependencies:
   - click
   - pip
-  - python=3.10
+  - python
+  - rich
+  - structlog
 
   # For unit tests and coverage monitoring
   - coverage
