@@ -15,10 +15,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Command-line interface and sub-commands registry.
+"""Command-line interface setup and sub-commands registry.
 """
+import logging
 
 import click
+import structlog
 
 
 @click.group(
@@ -27,6 +29,28 @@ import click
     """
 )
 @click.version_option()
-def reshapr():
-    """Click commands group into which sub-commands must be registered."""
-    pass
+@click.option(
+    "-v",
+    "--verbosity",
+    default="info",
+    show_default=True,
+    type=click.Choice(("debug", "info", "warning", "error", "critical")),
+    help="""
+    Choose how much information you want to see about the progress of the process;
+    warning, error, and critical should be silent unless something bad goes wrong.
+    """,
+)
+def reshapr(verbosity):
+    """Click commands group into which sub-commands must be registered.
+
+    :param str verbosity: Verbosity level of logging messages about the progress of the process.
+                          Choices are :kbd:`debug, info, warning, error, critical`.
+                          :kbd:`warning`, :kbd:`error`, and :kbd:`critical` should be silent
+                          unless something bad goes wrong.
+                          Default is :kbd:`info`.
+    """
+    structlog.configure(
+        wrapper_class=structlog.make_filtering_bound_logger(
+            getattr(logging, verbosity.upper())
+        )
+    )
