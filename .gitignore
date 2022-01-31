@@ -1,5 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
 
+### Reshapr-specific directories and files
+dask-worker-space/
+
+
 ### IntelliJ project files
 .idea
 *.iml
