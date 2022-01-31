@@ -14,6 +14,7 @@ channels:
 dependencies:
   - arrow
   - click
+  - dask
   - pip
   - python
   - pyyaml

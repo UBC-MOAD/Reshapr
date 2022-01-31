@@ -21,6 +21,7 @@ channels:
 dependencies:
   - arrow
   - click
+  - dask
   - pip
   - python=3.10
   - pyyaml
