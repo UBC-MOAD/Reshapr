@@ -12,9 +12,11 @@ channels:
   - nodefaults
 
 dependencies:
+  - arrow
   - click
   - pip
   - python
+  - pyyaml
   - rich
   - structlog
 
