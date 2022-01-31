@@ -22,6 +22,8 @@ import logging
 import click
 import structlog
 
+from reshapr.cli.extract import extract
+
 
 @click.group(
     help="""
@@ -54,3 +56,6 @@ def reshapr(verbosity):
             getattr(logging, verbosity.upper())
         )
     )
+
+
+reshapr.add_command(extract)

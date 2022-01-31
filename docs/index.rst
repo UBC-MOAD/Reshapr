@@ -25,6 +25,7 @@ This is the documentation for the :kbd:`Reshapr` Python package.
    :maxdepth: 2
    :caption: Contents:
 
+   subcommands/index
    pkg_development
    design_notes/index
 
