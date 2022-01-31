@@ -1,0 +1,4 @@
+# Example configuration file for `reshapr extract` sub-command
+
+start date: 2007-01-01
+end date: 2007-01-10
