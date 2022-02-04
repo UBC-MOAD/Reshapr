@@ -65,8 +65,12 @@ def _load_config(config_file):
     :type config_file: :py:class:`pathlib.Path`
     """
     log = logger.bind(config_file=os.fspath(config_file))
-    with config_file.open() as f:
-        config = yaml.safe_load(f)
+    try:
+        with config_file.open() as f:
+            config = yaml.safe_load(f)
+    except FileNotFoundError:
+        log.error("config file not found")
+        raise SystemExit(1)
     log.debug("loaded config")
     return config
 
