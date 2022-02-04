@@ -37,6 +37,12 @@
 .. image:: https://readthedocs.org/projects/Reshapr/badge/?version=latest
     :target: https://reshapr.readthedocs.io/en/latest/
     :alt: Documentation Status
+.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/CI/badge.svg
+    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3ACI
+    :alt: pytest and test coverage analysis
+.. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
+    :target: https://codecov.io/gh/UBC-MOAD/Reshapr
+    :alt: Codecov Testing Coverage Report
 .. image:: https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
     :target: https://github.com/UBC-MOAD/Reshapr/issues
     :alt: Issue Tracker
@@ -328,7 +334,16 @@ The output looks something like:
 
 .. code-block:: text
 
-    **add example pytest output**
+    ================================ test session starts =================================
+    platform linux -- Python 3.10.2, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+    Using --randomly-seed=2578159981
+    rootdir: /media/doug/warehouse/MOAD/Reshapr
+    plugins: randomly-3.11.0, cov-3.0.0
+    collected 7 items
+
+    tests/core/test_dask_cluster.py .......                                         [100%]
+
+    ================================== 7 passed in 1.60s =================================
 
 You can monitor what lines of code the test suite exercises using the `coverage.py`_
 and `pytest-cov`_ tools with the command:
@@ -354,7 +369,39 @@ or
 
     (reshapr-dev)$ coverage html
 
-to produce an HTML report that you can view in your browser by opening :file:`Reshapr/htmlcov/index.html`.
+to produce an HTML report that you can view in your browser by opening
+:file:`Reshapr/htmlcov/index.html`.
+
+
+.. _SalishSeaNowcastContinuousIntegration:
+
+Continuous Integration
+----------------------
+
+.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/CI/badge.svg
+    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3ACI
+    :alt: pytest and test coverage analysis
+.. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
+    :target: https://codecov.io/gh/UBC-MOAD/Reshapr
+    :alt: Codecov Testing Coverage Report
+
+The :kbd:`Reshapr` package unit test suite is run and a coverage report is generated
+whenever changes are pushed to GitHub.
+The results are visible on the `repo actions page`_,
+from the green checkmarks beside commits on the `repo commits page`_,
+or from the green checkmark to the left of the "Latest commit" message on the
+`repo code overview page`_ .
+The testing coverage report is uploaded to `codecov.io`_
+
+.. _repo actions page: https://github.com/UBC-MOAD/Reshapr/actions
+.. _repo commits page: https://github.com/UBC-MOAD/Reshapr/commits/main
+.. _repo code overview page: https://github.com/UBC-MOAD/Reshapr
+.. _codecov.io: https://codecov.io/gh/UBC-MOAD/Reshapr
+
+The `GitHub Actions`_ workflow configuration that defines the continuous integration tasks
+is in the :file:`.github/workflows/pytest-coverage.yaml` file.
+
+.. _GitHub Actions: https://docs.github.com/en/actions
 
 
 .. _ReshaprVersionControlRepository:
@@ -377,7 +424,7 @@ as a `Git`_ repository at https://github.com/UBC-MOAD/Reshapr.
 Issue Tracker
 =============
 
-.. image:: https://img.shields.io/github/issues/MIDOSS/WWatch3-Cmd?logo=github
+.. image:: https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
     :target: https://github.com/UBC-MOAD/Reshapr/issues
     :alt: Issue Tracker
 

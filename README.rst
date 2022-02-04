@@ -20,7 +20,13 @@ Reshapr
 .. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest
     :target: https://reshapr.readthedocs.io/en/latest/
     :alt: Documentation Status
-.. image:: https://img.shields.io/github/issues/MIDOSS/WWatch3-Cmd?logo=github
+.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/CI/badge.svg
+    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3ACI
+    :alt: pytest and test coverage analysis
+.. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
+    :target: https://codecov.io/gh/UBC-MOAD/Reshapr
+    :alt: Codecov Testing Coverage Report
+.. image:: https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
     :target: https://github.com/UBC-MOAD/Reshapr/issues
     :alt: Issue Tracker
 
