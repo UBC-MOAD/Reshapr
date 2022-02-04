@@ -38,8 +38,8 @@ def fixture_configure_structlog(log_output):
 
 
 @pytest.mark.filterwarnings("ignore:There is no current event loop:DeprecationWarning")
-class TestGetClient:
-    """Unit tests for DaskCluster.get_client() method."""
+class TestGetDaskClient:
+    """Unit tests for get_dask_client() function."""
 
     @pytest.mark.parametrize(
         "dask_config",
