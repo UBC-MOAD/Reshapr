@@ -86,23 +86,23 @@ class TestGetClient:
             == "requested dask cluster is not running or refused your connection"
         )
 
-    # def test_connect_to_cluster(self, log_output, tmp_path):
-    #     cluster = dask.distributed.LocalCluster(
-    #         name="test dask cluster",
-    #         n_workers=1,
-    #         threads_per_worker=1,
-    #         processes=True,
-    #     )
-    #     dask_config = cluster.scheduler_address
-    #
-    #     client = get_dask_client(dask_config)
-    #     dashboard_link = client.dashboard_link
-    #     client.close()
-    #
-    #     assert log_output.entries[0]["log_level"] == "info"
-    #     assert log_output.entries[0]["dask_config"] == dask_config
-    #     assert log_output.entries[0]["dashboard_link"] == dashboard_link
-    #     assert log_output.entries[0]["event"] == "dask cluster dashboard"
+    def test_connect_to_cluster(self, log_output, tmp_path):
+        cluster = dask.distributed.LocalCluster(
+            name="test dask cluster",
+            n_workers=1,
+            threads_per_worker=1,
+            processes=True,
+        )
+        dask_config = cluster.scheduler_address
+
+        client = get_dask_client(dask_config)
+        dashboard_link = client.dashboard_link
+        client.close()
+
+        assert log_output.entries[0]["log_level"] == "info"
+        assert log_output.entries[0]["dask_config"] == dask_config
+        assert log_output.entries[0]["dashboard_link"] == dashboard_link
+        assert log_output.entries[0]["event"] == "dask cluster dashboard"
 
     def test_launch_cluster(self, log_output, tmp_path):
         dask_config = tmp_path / "test_cluster.yaml"
