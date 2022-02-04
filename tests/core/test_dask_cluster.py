@@ -17,6 +17,7 @@
 
 """Unit test for DaskCluster class.
 """
+import textwrap
 
 import dask.distributed
 import pytest
@@ -102,29 +103,29 @@ class TestGetClient:
     #     assert log_output.entries[0]["dask_config"] == dask_config
     #     assert log_output.entries[0]["dashboard_link"] == dashboard_link
     #     assert log_output.entries[0]["event"] == "dask cluster dashboard"
-    #
-    # def test_launch_cluster(self, log_output, tmp_path):
-    #     dask_config = tmp_path / "test_cluster.yaml"
-    #     dask_config.write_text(
-    #         textwrap.dedent(
-    #             """\
-    #             name: test dask cluster
-    #             processes: True
-    #             number of workers: 1
-    #             threads per worker: 1
-    #             """
-    #         )
-    #     )
-    #
-    #     client = get_dask_client(dask_config)
-    #     dashboard_link = client.dashboard_link
-    #     client.close()
-    #
-    #     assert log_output.entries[0]["log_level"] == "debug"
-    #     assert log_output.entries[0]["dask_config"] == dask_config
-    #     assert log_output.entries[0]["event"] == "loaded dask cluster config"
-    #
-    #     assert log_output.entries[1]["log_level"] == "info"
-    #     assert log_output.entries[1]["dask_config"] == dask_config
-    #     assert log_output.entries[1]["dashboard_link"] == dashboard_link
-    #     assert log_output.entries[1]["event"] == "dask cluster dashboard"
+
+    def test_launch_cluster(self, log_output, tmp_path):
+        dask_config = tmp_path / "test_cluster.yaml"
+        dask_config.write_text(
+            textwrap.dedent(
+                """\
+                name: test dask cluster
+                processes: True
+                number of workers: 1
+                threads per worker: 1
+                """
+            )
+        )
+
+        client = get_dask_client(dask_config)
+        dashboard_link = client.dashboard_link
+        client.close()
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["dask_config"] == dask_config
+        assert log_output.entries[0]["event"] == "loaded dask cluster config"
+
+        assert log_output.entries[1]["log_level"] == "info"
+        assert log_output.entries[1]["dask_config"] == dask_config
+        assert log_output.entries[1]["dashboard_link"] == dashboard_link
+        assert log_output.entries[1]["event"] == "dask cluster dashboard"
