@@ -18,6 +18,7 @@
 """Unit test for DaskCluster class.
 """
 
+import dask.distributed
 import pytest
 import structlog
 from structlog.testing import LogCapture
@@ -59,31 +60,31 @@ class TestGetClient:
             == "unrecognized dask cluster config; expected YAML file path or host_ip:port"
         )
 
-    # @pytest.mark.parametrize(
-    #     "dask_config",
-    #     (
-    #         "localhost:4343",
-    #         "127.0.0.1:4343",
-    #     ),
-    # )
-    # def test_no_cluster(self, dask_config, log_output, monkeypatch):
-    #     class MockClient:
-    #         def __init__(self, dask_config):
-    #             raise OSError
-    #
-    #     monkeypatch.setattr(dask.distributed, "Client", MockClient)
-    #
-    #     with pytest.raises(SystemExit) as exc_info:
-    #         get_dask_client(dask_config)
-    #
-    #     assert exc_info.value.code == 1
-    #     assert log_output.entries[0]["log_level"] == "error"
-    #     assert log_output.entries[0]["dask_config"] == dask_config
-    #     assert (
-    #         log_output.entries[0]["event"]
-    #         == "requested dask cluster is not running or refused your connection"
-    #     )
-    #
+    @pytest.mark.parametrize(
+        "dask_config",
+        (
+            "localhost:4343",
+            "127.0.0.1:4343",
+        ),
+    )
+    def test_no_cluster(self, dask_config, log_output, monkeypatch):
+        class MockClient:
+            def __init__(self, dask_config):
+                raise OSError
+
+        monkeypatch.setattr(dask.distributed, "Client", MockClient)
+
+        with pytest.raises(SystemExit) as exc_info:
+            get_dask_client(dask_config)
+
+        assert exc_info.value.code == 1
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["dask_config"] == dask_config
+        assert (
+            log_output.entries[0]["event"]
+            == "requested dask cluster is not running or refused your connection"
+        )
+
     # def test_connect_to_cluster(self, log_output, tmp_path):
     #     cluster = dask.distributed.LocalCluster(
     #         name="test dask cluster",
