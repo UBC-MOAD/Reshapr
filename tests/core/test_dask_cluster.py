@@ -15,26 +15,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Unit test for DaskCluster class.
+"""Unit test for get_dask_client() function.
 """
 import textwrap
 
 import dask.distributed
 import pytest
-import structlog
-from structlog.testing import LogCapture
 
 from reshapr.core.extract import get_dask_client
-
-
-@pytest.fixture(name="log_output")
-def fixture_log_output():
-    return LogCapture()
-
-
-@pytest.fixture(autouse=True)
-def fixture_configure_structlog(log_output):
-    structlog.configure(processors=[log_output])
 
 
 @pytest.mark.filterwarnings("ignore:There is no current event loop:DeprecationWarning")
