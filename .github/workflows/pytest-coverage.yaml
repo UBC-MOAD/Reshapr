@@ -1,21 +1,15 @@
-name: sphinx-linkcheck
+name: CI
 
 on:
   push:
     branches: ['*']
-  schedule:
-    - cron: 43 14 14 * *  # 14:43 UTC on the 14th day of each month
 
 jobs:
-  sphinx-linkcheck:
-    name: linkcheck docs
+  test-coverage:
+    name: pytest & coverage report
     runs-on: 'ubuntu-latest'
     strategy:
       fail-fast: false
-      # Python version matrix is necessary because we are using the environment-test.yaml
-      # environment that is also used for unit tests and coverage analysis.
-      # That environment defers to the Python version(s) here so that it can be used
-      # for multi-version CI.
       matrix:
         python-version: ['3.10']
 
@@ -36,21 +30,29 @@ jobs:
            environment-file: envs/environment-test.yaml
            activate-environment: reshapr-test
 
-      - name: Install package
+      - name: Install packages
         shell: bash -l {0}
         run: |
           python3 -m pip install --editable $GITHUB_WORKSPACE
 
-      - name: linkcheck docs
+      - name: pytest package with coverage
         shell: bash -l {0}
         run: |
-          (cd docs && make linkcheck)
+          pytest --cov=$GITHUB_WORKSPACE --cov-report=xml
 
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          author_name: Sphinx linkcheck
+          author_name: Python ${{ matrix.python-version }} pytest & coverage report
           fields: repo,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SALISHSEACAST_WEBHOOK_URL }}
+        if: always()
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: unittests
         if: always()
