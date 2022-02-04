@@ -46,6 +46,7 @@ release = reshapr.__version__
 extensions = ["sphinx.ext.intersphinx"]
 
 intersphinx_mapping = {
+    "dask": ("https://docs.dask.org/en/stable/", None),
     "moaddocs": ("https://ubc-moad-docs.readthedocs.io/en/latest/", None),
     "xarray": ("http://xarray.pydata.org/en/latest/", None),
 }

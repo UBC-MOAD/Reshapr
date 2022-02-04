@@ -1,4 +1,6 @@
 # Example configuration file for `reshapr extract` sub-command
 
+dask cluster: docs/subcommands/salish_cluster.yaml
+
 start date: 2007-01-01
 end date: 2007-01-10

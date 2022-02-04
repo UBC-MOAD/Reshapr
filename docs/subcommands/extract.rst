@@ -24,14 +24,26 @@ Contents
 ========
 
 * :ref:`ReshaprExtractYAMLFile`
+* :ref:`ReshaprDaskClusterYAMLFile`
 
 
 .. _ReshaprExtractYAMLFile:
 
-Configuration File
-==================
+:command:`extract` Process Configuration File
+=============================================
 
 Example:
 
 .. literalinclude:: extract_example.yaml
+   :language: yaml
+
+
+.. _ReshaprDaskClusterYAMLFile:
+
+Dask Cluster Configuration File
+===============================
+
+Example:
+
+.. literalinclude:: salish_cluster.yaml
    :language: yaml
