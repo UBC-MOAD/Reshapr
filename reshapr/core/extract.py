@@ -123,7 +123,7 @@ def _load_model_profile(model_profile_yaml):
 ## Functions below will probably eventually  be refactored into separate module(s)
 
 
-def get_dask_client(dask_config):
+def get_dask_client(dask_config_yaml):
     """Return a dask cluster client.
 
     If :kbd:`dask_cluster` is a dask cluster configuration YAML file,
@@ -134,28 +134,28 @@ def get_dask_client(dask_config):
     in the form :kbd:`host_ip:port`,
     and a client connected to that cluster is returned.
 
-    :param dask_config: File path and name of the YAML file to read the dask cluster configuration
-                        dictionary from,
-                        or a :kbd:`host_ip:port` string of an existing dask cluster fot connect to.
-                        Please see :ref:`ReshaprDaskClusterYAMLFile` for details.
-    :type dask_config: :py:class:`pathlib.Path` or str
+    :param dask_config_yaml: File path and name of the YAML file to read the dask cluster configuration
+                             dictionary from,
+                             or a :kbd:`host_ip:port` string of an existing dask cluster fot connect to.
+                             Please see :ref:`ReshaprDaskClusterYAMLFile` for details.
+    :type dask_config_yaml: :py:class:`pathlib.Path` or str
 
     :return: Dask cluster client.
     :rtype: :py:class:`dask.distributed.Client`
 
     :raises: :py:exc:`SystemExit` if a client cannot be created.
     """
-    log = logger.bind(dask_config=dask_config)
+    log = logger.bind(dask_config_yaml=dask_config_yaml)
     try:
         # Assume config is a YAML file path
-        with Path(dask_config).open("rt") as f:
+        with Path(dask_config_yaml).open("rt") as f:
             cluster_config = yaml.safe_load(f)
         log.debug("loaded dask cluster config")
     except FileNotFoundError:
         # Maybe config is a host_ip:port string
         try:
             # Connect to an existing cluster
-            client = dask.distributed.Client(dask_config)
+            client = dask.distributed.Client(dask_config_yaml)
             log = log.bind(dashboard_link=client.dashboard_link)
             log.info("dask cluster dashboard")
             return client

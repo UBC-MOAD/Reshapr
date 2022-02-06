@@ -36,7 +36,7 @@ class TestGetDaskClient:
 
         assert exc_info.value.code == 1
         assert log_output.entries[0]["log_level"] == "error"
-        assert log_output.entries[0]["dask_config"] == dask_config_yaml
+        assert log_output.entries[0]["dask_config_yaml"] == dask_config_yaml
         assert (
             log_output.entries[0]["event"]
             == "unrecognized dask cluster config; expected YAML file path or host_ip:port"
@@ -49,32 +49,32 @@ class TestGetDaskClient:
 
         assert exc_info.value.code == 1
         assert log_output.entries[0]["log_level"] == "error"
-        assert log_output.entries[0]["dask_config"] == dask_config_yaml
+        assert log_output.entries[0]["dask_config_yaml"] == dask_config_yaml
         assert (
             log_output.entries[0]["event"]
             == "unrecognized dask cluster config; expected YAML file path or host_ip:port"
         )
 
     @pytest.mark.parametrize(
-        "dask_config",
+        "dask_config_yaml",
         (
             "localhost:4343",
             "127.0.0.1:4343",
         ),
     )
-    def test_no_cluster(self, dask_config, log_output, monkeypatch):
+    def test_no_cluster(self, dask_config_yaml, log_output, monkeypatch):
         class MockClient:
-            def __init__(self, dask_config):
+            def __init__(self, dask_config_yaml):
                 raise OSError
 
         monkeypatch.setattr(dask.distributed, "Client", MockClient)
 
         with pytest.raises(SystemExit) as exc_info:
-            get_dask_client(dask_config)
+            get_dask_client(dask_config_yaml)
 
         assert exc_info.value.code == 1
         assert log_output.entries[0]["log_level"] == "error"
-        assert log_output.entries[0]["dask_config"] == dask_config
+        assert log_output.entries[0]["dask_config_yaml"] == dask_config_yaml
         assert (
             log_output.entries[0]["event"]
             == "requested dask cluster is not running or refused your connection"
@@ -87,20 +87,20 @@ class TestGetDaskClient:
             threads_per_worker=1,
             processes=True,
         )
-        dask_config = cluster.scheduler_address
+        dask_config_yaml = cluster.scheduler_address
 
-        client = get_dask_client(dask_config)
+        client = get_dask_client(dask_config_yaml)
         dashboard_link = client.dashboard_link
         client.close()
 
         assert log_output.entries[0]["log_level"] == "info"
-        assert log_output.entries[0]["dask_config"] == dask_config
+        assert log_output.entries[0]["dask_config_yaml"] == dask_config_yaml
         assert log_output.entries[0]["dashboard_link"] == dashboard_link
         assert log_output.entries[0]["event"] == "dask cluster dashboard"
 
     def test_launch_cluster(self, log_output, tmp_path):
-        dask_config = tmp_path / "test_cluster.yaml"
-        dask_config.write_text(
+        dask_config_yaml = tmp_path / "test_cluster.yaml"
+        dask_config_yaml.write_text(
             textwrap.dedent(
                 """\
                 name: test dask cluster
@@ -111,15 +111,15 @@ class TestGetDaskClient:
             )
         )
 
-        client = get_dask_client(dask_config)
+        client = get_dask_client(dask_config_yaml)
         dashboard_link = client.dashboard_link
         client.close()
 
         assert log_output.entries[0]["log_level"] == "debug"
-        assert log_output.entries[0]["dask_config"] == dask_config
+        assert log_output.entries[0]["dask_config_yaml"] == dask_config_yaml
         assert log_output.entries[0]["event"] == "loaded dask cluster config"
 
         assert log_output.entries[1]["log_level"] == "info"
-        assert log_output.entries[1]["dask_config"] == dask_config
+        assert log_output.entries[1]["dask_config_yaml"] == dask_config_yaml
         assert log_output.entries[1]["dashboard_link"] == dashboard_link
         assert log_output.entries[1]["event"] == "dask cluster dashboard"
