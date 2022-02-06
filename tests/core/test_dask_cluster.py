@@ -29,21 +29,27 @@ from reshapr.core.extract import get_dask_client
 class TestGetDaskClient:
     """Unit tests for get_dask_client() function."""
 
-    @pytest.mark.parametrize(
-        "dask_config",
-        (
-            "nonexistent.yaml",
-            "localhost",
-            "127.0.0.1",
-        ),
-    )
-    def test_bad_config(self, dask_config, log_output):
+    def test_no_cluster_config_from_path(self, log_output):
+        dask_config_yaml = "nonexistent.yaml"
         with pytest.raises(SystemExit) as exc_info:
-            get_dask_client(dask_config)
+            get_dask_client(dask_config_yaml)
 
         assert exc_info.value.code == 1
         assert log_output.entries[0]["log_level"] == "error"
-        assert log_output.entries[0]["dask_config"] == dask_config
+        assert log_output.entries[0]["dask_config"] == dask_config_yaml
+        assert (
+            log_output.entries[0]["event"]
+            == "unrecognized dask cluster config; expected YAML file path or host_ip:port"
+        )
+
+    def test_bad_host_port_spec(self, log_output):
+        dask_config_yaml = "127.0.0.1"
+        with pytest.raises(SystemExit) as exc_info:
+            get_dask_client(dask_config_yaml)
+
+        assert exc_info.value.code == 1
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["dask_config"] == dask_config_yaml
         assert (
             log_output.entries[0]["event"]
             == "unrecognized dask cluster config; expected YAML file path or host_ip:port"
