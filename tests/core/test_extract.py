@@ -91,7 +91,12 @@ class TestLoadModelProfile:
         )
         assert log_output.entries[0]["event"] == "loaded model profile"
 
-    def test_load_model_profile_from_model_profiles_dir(self, log_output):
+    def test_load_model_profile_from_model_profiles_dir(self, log_output, monkeypatch):
+        def mock_exists(path):
+            return True
+
+        monkeypatch.setattr(Path, "exists", mock_exists)
+
         model_profile_yaml = Path("SalishSeaCast-201812.yaml")
 
         model_profile = extract._load_model_profile(model_profile_yaml)
