@@ -15,10 +15,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Unit test for core.extract module.
+"""Unit tests for core.extract module.
 """
 import os
 import textwrap
+from pathlib import Path
 
 import pytest
 
@@ -29,8 +30,8 @@ class TestLoadConfig:
     """Unit tests for core.extract._load_config() function."""
 
     def test_load_config(self, log_output, tmp_path):
-        extract_config = tmp_path / "extract_config.yaml"
-        extract_config.write_text(
+        extract_config_yaml = tmp_path / "extract_config.yaml"
+        extract_config_yaml.write_text(
             textwrap.dedent(
                 """\
                 dask cluster: docs/subcommands/salish_cluster.yaml
@@ -41,21 +42,116 @@ class TestLoadConfig:
             )
         )
 
-        config = extract._load_config(extract_config)
+        config = extract._load_config(extract_config_yaml)
 
         assert config["dask cluster"] == "docs/subcommands/salish_cluster.yaml"
 
         assert log_output.entries[0]["log_level"] == "debug"
-        assert log_output.entries[0]["config_file"] == os.fspath(extract_config)
+        assert log_output.entries[0]["config_file"] == os.fspath(extract_config_yaml)
         assert log_output.entries[0]["event"] == "loaded config"
 
     def test_no_config_file(self, log_output, tmp_path):
-        nonexistent_config = tmp_path / "extract_config.yaml"
+        nonexistent_config_yaml = tmp_path / "nonexistent.yaml"
 
         with pytest.raises(SystemExit) as exc_info:
-            extract._load_config(nonexistent_config)
+            extract._load_config(nonexistent_config_yaml)
 
         assert exc_info.value.code == 1
         assert log_output.entries[0]["log_level"] == "error"
-        assert log_output.entries[0]["config_file"] == os.fspath(nonexistent_config)
+        assert log_output.entries[0]["config_file"] == os.fspath(
+            nonexistent_config_yaml
+        )
         assert log_output.entries[0]["event"] == "config file not found"
+
+
+class TestLoadModelProfile:
+    """Unit tests for core.extract._load_model_profile() function."""
+
+    def test_load_model_profile_from_path(self, log_output, tmp_path):
+        model_results_archive = tmp_path / "model_results/"
+        model_results_archive.mkdir()
+        model_profile_yaml = tmp_path / "model_profile.yaml"
+        model_profile_yaml.write_text(
+            textwrap.dedent(
+                f"""\
+                name: SomeModel
+
+                results archive: {os.fspath(model_results_archive)}
+                """
+            )
+        )
+
+        model_profile = extract._load_model_profile(model_profile_yaml)
+
+        assert model_profile["name"] == "SomeModel"
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["model_profile_yaml"] == os.fspath(
+            model_profile_yaml
+        )
+        assert log_output.entries[0]["event"] == "loaded model profile"
+
+    def test_load_model_profile_from_model_profiles_dir(self, log_output):
+        model_profile_yaml = Path("SalishSeaCast-201812.yaml")
+
+        model_profile = extract._load_model_profile(model_profile_yaml)
+
+        assert model_profile["name"] == "SalishSeaCast.201812"
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        model_profiles_path = Path(__file__).parent.parent.parent / "model_profiles"
+        assert log_output.entries[0]["model_profile_yaml"] == os.fspath(
+            model_profiles_path / model_profile_yaml
+        )
+        assert log_output.entries[0]["event"] == "loaded model profile"
+
+    def test_no_model_profile_file_from_path(self, log_output, tmp_path):
+        nonexistent_model_profile_yaml = tmp_path / "nonexistent.yaml"
+
+        with pytest.raises(SystemExit) as exc_info:
+            extract._load_model_profile(nonexistent_model_profile_yaml)
+
+        assert exc_info.value.code == 1
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["model_profile_yaml"] == os.fspath(
+            nonexistent_model_profile_yaml
+        )
+        assert log_output.entries[0]["event"] == "model profile file not found"
+
+    def test_no_model_profile_in_model_profiles_dir(self, log_output):
+        nonexistent_model_profile_yaml = Path("nonexistent.yaml")
+
+        with pytest.raises(SystemExit) as exc_info:
+            extract._load_model_profile(nonexistent_model_profile_yaml)
+
+        assert exc_info.value.code == 1
+        assert log_output.entries[0]["log_level"] == "error"
+        model_profiles_path = Path(__file__).parent.parent.parent / "model_profiles"
+        assert log_output.entries[0]["model_profile_yaml"] == os.fspath(
+            model_profiles_path / nonexistent_model_profile_yaml
+        )
+        assert log_output.entries[0]["event"] == "model profile file not found"
+
+    def test_no_results_archive(self, log_output, tmp_path):
+        nonexistent_path = Path("/this/path/does/not/exist/")
+        model_profile_yaml = tmp_path / "model_profile.yaml"
+        model_profile_yaml.write_text(
+            textwrap.dedent(
+                f"""\
+                name: SomeModel
+
+                results archive: {os.fspath(nonexistent_path)}
+                """
+            )
+        )
+
+        with pytest.raises(SystemExit) as exc_info:
+            extract._load_model_profile(model_profile_yaml)
+
+        assert exc_info.value.code == 1
+        assert log_output.entries[1]["log_level"] == "error"
+        assert log_output.entries[1]["model_profile_yaml"] == os.fspath(
+            model_profile_yaml
+        )
+        assert log_output.entries[1]["results_archive"] == os.fspath(nonexistent_path)
+        assert log_output.entries[1]["event"] == "model results archive not found"

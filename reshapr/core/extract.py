@@ -39,6 +39,7 @@ def extract(config_file):
     :type config_file: :py:class:`pathlib.Path`
     """
     config = _load_config(config_file)
+    model_profile = _load_model_profile(Path(config["model profile"]))
     dask_client = get_dask_client(config["dask cluster"])
 
     start_date = arrow.get(config["start date"])
@@ -57,22 +58,66 @@ def extract(config_file):
     dask_client.close()
 
 
-def _load_config(config_file):
+def _load_config(config_yaml):
     """
-    :param config_file: File path and name of the YAML file to read processing configuration
+    :param config_yaml: File path and name of the YAML file to read processing configuration
                         dictionary from.
                         Please see :ref:`ReshaprExtractYAMLFile` for details.
-    :type config_file: :py:class:`pathlib.Path`
+    :type config_yaml: :py:class:`pathlib.Path`
+
+    :return: Extraction processing configuration dictionary.
+    :rtype: dict
+
+    :raises: :py:exc:`SystemExit` if processing configuration YAML file cannot be opened.
     """
-    log = logger.bind(config_file=os.fspath(config_file))
+    log = logger.bind(config_file=os.fspath(config_yaml))
     try:
-        with config_file.open() as f:
+        with config_yaml.open() as f:
             config = yaml.safe_load(f)
     except FileNotFoundError:
         log.error("config file not found")
         raise SystemExit(1)
     log.debug("loaded config")
     return config
+
+
+def _load_model_profile(model_profile_yaml):
+    """
+    :param model_profile_yaml: File path and name of the YAML file to read model profile
+                               dictionary from.
+                               Please see :ref:`ReshaprModelProfileYAMLFile` for details.
+    :type model_profile_yaml: :py:class:`pathlib.Path`
+
+    :return: Model profile dictionary.
+    :rtype: dict
+
+    :raises: :py:exc:`SystemExit` if model profile YAML file cannot be opened,
+             or if the model results archive path in the file cannot be accessed.
+    """
+    log = logger.bind(model_profile_yaml=os.fspath(model_profile_yaml))
+    try:
+        # Handle possible user-created model profile
+        with model_profile_yaml.open() as f:
+            model_profile = yaml.safe_load(f)
+    except FileNotFoundError:
+        # Fall back to try to find model profile in Reshapr/model_profiles/
+        model_profiles_path = Path(__file__).parent.parent.parent / "model_profiles"
+        try:
+            log = logger.bind(
+                model_profile_yaml=os.fspath(model_profiles_path / model_profile_yaml)
+            )
+            with (model_profiles_path / model_profile_yaml).open("rt") as f:
+                model_profile = yaml.safe_load(f)
+        except FileNotFoundError:
+            log.error("model profile file not found")
+            raise SystemExit(1)
+    log.debug("loaded model profile")
+    results_archive = Path(model_profile["results archive"])
+    log = log.bind(results_archive=os.fspath(results_archive))
+    if not results_archive.exists():
+        log.error("model results archive not found")
+        raise SystemExit(1)
+    return model_profile
 
 
 ## Functions below will probably eventually  be refactored into separate module(s)

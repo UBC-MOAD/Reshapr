@@ -47,3 +47,14 @@ Example:
 
 .. literalinclude:: salish_cluster.yaml
    :language: yaml
+
+
+.. _ReshaprModelProfileYAMLFile:
+
+Model Profile File
+==================
+
+Example:
+
+.. literalinclude:: ../../model_profiles/SalishSeaCast-201812.yaml
+   :language: yaml
