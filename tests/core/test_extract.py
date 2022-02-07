@@ -172,3 +172,12 @@ class Test_ddmmmyy:
         ddmmmyy = extract.ddmmmyy(arrow.get("2022-02-07"))
 
         assert ddmmmyy == "07feb22"
+
+
+class Test_yyyymmdd:
+    """Unit test for yyyymmdd() function."""
+
+    def test_yyyymmdd(self):
+        yyyymmdd = extract.yyyymmdd(arrow.get("2022-02-07"))
+
+        assert yyyymmdd == "20220207"
