@@ -72,7 +72,7 @@ def _load_config(config_yaml):
     """
     log = logger.bind(config_file=os.fspath(config_yaml))
     try:
-        with config_yaml.open() as f:
+        with config_yaml.open("rt") as f:
             config = yaml.safe_load(f)
     except FileNotFoundError:
         log.error("config file not found")
@@ -97,7 +97,7 @@ def _load_model_profile(model_profile_yaml):
     log = logger.bind(model_profile_yaml=os.fspath(model_profile_yaml))
     try:
         # Handle possible user-created model profile
-        with model_profile_yaml.open() as f:
+        with model_profile_yaml.open("rt") as f:
             model_profile = yaml.safe_load(f)
     except FileNotFoundError:
         # Fall back to try to find model profile in Reshapr/model_profiles/
@@ -145,30 +145,42 @@ def get_dask_client(dask_config_yaml):
 
     :raises: :py:exc:`SystemExit` if a client cannot be created.
     """
-    log = logger.bind(dask_config_yaml=dask_config_yaml)
+    log = logger.bind(dask_config_yaml=os.fspath(dask_config_yaml))
     try:
-        # Assume config is a YAML file path
+        # Handle possible user-created dask cluster description
         with Path(dask_config_yaml).open("rt") as f:
             cluster_config = yaml.safe_load(f)
-        log.debug("loaded dask cluster config")
     except FileNotFoundError:
-        # Maybe config is a host_ip:port string
+        # Fall back to try to find model profile in Reshapr/model_profiles/
+        cluster_configs_path = Path(__file__).parent.parent.parent / "cluster_configs"
         try:
-            # Connect to an existing cluster
-            client = dask.distributed.Client(dask_config_yaml)
-            log = log.bind(dashboard_link=client.dashboard_link)
-            log.info("dask cluster dashboard")
-            return client
-        except ValueError:
-            log.error(
-                "unrecognized dask cluster config; expected YAML file path or host_ip:port"
+            with Path(cluster_configs_path / dask_config_yaml).open("rt") as f:
+                cluster_config = yaml.safe_load(f)
+            log = logger.bind(
+                dask_config_yaml=os.fspath(cluster_configs_path / dask_config_yaml)
             )
-            raise SystemExit(1)
-        except OSError:
-            log.error(
-                "requested dask cluster is not running or refused your connection"
-            )
-            raise SystemExit(1)
+        except FileNotFoundError:
+            # Maybe config is a host_ip:port string
+            try:
+                # Connect to an existing cluster
+                client = dask.distributed.Client(dask_config_yaml)
+                log = log.bind(dashboard_link=client.dashboard_link)
+                log.info("dask cluster dashboard")
+                return client
+            except TypeError:
+                log.error("dask cluster config file not found")
+                raise SystemExit(1)
+            except ValueError:
+                log.error(
+                    "unrecognized dask cluster config; expected YAML file path or host_ip:port"
+                )
+                raise SystemExit(1)
+            except OSError:
+                log.error(
+                    "requested dask cluster is not running or refused your connection"
+                )
+                raise SystemExit(1)
+    log.debug("loaded dask cluster config")
     # Set up cluster described in YAML file
     cluster = dask.distributed.LocalCluster(
         name=cluster_config["name"],

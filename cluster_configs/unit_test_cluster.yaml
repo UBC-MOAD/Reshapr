@@ -1,0 +1,7 @@
+# Configuration for a dask cluster used by unit tests suite
+# ** DO NOT USE FOR PROCESSING **
+
+name: unit test dask cluster
+processes: True
+number of workers: 1
+threads per worker: 1
