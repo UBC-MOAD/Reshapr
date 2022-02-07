@@ -194,6 +194,18 @@ def get_dask_client(dask_config_yaml):
     return client
 
 
+def ddmmmyy(arrow_date):
+    """Return an Arrow date as a string formatted as lower-cased `ddmmmyy`.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as lower-cased `ddmmmyy`.
+    :rtype: str
+    """
+    return arrow_date.format("DDMMMYY").lower()
+
+
 # This stanza facilitates running the extract sub-command in a Python debugger
 if __name__ == "__main__":
     config_file = Path(sys.argv[1])

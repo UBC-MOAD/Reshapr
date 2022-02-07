@@ -21,6 +21,7 @@ import os
 import textwrap
 from pathlib import Path
 
+import arrow
 import pytest
 
 from reshapr.core import extract
@@ -162,3 +163,12 @@ class TestLoadModelProfile:
         )
         assert log_output.entries[1]["results_archive"] == os.fspath(nonexistent_path)
         assert log_output.entries[1]["event"] == "model results archive not found"
+
+
+class Test_ddmmmyy:
+    """Unit test for ddmmmyy() function."""
+
+    def test_ddmmmyy(self):
+        ddmmmyy = extract.ddmmmyy(arrow.get("2022-02-07"))
+
+        assert ddmmmyy == "07feb22"
