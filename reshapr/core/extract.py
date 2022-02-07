@@ -112,7 +112,7 @@ def _load_model_profile(model_profile_yaml):
             log.error("model profile file not found")
             raise SystemExit(1)
     log.debug("loaded model profile")
-    results_archive = Path(model_profile["results archive"])
+    results_archive = Path(model_profile["results archive"]["path"])
     log = log.bind(results_archive=os.fspath(results_archive))
     if not results_archive.exists():
         log.error("model results archive not found")

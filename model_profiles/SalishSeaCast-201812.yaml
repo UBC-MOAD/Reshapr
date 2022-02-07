@@ -2,4 +2,5 @@
 
 name: SalishSeaCast.201812
 
-results archive: /results/SalishSea/nowcast-green.201812/
+results archive:
+  path: /results/SalishSea/nowcast-green.201812/
