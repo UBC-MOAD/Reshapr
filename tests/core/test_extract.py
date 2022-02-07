@@ -181,3 +181,38 @@ class Test_yyyymmdd:
         yyyymmdd = extract.yyyymmdd(arrow.get("2022-02-07"))
 
         assert yyyymmdd == "20220207"
+
+
+class TestCalcDsPaths:
+    """Unit test for calc_ds_paths() function."""
+
+    def test_calc_ds_paths(self, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "start date": "2015-01-01",
+            "end date": "2015-01-02",
+        }
+        model_profile = {
+            "results archive": {
+                "path": "/results/SalishSea/nowcast-green.201812/",
+                "datasets": {
+                    "day": {
+                        "biology": "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc",
+                    },
+                },
+            },
+        }
+        ds_paths = extract.calc_ds_paths(extract_config, model_profile)
+
+        expected = [
+            Path(
+                "/results/SalishSea/nowcast-green.201812/01jan15/SalishSea_1d_20150101_20150101_ptrc_T.nc"
+            ),
+            Path(
+                "/results/SalishSea/nowcast-green.201812/02jan15/SalishSea_1d_20150102_20150102_ptrc_T.nc"
+            ),
+        ]
+        assert ds_paths == expected
