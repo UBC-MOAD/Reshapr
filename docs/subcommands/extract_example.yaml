@@ -2,7 +2,7 @@
 
 model profile: SalishSeaCast-201812.yaml
 
-dask cluster: docs/subcommands/salish_cluster.yaml
+dask cluster: salish_cluster.yaml
 
 start date: 2007-01-01
 end date: 2007-01-10
