@@ -39,20 +39,14 @@ def extract(config_file):
     :type config_file: :py:class:`pathlib.Path`
     """
     config = _load_config(config_file)
-    model_profile = _load_model_profile(Path(config["model profile"]))
+    model_profile = _load_model_profile(Path(config["dataset"]["model profile"]))
+    ds_paths = calc_ds_paths(config, model_profile)
     dask_client = get_dask_client(config["dask cluster"])
-
-    start_date = arrow.get(config["start date"])
-    end_date = arrow.get(config["end date"])
-    log = logger.bind(
-        start_date=start_date.format("YYYY-MM-DD"),
-        end_date=end_date.format("YYYY-MM-DD"),
-    )
 
     t_start = time.time()
 
     t_total = time.time() - t_start
-    log = log.bind(t_total=t_total)
+    log = logger.bind(t_total=t_total)
     log.info(f"total time: {t_total:.3f}s")
 
     dask_client.close()
@@ -120,7 +114,70 @@ def _load_model_profile(model_profile_yaml):
     return model_profile
 
 
-## Functions below will probably eventually  be refactored into separate module(s)
+def calc_ds_paths(config, model_profile):
+    """Calculate the list of dataset netCDF4 file paths to process.
+
+    The list is in order ascending date order.
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Dataset netCDF4 file paths in date order.
+    :rtype: list
+    """
+    results_archive_path = Path(model_profile["results archive"]["path"])
+    time_base = config["dataset"]["time base"]
+    vars_group = config["dataset"]["variables group"]
+    nc_files_pattern = model_profile["results archive"]["datasets"][time_base][
+        vars_group
+    ]
+    log = logger.bind(
+        results_archive_path=(os.fspath(results_archive_path)),
+        time_base=time_base,
+        vars_group=vars_group,
+        nc_files_pattern=nc_files_pattern,
+    )
+    start_date = arrow.get(config["start date"])
+    end_date = arrow.get(config["end date"])
+    log = log.bind(
+        start_date=start_date.format("YYYY-MM-DD"),
+        end_date=end_date.format("YYYY-MM-DD"),
+    )
+    date_range = arrow.Arrow.range("days", start_date, end_date)
+    ds_paths = [
+        results_archive_path
+        / ddmmmyy(day)
+        / nc_files_pattern.format(yyyymmdd=yyyymmdd(day))
+        for day in date_range
+    ]
+    log = log.bind(n_datasets=len(ds_paths))
+    log.info("collected dataset paths")
+    return ds_paths
+
+
+def ddmmmyy(arrow_date):
+    """Return an Arrow date as a string formatted as lower-cased `ddmmmyy`.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as lower-cased `ddmmmyy`.
+    :rtype: str
+    """
+    return arrow_date.format("DDMMMYY").lower()
+
+
+def yyyymmdd(arrow_date):
+    """Return an Arrow date as a string of digits formatted as `yyyymmdd`.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as `yyyymmdd` digits.
+    :rtype: str
+    """
+    return arrow_date.format("YYYYMMDD").lower()
 
 
 def get_dask_client(dask_config_yaml):
@@ -192,30 +249,6 @@ def get_dask_client(dask_config_yaml):
     log = log.bind(dashboard_link=client.dashboard_link)
     log.info("dask cluster dashboard")
     return client
-
-
-def ddmmmyy(arrow_date):
-    """Return an Arrow date as a string formatted as lower-cased `ddmmmyy`.
-
-    :param arrow_date: Date/time to format.
-    :type arrow_date: :py:class:`arrow.arrow.Arrow`
-
-    :return: Date formatted as lower-cased `ddmmmyy`.
-    :rtype: str
-    """
-    return arrow_date.format("DDMMMYY").lower()
-
-
-def yyyymmdd(arrow_date):
-    """Return an Arrow date as a string of digits formatted as `yyyymmdd`.
-
-    :param arrow_date: Date/time to format.
-    :type arrow_date: :py:class:`arrow.arrow.Arrow`
-
-    :return: Date formatted as `yyyymmdd` digits.
-    :rtype: str
-    """
-    return arrow_date.format("YYYYMMDD").lower()
 
 
 # This stanza facilitates running the extract sub-command in a Python debugger
