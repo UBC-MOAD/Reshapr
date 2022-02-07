@@ -4,3 +4,8 @@ name: SalishSeaCast.201812
 
 results archive:
   path: /results/SalishSea/nowcast-green.201812/
+  datasets:
+    day:
+      biology: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+    hour:
+      biology: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"

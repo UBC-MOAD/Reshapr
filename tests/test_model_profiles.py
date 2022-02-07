@@ -41,6 +41,7 @@ class TestModelProfiles:
         assert model_profile["name"] is not None
         assert model_profile["results archive"] is not None
         assert model_profile["results archive"]["path"] is not None
+        assert model_profile["results archive"]["datasets"] is not None
 
 
 class TestSalishSeaCast201812:
@@ -54,4 +55,20 @@ class TestSalishSeaCast201812:
         assert (
             model_profile["results archive"]["path"]
             == "/results/SalishSea/nowcast-green.201812/"
+        )
+
+    def test_SalishSeaCast_201812_day_datasets(self):
+        with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
+            model_profile = yaml.safe_load(f)
+        day_datasets = model_profile["results archive"]["datasets"]["day"]
+
+        assert day_datasets["biology"] == "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+
+    def test_SalishSeaCast_201812_hour_datasets(self):
+        with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
+            model_profile = yaml.safe_load(f)
+        hour_datasets = model_profile["results archive"]["datasets"]["hour"]
+
+        assert (
+            hour_datasets["biology"] == "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
         )
