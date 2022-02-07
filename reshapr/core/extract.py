@@ -206,6 +206,18 @@ def ddmmmyy(arrow_date):
     return arrow_date.format("DDMMMYY").lower()
 
 
+def yyyymmdd(arrow_date):
+    """Return an Arrow date as a string of digits formatted as `yyyymmdd`.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as `yyyymmdd` digits.
+    :rtype: str
+    """
+    return arrow_date.format("YYYYMMDD").lower()
+
+
 # This stanza facilitates running the extract sub-command in a Python debugger
 if __name__ == "__main__":
     config_file = Path(sys.argv[1])
