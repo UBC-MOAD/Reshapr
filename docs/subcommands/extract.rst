@@ -45,7 +45,7 @@ Dask Cluster Configuration File
 
 Example:
 
-.. literalinclude:: salish_cluster.yaml
+.. literalinclude:: ../../cluster_configs/salish_cluster.yaml
    :language: yaml
 
 
