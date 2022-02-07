@@ -76,7 +76,8 @@ class TestLoadModelProfile:
                 f"""\
                 name: SomeModel
 
-                results archive: {os.fspath(model_results_archive)}
+                results archive:
+                  path: {os.fspath(model_results_archive)}
                 """
             )
         )
@@ -145,7 +146,8 @@ class TestLoadModelProfile:
                 f"""\
                 name: SomeModel
 
-                results archive: {os.fspath(nonexistent_path)}
+                results archive:
+                  path: {os.fspath(nonexistent_path)}
                 """
             )
         )

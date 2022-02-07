@@ -40,6 +40,7 @@ class TestModelProfiles:
 
         assert model_profile["name"] is not None
         assert model_profile["results archive"] is not None
+        assert model_profile["results archive"]["path"] is not None
 
 
 class TestSalishSeaCast201812:
@@ -51,6 +52,6 @@ class TestSalishSeaCast201812:
 
         assert model_profile["name"] == "SalishSeaCast.201812"
         assert (
-            model_profile["results archive"]
+            model_profile["results archive"]["path"]
             == "/results/SalishSea/nowcast-green.201812/"
         )
