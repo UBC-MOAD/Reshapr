@@ -25,6 +25,7 @@ from pathlib import Path
 import arrow
 import dask.distributed
 import structlog
+import xarray
 import yaml
 
 logger = structlog.get_logger()
@@ -38,19 +39,16 @@ def extract(config_file):
                         Please see :ref:`ReshaprExtractYAMLFile` for details.
     :type config_file: :py:class:`pathlib.Path`
     """
+    t_start = time.time()
     config = _load_config(config_file)
     model_profile = _load_model_profile(Path(config["dataset"]["model profile"]))
     ds_paths = calc_ds_paths(config, model_profile)
     chunk_size = calc_ds_chunk_size(config, model_profile)
-
     dask_client = get_dask_client(config["dask cluster"])
+    with open_dataset(ds_paths, chunk_size, config, model_profile) as ds:
+        pass
 
-    t_start = time.time()
-
-    t_total = time.time() - t_start
-    log = logger.bind(t_total=t_total)
-    log.info(f"total time: {t_total:.3f}s")
-
+    logger.info("total time", t_total=time.time() - t_start)
     dask_client.close()
 
 
@@ -279,6 +277,39 @@ def get_dask_client(dask_config_yaml):
     log = log.bind(dashboard_link=client.dashboard_link)
     log.info("dask cluster dashboard")
     return client
+
+
+def open_dataset(ds_paths, chunk_size, config, model_profile):
+    """Open a list of dataset paths as a single dataset.
+
+    This is a wrapper around :py:func:`xarray.open_mfdataset` that ensures that the
+    returned dataset contains only the variable(s) of interest and their coordinates.
+    That is done to minimize the memory size of the dataset.
+
+    The returned dataset contains dask arrays that defer processing and delegate it to
+    the dask cluster.
+
+    :param list ds_paths: Dataset netCDF4 file paths in date order.
+
+    :param dict chunk_size: Chunks size to use for loading datasets.
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Multi-file dataset.
+    :rtype: :py:class:`xarray.Dataset`
+    """
+    extract_vars = {var for var in config["extract variables"]}
+    # Use 1st dataset path to calculate the set of variables to drop
+    with xarray.open_dataset(ds_paths[0], chunks=chunk_size) as ds:
+        drop_vars = {var for var in ds.data_vars} - extract_vars
+    drop_vars.update({var for var in model_profile["useless variables"]})
+    ds = xarray.open_mfdataset(
+        ds_paths, chunks=chunk_size, drop_variables=drop_vars, parallel=True
+    )
+    logger.debug("opened dataset", ds=ds)
+    return ds
 
 
 # This stanza facilitates running the extract sub-command in a Python debugger

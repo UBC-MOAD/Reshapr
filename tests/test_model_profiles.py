@@ -66,6 +66,11 @@ class TestSalishSeaCast201812:
             "x": 398,
         }
         assert model_profile["chunk size"] == expected_chunk_size
+        assert model_profile["useless variables"] == [
+            "time_centered",
+            "nav_lon",
+            "nav_lat",
+        ]
 
     def test_SalishSeaCast_201812_day_datasets(self):
         with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
