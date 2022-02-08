@@ -15,11 +15,13 @@ dependencies:
   - arrow
   - click
   - dask
+  - netCDF4
   - pip
   - python
   - pyyaml
   - rich
   - structlog
+  - xarray
 
   # For unit tests and coverage monitoring
   - coverage

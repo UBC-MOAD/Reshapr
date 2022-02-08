@@ -14,12 +14,13 @@ brotlipy==0.7.0
 certifi==2021.10.8
 cffi==1.15.0
 cfgv==3.3.1
+cftime==1.5.2
 charset-normalizer==2.0.10
 click==8.0.3
 cloudpickle==2.0.0
 colorama==0.4.4
 commonmark==0.9.1
-coverage==6.3
+coverage==6.3.1
 cryptography==36.0.1
 cytoolz==0.11.2
 dask==2022.1.1
@@ -41,6 +42,7 @@ locket==0.2.0
 MarkupSafe==2.0.1
 msgpack==1.0.3
 mypy-extensions==0.4.3
+netCDF4==1.5.8
 nodeenv==1.6.0
 numpy==1.22.1
 olefile==0.46
@@ -49,7 +51,7 @@ pandas==1.4.0
 partd==1.2.0
 pathspec==0.9.0
 Pillow==8.4.0
-pip==22.0.2
+pip==22.0.3
 platformdirs==2.3.0
 pluggy==1.0.0
 pre-commit==2.17.0
@@ -84,7 +86,7 @@ sphinxcontrib-serializinghtml==1.1.5
 structlog==21.5.0
 tblib==1.7.0
 toml==0.10.2
-tomli==2.0.0
+tomli==2.0.1
 toolz==0.11.2
 tornado==6.1
 typed-ast==1.5.2
@@ -93,5 +95,6 @@ ukkonen==1.0.1
 urllib3==1.26.8
 virtualenv==20.4.7
 wheel==0.37.1
+xarray==0.21.1
 zict==2.0.0
 zipp==3.7.0
