@@ -207,6 +207,7 @@ class TestCalcDsPaths:
                 },
             },
         }
+
         ds_paths = extract.calc_ds_paths(extract_config, model_profile)
 
         expected_paths = [
@@ -232,3 +233,47 @@ class TestCalcDsPaths:
         assert log_output.entries[0]["end_date"] == "2015-01-02"
         assert log_output.entries[0]["n_datasets"] == 2
         assert log_output.entries[0]["event"] == "collected dataset paths"
+
+
+class TestCalcDsChunks:
+    """Unit test for calc_ds_chunk() function."""
+
+    def test_calc_ds_chunks(self, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "start date": "2015-01-01",
+            "end date": "2015-01-02",
+        }
+        model_profile = {
+            "time coord": "time_counter",
+            "chunk size": {
+                "time": 1,
+                "depth": 40,
+                "y": 898,
+                "x": 398,
+            },
+            "results archive": {
+                "datasets": {
+                    "day": {
+                        "biology": {"depth coord": "deptht"},
+                    },
+                },
+            },
+        }
+
+        chunk_size = extract.calc_ds_chunk_size(extract_config, model_profile)
+
+        expected = {
+            "time_counter": 1,
+            "deptht": 40,
+            "y": 898,
+            "x": 398,
+        }
+        assert chunk_size == expected
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["chunk_size"] == expected
+        assert log_output.entries[0]["event"] == "chunk size for dataset loading"
