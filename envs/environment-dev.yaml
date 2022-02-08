@@ -22,11 +22,13 @@ dependencies:
   - arrow
   - click
   - dask
+  - netCDF4
   - pip
   - python=3.10
   - pyyaml
   - rich
   - structlog
+  - xarray
 
   # For code style & repo QA
   - black
