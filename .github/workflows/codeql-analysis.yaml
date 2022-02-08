@@ -33,9 +33,6 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
-
     - name: Push job status to SalishSeaCast Slack
       uses: 8398a7/action-slack@v3
       with:
