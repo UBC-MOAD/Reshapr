@@ -200,14 +200,16 @@ class TestCalcDsPaths:
                 "path": "/results/SalishSea/nowcast-green.201812/",
                 "datasets": {
                     "day": {
-                        "biology": "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc",
+                        "biology": {
+                            "file pattern": "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+                        },
                     },
                 },
             },
         }
         ds_paths = extract.calc_ds_paths(extract_config, model_profile)
 
-        expected = [
+        expected_paths = [
             Path(
                 "/results/SalishSea/nowcast-green.201812/01jan15/SalishSea_1d_20150101_20150101_ptrc_T.nc"
             ),
@@ -215,4 +217,18 @@ class TestCalcDsPaths:
                 "/results/SalishSea/nowcast-green.201812/02jan15/SalishSea_1d_20150102_20150102_ptrc_T.nc"
             ),
         ]
-        assert ds_paths == expected
+        assert ds_paths == expected_paths
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        expected = os.fspath(Path(model_profile["results archive"]["path"]))
+        assert log_output.entries[0]["results_archive_path"] == expected
+        assert log_output.entries[0]["time_base"] == "day"
+        assert log_output.entries[0]["vars_group"] == "biology"
+        assert (
+            log_output.entries[0]["nc_files_pattern"]
+            == "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+        )
+        assert log_output.entries[0]["start_date"] == "2015-01-01"
+        assert log_output.entries[0]["end_date"] == "2015-01-02"
+        assert log_output.entries[0]["n_datasets"] == 2
+        assert log_output.entries[0]["event"] == "collected dataset paths"
