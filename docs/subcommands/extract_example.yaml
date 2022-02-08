@@ -9,3 +9,7 @@ dask cluster: salish_cluster.yaml
 
 start date: 2015-01-01
 end date: 2015-01-10
+
+extract variables:
+  - diatoms
+  - nitrate
