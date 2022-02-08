@@ -12,8 +12,8 @@ Reshapr
     :target: https://github.com/UBC-MOAD/Reshapr
     :alt: Git on GitHub
 .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
-   :target: https://github.com/pre-commit/pre-commit
-   :alt: pre-commit
+    :target: https://github.com/pre-commit/pre-commit
+    :alt: pre-commit
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
@@ -26,6 +26,9 @@ Reshapr
 .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/UBC-MOAD/Reshapr
     :alt: Codecov Testing Coverage Report
+.. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
+    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
+    :alt: CodeQL analysis
 .. image:: https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
     :target: https://github.com/UBC-MOAD/Reshapr/issues
     :alt: Issue Tracker
