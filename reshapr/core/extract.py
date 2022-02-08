@@ -41,6 +41,8 @@ def extract(config_file):
     config = _load_config(config_file)
     model_profile = _load_model_profile(Path(config["dataset"]["model profile"]))
     ds_paths = calc_ds_paths(config, model_profile)
+    chunk_size = calc_ds_chunk_size(config, model_profile)
+
     dask_client = get_dask_client(config["dask cluster"])
 
     t_start = time.time()
@@ -177,6 +179,35 @@ def yyyymmdd(arrow_date):
     :rtype: str
     """
     return arrow_date.format("YYYYMMDD").lower()
+
+
+def calc_ds_chunk_size(config, model_profile):
+    """Calculate chunk size dictionary for dataset loading.
+
+    This does a transformation of the "conceptual" (time, depth, y, x) chunks dict to
+    one with the correct coordinate names for the model datasets.
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Chunks size dict to use for loading model datasets.
+    :rtype: dict
+    """
+    abstract_chunk_size = model_profile["chunk size"]
+    time_chunk_size = abstract_chunk_size.pop("time")
+    depth_chunk_size = abstract_chunk_size.pop("depth")
+    time_base = config["dataset"]["time base"]
+    vars_group = config["dataset"]["variables group"]
+    datasets = model_profile["results archive"]["datasets"]
+    ds_depth_coord = datasets[time_base][vars_group]["depth coord"]
+    chunk_size = {
+        model_profile["time coord"]: time_chunk_size,
+        ds_depth_coord: depth_chunk_size,
+    }
+    chunk_size.update(abstract_chunk_size)
+    logger.debug("chunk size for dataset loading", chunk_size=chunk_size)
+    return chunk_size
 
 
 def get_dask_client(dask_config_yaml):

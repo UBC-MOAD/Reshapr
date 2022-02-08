@@ -42,6 +42,8 @@ class TestModelProfiles:
         assert model_profile["results archive"] is not None
         assert model_profile["results archive"]["path"] is not None
         assert model_profile["results archive"]["datasets"] is not None
+        assert model_profile["time coord"] is not None
+        assert model_profile["chunk size"] is not None
 
 
 class TestSalishSeaCast201812:
@@ -56,13 +58,25 @@ class TestSalishSeaCast201812:
             model_profile["results archive"]["path"]
             == "/results/SalishSea/nowcast-green.201812/"
         )
+        assert model_profile["time coord"] == "time_counter"
+        expected_chunk_size = {
+            "time": 1,
+            "depth": 40,
+            "y": 898,
+            "x": 398,
+        }
+        assert model_profile["chunk size"] == expected_chunk_size
 
     def test_SalishSeaCast_201812_day_datasets(self):
         with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
             model_profile = yaml.safe_load(f)
         day_datasets = model_profile["results archive"]["datasets"]["day"]
 
-        assert day_datasets["biology"] == "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+        assert (
+            day_datasets["biology"]["file pattern"]
+            == "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+        )
+        assert day_datasets["biology"]["depth coord"] == "deptht"
 
     def test_SalishSeaCast_201812_hour_datasets(self):
         with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
@@ -70,5 +84,7 @@ class TestSalishSeaCast201812:
         hour_datasets = model_profile["results archive"]["datasets"]["hour"]
 
         assert (
-            hour_datasets["biology"] == "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+            hour_datasets["biology"]["file pattern"]
+            == "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
         )
+        assert hour_datasets["biology"]["depth coord"] == "deptht"
