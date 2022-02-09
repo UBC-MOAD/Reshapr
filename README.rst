@@ -24,7 +24,7 @@ Reshapr
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3ACI
     :alt: pytest and test coverage analysis
 .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
-    :target: https://codecov.io/gh/UBC-MOAD/Reshapr
+    :target: https://app.codecov.io/gh/UBC-MOAD/Reshapr
     :alt: Codecov Testing Coverage Report
 .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
