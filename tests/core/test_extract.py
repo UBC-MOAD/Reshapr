@@ -282,7 +282,7 @@ class TestCalcDsChunks:
 
 
 class TestCreateDataarray:
-    """Unit test for create_dataarray() function."""
+    """Unit tests for create_dataarray() function."""
 
     def test_create_coord_array(self):
         source_array = xarray.DataArray(
@@ -312,3 +312,143 @@ class TestCreateDataarray:
         assert numpy.array_equal(var.data, source_array.data)
         assert numpy.array_equal(var.coords["time"], coords["time"])
         assert var.attrs == attrs
+
+
+class TestCalcCoords:
+    "Unit tests for calc_coords() function."
+
+    @pytest.fixture(name="model_profile", scope="class")
+    def fixture_model_profile(self):
+        return {
+            "time coord": "time_counter",
+            "results archive": {
+                "datasets": {
+                    "day": {
+                        "biology": {"depth coord": "deptht"},
+                    },
+                    "hour": {
+                        "biology": {"depth coord": "deptht"},
+                    },
+                }
+            },
+        }
+
+    @pytest.fixture(name="source_dataset", scope="class")
+    def fixture_source_dataset(self):
+        return xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(43),
+                "deptht": numpy.arange(0, 450, 0.5),
+                "y": numpy.arange(898),
+                "x": numpy.arange(398),
+            }
+        )
+
+    @pytest.mark.parametrize(
+        "time_base, example",
+        (
+            ("day", "8 February 2022 have a time value of 2022-02-08 12:00:00Z"),
+            (
+                "hour",
+                "the first hour of 8 February 2022 have a time value of 2022-02-08 00:30:00Z",
+            ),
+        ),
+    )
+    def test_time_coord(
+        self, time_base, example, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": time_base,
+                "variables group": "biology",
+            }
+        }
+
+        coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert coords.time.name == "time"
+        assert numpy.array_equal(coords.time.data, source_dataset.time_counter.data)
+        assert coords.time.attrs["standard_name"] == "time"
+        assert coords.time.attrs["long_name"] == "Time Axis"
+        expected = (
+            f"time values are UTC at the centre of the intervals over which the "
+            f"calculated model results are averaged; e.g. the field average values for "
+            f"{example}"
+        )
+        assert coords.time.attrs["comment"] == expected
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extraction time coordinate"
+
+    def test_depth_coord(self, source_dataset, model_profile, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            }
+        }
+
+        coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert coords.depth.name == "depth"
+        assert numpy.array_equal(coords.depth.data, source_dataset.deptht.data)
+        assert coords.depth.attrs["standard_name"] == "sea_floor_depth"
+        assert coords.depth.attrs["long_name"] == "Sea Floor Depth"
+        assert coords.depth.attrs["units"] == "metres"
+
+        assert log_output.entries[1]["log_level"] == "debug"
+        assert log_output.entries[1]["event"] == "extraction depth coordinate"
+
+    def test_y_index_coord(self, source_dataset, model_profile, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            }
+        }
+
+        coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert coords.y_index.name == "gridY"
+        assert numpy.array_equal(coords.y_index.data, source_dataset.y.data)
+        assert coords.y_index.attrs["standard_name"] == "y"
+        assert coords.y_index.attrs["long_name"] == "Grid Y"
+        assert coords.y_index.attrs["units"] == "count"
+        assert (
+            coords.y_index.attrs["comment"]
+            == "gridY values are grid indices in the model y-direction"
+        )
+
+        assert log_output.entries[2]["log_level"] == "debug"
+        assert log_output.entries[2]["event"] == "extraction y coordinate"
+
+    def test_x_index_coord(self, source_dataset, model_profile, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            }
+        }
+
+        coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert coords.x_index.name == "gridX"
+        assert numpy.array_equal(coords.x_index.data, source_dataset.x.data)
+        assert coords.x_index.attrs["standard_name"] == "x"
+        assert coords.x_index.attrs["long_name"] == "Grid X"
+        assert coords.x_index.attrs["units"] == "count"
+        assert (
+            coords.x_index.attrs["comment"]
+            == "gridX values are grid indices in the model x-direction"
+        )
+
+        assert log_output.entries[3]["log_level"] == "debug"
+        assert log_output.entries[3]["event"] == "extraction x coordinate"
