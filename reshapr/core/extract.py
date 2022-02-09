@@ -47,6 +47,7 @@ def extract(config_file):
     dask_client = get_dask_client(config["dask cluster"])
     with open_dataset(ds_paths, chunk_size, config, model_profile) as ds:
         output_coords = calc_output_coords(ds, config, model_profile)
+        extracted_vars = calc_extracted_vars(ds, output_coords, config, model_profile)
 
     logger.info("total time", t_total=time.time() - t_start)
     dask_client.close()
@@ -398,6 +399,76 @@ def calc_output_coords(source_dataset, config, model_profile):
     logger.debug("extraction x coordinate", x_index=x_indices)
 
     return {"time": times, "depth": depths, "gridY": y_indices, "gridX": x_indices}
+
+
+def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
+    """Construct the data array for the extracted variable(s).
+
+    :param source_dataset: Dataset from which variable(s) are being extracted.
+    :type source_dataset: :py:class:`xarray.Dataset`
+
+    :param dict output_coords: Coordinate names to data array mapping for the extracted
+                               variable(s).
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Extracted variable data array(s).
+    :rtype: list
+    """
+    extracted_vars = []
+    for name, var in source_dataset.data_vars.items():
+        extracted_var = create_dataarray(
+            name,
+            var,
+            attrs={
+                "standard_name": var.attrs["standard_name"],
+                "long_name": var.attrs["long_name"],
+                "units": var.attrs["units"],
+            },
+            coords=output_coords,
+        )
+        extracted_vars.append(extracted_var)
+        logger.debug(f"extracted {name}", extracted_var=extracted_var)
+    if not config.get("include lons lats", False):
+        return extracted_vars
+
+    # Add longitude and latitude variables from geo ref dataset
+    with xarray.open_dataset(model_profile["geo ref dataset"]) as grid_ds:
+        lons = create_dataarray(
+            "longitude",
+            grid_ds.longitude,
+            attrs={
+                "standard_name": "longitude",
+                "long_name": "Longitude",
+                "units": "degrees_east",
+            },
+            coords={
+                "gridY": output_coords["gridY"],
+                "gridX": output_coords["gridX"],
+            },
+        )
+        extracted_vars.append(lons)
+        logger.debug(f"extracted longitudes", lons=lons)
+
+        lats = create_dataarray(
+            "latitude",
+            grid_ds.latitude,
+            attrs={
+                "standard_name": "latitude",
+                "long_name": "Latitude",
+                "units": "degrees_north",
+            },
+            coords={
+                "gridY": output_coords["gridY"],
+                "gridX": output_coords["gridX"],
+            },
+        )
+        extracted_vars.append(lats)
+        logger.debug(f"extracted latitudes", lats=lats)
+
+    return extracted_vars
 
 
 def create_dataarray(name, source_array, attrs, coords=None):

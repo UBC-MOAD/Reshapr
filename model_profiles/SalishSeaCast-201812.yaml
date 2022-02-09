@@ -14,6 +14,8 @@ chunk size:
   y: 898
   x: 398
 
+geo ref dataset: https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetryV17-02
+
 results archive:
   path: /results/SalishSea/nowcast-green.201812/
   datasets:
