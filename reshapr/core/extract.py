@@ -312,6 +312,42 @@ def open_dataset(ds_paths, chunk_size, config, model_profile):
     return ds
 
 
+def create_dataarray(name, source_array, attrs, coords=None):
+    """Helper function to create :py:class:`xarray.DataArray` instances.
+
+    To create a data array to be used as a :py:class:`xarray.Dataset` coordinate,
+    call without a value for :kbd:`coords`.
+
+    To create a data array to be used as a dataset variable,
+    provide the variable's coordinates dict.
+
+    :param str name: Name of the data array.
+
+    :param source_array: Data array from which to take the array data.
+                         Also used as the coordinate values when creating a coordinate array.
+    :type source_array: :py:class:`xarray.DataArray`
+
+    :param dict attrs: Attributes of the data array.
+                       These become netCDF4 variable attributes.
+
+    :param dict coords: Coordinates of the data array.
+                        Use default empty dict to create a dataset coordinate array,
+                        or provide the variable's coordinates dict to create a
+                        dataset variable array.
+
+    :return: Data array for use a dataset coordinate or variable.
+    :rtype: :py:class:`xarray.DataArray`
+    """
+    if coords is None:
+        coords = {}
+    return xarray.DataArray(
+        name=name,
+        data=source_array.data,
+        coords={name: source_array.data} if coords == {} else coords,
+        attrs=attrs,
+    )
+
+
 # This stanza facilitates running the extract sub-command in a Python debugger
 if __name__ == "__main__":
     config_file = Path(sys.argv[1])

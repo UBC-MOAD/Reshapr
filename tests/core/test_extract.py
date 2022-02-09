@@ -22,7 +22,9 @@ import textwrap
 from pathlib import Path
 
 import arrow
+import numpy
 import pytest
+import xarray
 
 from reshapr.core import extract
 
@@ -277,3 +279,36 @@ class TestCalcDsChunks:
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["chunk_size"] == expected
         assert log_output.entries[0]["event"] == "chunk size for dataset loading"
+
+
+class TestCreateDataarray:
+    """Unit test for create_dataarray() function."""
+
+    def test_create_coord_array(self):
+        source_array = xarray.DataArray(
+            name="test source array",
+            data=numpy.arange(43),
+        )
+        attrs = {"foo": "bar"}
+
+        coord = extract.create_dataarray("test", source_array, attrs)
+
+        assert coord.name == "test"
+        assert numpy.array_equal(coord.data, source_array.data)
+        assert numpy.array_equal(coord.coords["test"], source_array.data)
+        assert coord.attrs == attrs
+
+    def test_create_var_array(self):
+        source_array = xarray.DataArray(
+            name="test source array",
+            data=numpy.arange(43),
+        )
+        attrs = {"bar": "foo"}
+        coords = {"time": numpy.arange(43, 0, -1)}
+
+        var = extract.create_dataarray("test", source_array, attrs, coords)
+
+        assert var.name == "test"
+        assert numpy.array_equal(var.data, source_array.data)
+        assert numpy.array_equal(var.coords["time"], coords["time"])
+        assert var.attrs == attrs
