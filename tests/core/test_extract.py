@@ -458,8 +458,65 @@ class TestCalcOutputCoords:
         assert log_output.entries[3]["event"] == "extraction x coordinate"
 
 
-class CalcExtractedVars:
-    """Unit tests for calc_extracted_vars() function."""
+class TestCalcExtractedVars:
+    """Unit test for calc_extracted_vars() function."""
 
-    def test(self):
-        pass
+    @pytest.fixture(name="source_dataset", scope="class")
+    def fixture_source_dataset(self):
+        return xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(2),
+                "deptht": numpy.arange(0, 4, 0.5),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "diatoms": xarray.DataArray(
+                    name="diatoms",
+                    data=numpy.ones((2, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(2),
+                        "deptht": numpy.arange(0, 4, 0.5),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water",
+                        "long_name": "Diatoms Concentration",
+                        "units": "mmol m-3",
+                    },
+                )
+            },
+        )
+
+    def test_extract_var(self, source_dataset, log_output):
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {}
+        model_profile = {}
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "diatoms"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((2, 8, 9, 4), dtype=numpy.single)
+        )
+        assert (
+            extracted_vars[0].attrs["standard_name"]
+            == "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water"
+        )
+        assert extracted_vars[0].attrs["long_name"] == "Diatoms Concentration"
+        assert extracted_vars[0].attrs["units"] == "mmol m-3"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted diatoms"
