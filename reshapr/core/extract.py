@@ -21,7 +21,6 @@ import os
 import sys
 import time
 from pathlib import Path
-from types import SimpleNamespace
 
 import arrow
 import dask.distributed
@@ -331,9 +330,8 @@ def calc_output_coords(source_dataset, config, model_profile):
 
     :param dict model_profile: Model profile dictionary.
 
-    :return: Container of dataset coordinates with attributes :kbd:`time`,
-             :kbd:`depth`, :kbd:`y_index`, and :kbd:`x_index`.
-    :rtype: :py:class:`types.SimpleNamespace`
+    :return: Mapping of coordinate names to their data arrays.
+    :rtype: dict
     """
     time_examples = {
         "day": (
@@ -399,9 +397,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     )
     logger.debug("extraction x coordinate", x_index=x_indices)
 
-    return SimpleNamespace(
-        time=times, depth=depths, y_index=y_indices, x_index=x_indices
-    )
+    return {"time": times, "depth": depths, "gridY": y_indices, "gridX": x_indices}
 
 
 def create_dataarray(name, source_array, attrs, coords=None):

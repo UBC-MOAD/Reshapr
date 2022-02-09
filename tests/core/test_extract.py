@@ -368,18 +368,18 @@ class TestCalcOutputCoords:
             source_dataset, extract_config, model_profile
         )
 
-        assert output_coords.time.name == "time"
+        assert output_coords["time"].name == "time"
         assert numpy.array_equal(
-            output_coords.time.data, source_dataset.time_counter.data
+            output_coords["time"].data, source_dataset.time_counter.data
         )
-        assert output_coords.time.attrs["standard_name"] == "time"
-        assert output_coords.time.attrs["long_name"] == "Time Axis"
+        assert output_coords["time"].attrs["standard_name"] == "time"
+        assert output_coords["time"].attrs["long_name"] == "Time Axis"
         expected = (
             f"time values are UTC at the centre of the intervals over which the "
             f"calculated model results are averaged; e.g. the field average values for "
             f"{example}"
         )
-        assert output_coords.time.attrs["comment"] == expected
+        assert output_coords["time"].attrs["comment"] == expected
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extraction time coordinate"
@@ -396,11 +396,13 @@ class TestCalcOutputCoords:
             source_dataset, extract_config, model_profile
         )
 
-        assert output_coords.depth.name == "depth"
-        assert numpy.array_equal(output_coords.depth.data, source_dataset.deptht.data)
-        assert output_coords.depth.attrs["standard_name"] == "sea_floor_depth"
-        assert output_coords.depth.attrs["long_name"] == "Sea Floor Depth"
-        assert output_coords.depth.attrs["units"] == "metres"
+        assert output_coords["depth"].name == "depth"
+        assert numpy.array_equal(
+            output_coords["depth"].data, source_dataset.deptht.data
+        )
+        assert output_coords["depth"].attrs["standard_name"] == "sea_floor_depth"
+        assert output_coords["depth"].attrs["long_name"] == "Sea Floor Depth"
+        assert output_coords["depth"].attrs["units"] == "metres"
 
         assert log_output.entries[1]["log_level"] == "debug"
         assert log_output.entries[1]["event"] == "extraction depth coordinate"
@@ -417,13 +419,13 @@ class TestCalcOutputCoords:
             source_dataset, extract_config, model_profile
         )
 
-        assert output_coords.y_index.name == "gridY"
-        assert numpy.array_equal(output_coords.y_index.data, source_dataset.y.data)
-        assert output_coords.y_index.attrs["standard_name"] == "y"
-        assert output_coords.y_index.attrs["long_name"] == "Grid Y"
-        assert output_coords.y_index.attrs["units"] == "count"
+        assert output_coords["gridY"].name == "gridY"
+        assert numpy.array_equal(output_coords["gridY"].data, source_dataset.y.data)
+        assert output_coords["gridY"].attrs["standard_name"] == "y"
+        assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
+        assert output_coords["gridY"].attrs["units"] == "count"
         assert (
-            output_coords.y_index.attrs["comment"]
+            output_coords["gridY"].attrs["comment"]
             == "gridY values are grid indices in the model y-direction"
         )
 
@@ -442,15 +444,22 @@ class TestCalcOutputCoords:
             source_dataset, extract_config, model_profile
         )
 
-        assert output_coords.x_index.name == "gridX"
-        assert numpy.array_equal(output_coords.x_index.data, source_dataset.x.data)
-        assert output_coords.x_index.attrs["standard_name"] == "x"
-        assert output_coords.x_index.attrs["long_name"] == "Grid X"
-        assert output_coords.x_index.attrs["units"] == "count"
+        assert output_coords["gridX"].name == "gridX"
+        assert numpy.array_equal(output_coords["gridX"].data, source_dataset.x.data)
+        assert output_coords["gridX"].attrs["standard_name"] == "x"
+        assert output_coords["gridX"].attrs["long_name"] == "Grid X"
+        assert output_coords["gridX"].attrs["units"] == "count"
         assert (
-            output_coords.x_index.attrs["comment"]
+            output_coords["gridX"].attrs["comment"]
             == "gridX values are grid indices in the model x-direction"
         )
 
         assert log_output.entries[3]["log_level"] == "debug"
         assert log_output.entries[3]["event"] == "extraction x coordinate"
+
+
+class CalcExtractedVars:
+    """Unit tests for calc_extracted_vars() function."""
+
+    def test(self):
+        pass
