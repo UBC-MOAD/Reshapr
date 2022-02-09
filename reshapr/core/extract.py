@@ -21,6 +21,7 @@ import os
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import arrow
 import dask.distributed
@@ -46,7 +47,7 @@ def extract(config_file):
     chunk_size = calc_ds_chunk_size(config, model_profile)
     dask_client = get_dask_client(config["dask cluster"])
     with open_dataset(ds_paths, chunk_size, config, model_profile) as ds:
-        pass
+        coords = calc_output_coords(ds, config, model_profile)
 
     logger.info("total time", t_total=time.time() - t_start)
     dask_client.close()
@@ -310,6 +311,97 @@ def open_dataset(ds_paths, chunk_size, config, model_profile):
     )
     logger.debug("opened dataset", ds=ds)
     return ds
+
+
+def calc_output_coords(source_dataset, config, model_profile):
+    """Construct the coordinates for the dataset containing the extracted variable(s).
+
+    The returned coordinates container has the following mapping of attributes to
+    coordinate names:
+
+    * :kbd:`time`: :kbd:`time`
+    * :kbd:`depth`: :kbd:`depth`
+    * :kbd:`y_index`: :kbd:`gridY`
+    * :kbd:`x_index`: :kbd:`gridx`
+
+    :param source_dataset: Dataset from which variables are being extracted.
+    :type source_dataset: :py:class:`xarray.Dataset`
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Container of dataset coordinates with attributes :kbd:`time`,
+             :kbd:`depth`, :kbd:`y_index`, and :kbd:`x_index`.
+    :rtype: :py:class:`types.SimpleNamespace`
+    """
+    time_examples = {
+        "day": (
+            "e.g. the field average values for 8 February 2022 have "
+            "a time value of 2022-02-08 12:00:00Z"
+        ),
+        "hour": (
+            "e.g. the field average values for the first hour of 8 February 2022 have "
+            "a time value of 2022-02-08 00:30:00Z"
+        ),
+    }
+    times = create_dataarray(
+        "time",
+        source_dataset[model_profile["time coord"]],
+        attrs={
+            "standard_name": "time",
+            "long_name": "Time Axis",
+            "comment": (
+                f"time values are UTC at the centre of the intervals over which the "
+                f"calculated model results are averaged; "
+                f"{time_examples[config['dataset']['time base']]}"
+            ),
+            # time_origin and units are provided by encoding when dataset is written to netCDF file
+        },
+    )
+    logger.debug("extraction time coordinate", time=times)
+
+    time_base = config["dataset"]["time base"]
+    vars_group = config["dataset"]["variables group"]
+    datasets = model_profile["results archive"]["datasets"]
+    depths = create_dataarray(
+        "depth",
+        source_dataset[datasets[time_base][vars_group]["depth coord"]],
+        attrs={
+            "standard_name": "sea_floor_depth",
+            "long_name": "Sea Floor Depth",
+            "units": "metres",
+        },
+    )
+    logger.debug("extraction depth coordinate", depth=depths)
+
+    y_indices = create_dataarray(
+        "gridY",
+        source_dataset.y,
+        attrs={
+            "standard_name": "y",
+            "long_name": "Grid Y",
+            "units": "count",
+            "comment": "gridY values are grid indices in the model y-direction",
+        },
+    )
+    logger.debug("extraction y coordinate", y_index=y_indices)
+
+    x_indices = create_dataarray(
+        "gridX",
+        source_dataset.x,
+        attrs={
+            "standard_name": "x",
+            "long_name": "Grid X",
+            "units": "count",
+            "comment": "gridX values are grid indices in the model x-direction",
+        },
+    )
+    logger.debug("extraction x coordinate", x_index=x_indices)
+
+    return SimpleNamespace(
+        time=times, depth=depths, y_index=y_indices, x_index=x_indices
+    )
 
 
 def create_dataarray(name, source_array, attrs, coords=None):
