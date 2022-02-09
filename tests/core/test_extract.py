@@ -314,8 +314,8 @@ class TestCreateDataarray:
         assert var.attrs == attrs
 
 
-class TestCalcCoords:
-    "Unit tests for calc_coords() function."
+class TestCalcOutputCoords:
+    "Unit tests for calc_output_coords() function."
 
     @pytest.fixture(name="model_profile", scope="class")
     def fixture_model_profile(self):
@@ -364,20 +364,22 @@ class TestCalcCoords:
             }
         }
 
-        coords = extract.calc_output_coords(
+        output_coords = extract.calc_output_coords(
             source_dataset, extract_config, model_profile
         )
 
-        assert coords.time.name == "time"
-        assert numpy.array_equal(coords.time.data, source_dataset.time_counter.data)
-        assert coords.time.attrs["standard_name"] == "time"
-        assert coords.time.attrs["long_name"] == "Time Axis"
+        assert output_coords.time.name == "time"
+        assert numpy.array_equal(
+            output_coords.time.data, source_dataset.time_counter.data
+        )
+        assert output_coords.time.attrs["standard_name"] == "time"
+        assert output_coords.time.attrs["long_name"] == "Time Axis"
         expected = (
             f"time values are UTC at the centre of the intervals over which the "
             f"calculated model results are averaged; e.g. the field average values for "
             f"{example}"
         )
-        assert coords.time.attrs["comment"] == expected
+        assert output_coords.time.attrs["comment"] == expected
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extraction time coordinate"
@@ -390,15 +392,15 @@ class TestCalcCoords:
             }
         }
 
-        coords = extract.calc_output_coords(
+        output_coords = extract.calc_output_coords(
             source_dataset, extract_config, model_profile
         )
 
-        assert coords.depth.name == "depth"
-        assert numpy.array_equal(coords.depth.data, source_dataset.deptht.data)
-        assert coords.depth.attrs["standard_name"] == "sea_floor_depth"
-        assert coords.depth.attrs["long_name"] == "Sea Floor Depth"
-        assert coords.depth.attrs["units"] == "metres"
+        assert output_coords.depth.name == "depth"
+        assert numpy.array_equal(output_coords.depth.data, source_dataset.deptht.data)
+        assert output_coords.depth.attrs["standard_name"] == "sea_floor_depth"
+        assert output_coords.depth.attrs["long_name"] == "Sea Floor Depth"
+        assert output_coords.depth.attrs["units"] == "metres"
 
         assert log_output.entries[1]["log_level"] == "debug"
         assert log_output.entries[1]["event"] == "extraction depth coordinate"
@@ -411,17 +413,17 @@ class TestCalcCoords:
             }
         }
 
-        coords = extract.calc_output_coords(
+        output_coords = extract.calc_output_coords(
             source_dataset, extract_config, model_profile
         )
 
-        assert coords.y_index.name == "gridY"
-        assert numpy.array_equal(coords.y_index.data, source_dataset.y.data)
-        assert coords.y_index.attrs["standard_name"] == "y"
-        assert coords.y_index.attrs["long_name"] == "Grid Y"
-        assert coords.y_index.attrs["units"] == "count"
+        assert output_coords.y_index.name == "gridY"
+        assert numpy.array_equal(output_coords.y_index.data, source_dataset.y.data)
+        assert output_coords.y_index.attrs["standard_name"] == "y"
+        assert output_coords.y_index.attrs["long_name"] == "Grid Y"
+        assert output_coords.y_index.attrs["units"] == "count"
         assert (
-            coords.y_index.attrs["comment"]
+            output_coords.y_index.attrs["comment"]
             == "gridY values are grid indices in the model y-direction"
         )
 
@@ -436,17 +438,17 @@ class TestCalcCoords:
             }
         }
 
-        coords = extract.calc_output_coords(
+        output_coords = extract.calc_output_coords(
             source_dataset, extract_config, model_profile
         )
 
-        assert coords.x_index.name == "gridX"
-        assert numpy.array_equal(coords.x_index.data, source_dataset.x.data)
-        assert coords.x_index.attrs["standard_name"] == "x"
-        assert coords.x_index.attrs["long_name"] == "Grid X"
-        assert coords.x_index.attrs["units"] == "count"
+        assert output_coords.x_index.name == "gridX"
+        assert numpy.array_equal(output_coords.x_index.data, source_dataset.x.data)
+        assert output_coords.x_index.attrs["standard_name"] == "x"
+        assert output_coords.x_index.attrs["long_name"] == "Grid X"
+        assert output_coords.x_index.attrs["units"] == "count"
         assert (
-            coords.x_index.attrs["comment"]
+            output_coords.x_index.attrs["comment"]
             == "gridX values are grid indices in the model x-direction"
         )
 

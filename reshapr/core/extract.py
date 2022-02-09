@@ -47,7 +47,7 @@ def extract(config_file):
     chunk_size = calc_ds_chunk_size(config, model_profile)
     dask_client = get_dask_client(config["dask cluster"])
     with open_dataset(ds_paths, chunk_size, config, model_profile) as ds:
-        coords = calc_output_coords(ds, config, model_profile)
+        output_coords = calc_output_coords(ds, config, model_profile)
 
     logger.info("total time", t_total=time.time() - t_start)
     dask_client.close()
