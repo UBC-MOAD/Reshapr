@@ -41,7 +41,7 @@
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3ACI
     :alt: pytest and test coverage analysis
 .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
-    :target: https://codecov.io/gh/UBC-MOAD/Reshapr
+    :target: https://app.codecov.io/gh/UBC-MOAD/Reshapr
     :alt: Codecov Testing Coverage Report
 .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
@@ -385,7 +385,7 @@ Continuous Integration
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3ACI
     :alt: pytest and test coverage analysis
 .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
-    :target: https://codecov.io/gh/UBC-MOAD/Reshapr
+    :target: https://app.codecov.io/gh/UBC-MOAD/Reshapr
     :alt: Codecov Testing Coverage Report
 
 The :kbd:`Reshapr` package unit test suite is run and a coverage report is generated
@@ -399,7 +399,7 @@ The testing coverage report is uploaded to `codecov.io`_
 .. _repo actions page: https://github.com/UBC-MOAD/Reshapr/actions
 .. _repo commits page: https://github.com/UBC-MOAD/Reshapr/commits/main
 .. _repo code overview page: https://github.com/UBC-MOAD/Reshapr
-.. _codecov.io: https://codecov.io/gh/UBC-MOAD/Reshapr
+.. _codecov.io: https://app.codecov.io/gh/UBC-MOAD/Reshapr
 
 The `GitHub Actions`_ workflow configuration that defines the continuous integration tasks
 is in the :file:`.github/workflows/pytest-coverage.yaml` file.
