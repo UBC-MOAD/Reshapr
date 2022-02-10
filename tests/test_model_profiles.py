@@ -104,6 +104,11 @@ class TestSalishSeaCast201812:
                 "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
                 "deptht",
             ),
+            (
+                "primary production",
+                "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_prod_T.nc",
+                "deptht",
+            ),
         ),
     )
     def test_SalishSeaCast_201812_hour_datasets(
