@@ -84,6 +84,11 @@ class TestSalishSeaCast201812:
             ),
             ("u velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_U.nc", "depthu"),
             ("v velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_V.nc", "depthv"),
+            (
+                "vertical turbulence",
+                "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
+                "depthw",
+            ),
             ("w velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc", "depthw"),
         ),
     )
@@ -114,6 +119,11 @@ class TestSalishSeaCast201812:
             ),
             ("u velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc", "depthu"),
             ("v velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc", "depthv"),
+            (
+                "vertical turbulence",
+                "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
+                "depthw",
+            ),
             ("w velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc", "depthw"),
         ),
     )
