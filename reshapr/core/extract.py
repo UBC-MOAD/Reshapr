@@ -24,6 +24,7 @@ from pathlib import Path
 
 import arrow
 import dask.distributed
+import numpy
 import structlog
 import xarray
 import yaml
@@ -547,6 +548,55 @@ def calc_extracted_dataset(extracted_vars, output_coords, config, config_yaml):
     )
     logger.debug("extracted dataset metadata", extracted_ds=extracted_ds)
     return extracted_ds
+
+
+def calc_coord_encoding(ds, coord, config, model_profile):
+    """Construct the netCDF4 encoding dictionary for a coordinate.
+
+    :param ds: Dataset for which the ending is being constructed.
+    :type ds: :py:class:`xarray.Dataset`
+
+    :param str coord: Coordinate for which the ending is being constructed.
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: netCDF4 encoding for coordinate
+    :rtype: dict
+    """
+    match coord:
+        case "time":
+            extract_time_origin = model_profile["extraction time origin"]
+            match config["dataset"]["time base"]:
+                case "day":
+                    quanta = "days"
+                    time_offset = "12:00:00"
+                case "hour":
+                    quanta = "hours"
+                    time_offset = "00:30:00"
+                case _:
+                    quanta = "seconds"
+                    time_offset = "00:30:00"
+            return {
+                "dtype": numpy.single,
+                "units": f"{quanta} since {extract_time_origin} {time_offset}",
+                "chunksizes": [1],
+                "zlib": config["extracted dataset"].get("deflate", True),
+                "_FillValue": None,
+            }
+        case "depth":
+            return {
+                "dtype": numpy.single,
+                "chunksizes": [ds.coords[coord].size],
+                "zlib": config["extracted dataset"].get("deflate", True),
+            }
+        case _:
+            return {
+                "dtype": int,
+                "chunksizes": [ds.coords[coord].size],
+                "zlib": config["extracted dataset"].get("deflate", True),
+            }
 
 
 # This stanza facilitates running the extract sub-command in a Python debugger
