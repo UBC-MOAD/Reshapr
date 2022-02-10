@@ -52,7 +52,10 @@ def extract(config_file):
         extracted_ds = calc_extracted_dataset(
             extracted_vars, output_coords, config, config_file
         )
-
+        nc_path, encoding, nc_format = prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+        write_netcdf(extracted_ds, nc_path, encoding, nc_format)
     logger.info("total time", t_total=time.time() - t_start)
     dask_client.close()
 
@@ -556,7 +559,7 @@ def calc_coord_encoding(ds, coord, config, model_profile):
     :param ds: Dataset for which the ending is being constructed.
     :type ds: :py:class:`xarray.Dataset`
 
-    :param str coord: Coordinate for which the ending is being constructed.
+    :param Hashable coord: Coordinate for which the ending is being constructed.
 
     :param dict config: Extraction processing configuration dictionary.
 
@@ -628,6 +631,69 @@ def calc_var_encoding(var, output_coords, config):
         "chunksizes": chunksizes,
         "zlib": config["extracted dataset"].get("deflate", True),
     }
+
+
+def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
+    """Prepare parameters for :py:func:`write_netcdf` call.
+
+    This function is separate from :py:func:`write_netcdf` to simplify unit tests.
+
+    :param extracted_ds: Dataset containing extracted variable(s) to write to netCDF4 file.
+    :type extracted_ds: :py:class:`xarray.Dataset`
+
+    :param dict output_coords: Coordinate names to data array mapping for the extracted
+                               variable(s).
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Tuple of parameters for write_netcdf();
+             :kbd:`nc_path`: File path and name to write netCDF4 file to,
+             :kbd:`encoding`: Encoding dict to use for netCDF4 file write,
+             :kbd:`nc_format`: Format to use for netCDF4 file write.
+                               Defaults to kbd:`NETCDF4`.
+    :rtype: 3-tuple
+    """
+    encoding = {}
+    for coord in extracted_ds.coords:
+        encoding[coord] = calc_coord_encoding(
+            extracted_ds, coord, config, model_profile
+        )
+    for v_name, v_array in extracted_ds.data_vars.items():
+        encoding[v_name] = calc_var_encoding(v_array, output_coords, config)
+    nc_path = Path(config["extracted dataset"]["dest dir"]) / f"{extracted_ds.name}.nc"
+    nc_format = config["extracted dataset"].get("format", "NETCDF4")
+    logger.debug(
+        "prepared netCDF4 write params",
+        nc_path=nc_path,
+        encoding=encoding,
+        nc_format=nc_format,
+    )
+    return nc_path, encoding, nc_format
+
+
+def write_netcdf(extracted_ds, nc_path, encoding, nc_format):
+    """WRite the extracted variable(s) dataset to disk.
+
+    This function triggers the main dask task graph execution of the extraction process.
+
+    This function is separate from :py:func:`prep_netcdf_write` to simplify unit tests.
+
+    :param extracted_ds: Dataset containing extracted variable(s) to write to netCDF4 file.
+    :type extracted_ds: :py:class:`xarray.Dataset`
+
+    :param nc_path: File path and name to write netCDF4 file to.
+    :type nc_path: :py:class:`pathlib.Path`
+
+    :param dict encoding: Encoding to use for netCDF4 file write.
+
+    :param str nc_format: Format to use for netCDF4 file write.
+    """
+    extracted_ds.to_netcdf(
+        nc_path, format=nc_format, encoding=encoding, unlimited_dims="time"
+    )
+    logger.info("wrote netCDF4 file", nc_path=os.fspath(nc_path))
 
 
 # This stanza facilitates running the extract sub-command in a Python debugger
