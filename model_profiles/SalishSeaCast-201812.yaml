@@ -37,6 +37,9 @@ results archive:
       v velocity:
         file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
         depth coord: depthv
+      vertical turbulence:
+        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        depth coord: depthw
       w velocity:
         file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
         depth coord: depthw
@@ -59,6 +62,9 @@ results archive:
       v velocity:
         file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
         depth coord: depthv
+      vertical turbulence:
+        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        depth coord: depthw
       w velocity:
         file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
         depth coord: depthw
