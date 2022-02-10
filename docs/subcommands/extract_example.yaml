@@ -15,3 +15,7 @@ extract variables:
   - nitrate
 
 include lons lats: True
+
+extracted dataset:
+  name: SalishSeaCast_day_avg_diatoms
+  description: Day-averaged diatoms biomass and nitrate extracted from SalishSeaCast v201812 hindcast
