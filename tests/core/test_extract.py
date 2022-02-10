@@ -565,3 +565,105 @@ class TestCalcExtractedDataset:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extracted dataset metadata"
+
+
+class TestCalcCoordEncoding:
+    """Unit tests for calc_coord_encoding() function."""
+
+    @pytest.mark.parametrize(
+        "time_base, quanta, time_offset",
+        (
+            ("day", "days", "12:00:00"),
+            ("hour", "hours", "00:30:00"),
+            ("fortnight", "seconds", "00:30:00"),  # wildcard pattern test
+        ),
+    )
+    def test_time_coord(self, time_base, quanta, time_offset):
+        dataset = xarray.Dataset()
+        config = {
+            "dataset": {
+                "time base": time_base,
+            },
+            "extracted dataset": {},
+        }
+        model_profile = {"extraction time origin": "2015-01-01"}
+
+        encoding = extract.calc_coord_encoding(dataset, "time", config, model_profile)
+
+        expected = {
+            "dtype": numpy.single,
+            "units": f"{quanta} since 2015-01-01 {time_offset}",
+            "chunksizes": [1],
+            "zlib": True,
+            "_FillValue": None,
+        }
+        assert encoding == expected
+
+    def test_time_coord_no_deflate(self):
+        dataset = xarray.Dataset()
+        config = {
+            "dataset": {
+                "time base": "day",
+            },
+            "extracted dataset": {"deflate": False},
+        }
+        model_profile = {"extraction time origin": "2015-01-01"}
+
+        encoding = extract.calc_coord_encoding(dataset, "time", config, model_profile)
+
+        expected = {
+            "dtype": numpy.single,
+            "units": "days since 2015-01-01 12:00:00",
+            "chunksizes": [1],
+            "zlib": False,
+            "_FillValue": None,
+        }
+        assert encoding == expected
+
+    @pytest.mark.parametrize("deflate", (True, False))
+    def test_depth_coord(self, deflate):
+        dataset = xarray.Dataset(
+            coords={
+                "depth": numpy.arange(0, 4, 0.5),
+            }
+        )
+        config = {"extracted dataset": {"deflate": deflate}}
+        model_profile = {}
+
+        encoding = extract.calc_coord_encoding(dataset, "depth", config, model_profile)
+
+        expected = {
+            "dtype": numpy.single,
+            "chunksizes": [numpy.arange(0, 4, 0.5).size],
+            "zlib": deflate,
+        }
+        assert encoding == expected
+
+    @pytest.mark.parametrize(
+        "grid_index, deflate",
+        (
+            ("gridY", True),
+            ("gridY", False),
+            ("gridX", True),
+            ("gridX", False),
+        ),
+    )
+    def test_depth_coord(self, grid_index, deflate):
+        dataset = xarray.Dataset(
+            coords={
+                grid_index: numpy.arange(5),
+            }
+        )
+        config = {"extracted dataset": {"deflate": deflate}}
+        model_profile = {}
+
+        encoding = extract.calc_coord_encoding(
+            dataset, grid_index, config, model_profile
+        )
+
+        expected = {
+            "dtype": int,
+            "chunksizes": [numpy.arange(5).size],
+            "zlib": deflate,
+        }
+        assert encoding == expected
