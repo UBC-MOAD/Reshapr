@@ -76,6 +76,7 @@ class TestSalishSeaCast201812:
         "var_group, file_pattern, depth_coord",
         (
             ("biology", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
+            ("chemistry", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
             (
                 "physics tracers",
                 "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
@@ -97,6 +98,7 @@ class TestSalishSeaCast201812:
         "var_group, file_pattern, depth_coord",
         (
             ("biology", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
+            ("chemistry", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
             (
                 "physics tracers",
                 "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
