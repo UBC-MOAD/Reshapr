@@ -20,3 +20,5 @@ extracted dataset:
   name: SalishSeaCast_day_avg_diatoms
   description: Day-averaged diatoms biomass and nitrate extracted from SalishSeaCast v201812 hindcast
   deflate: True
+  format: NETCDF4
+  dest dir: /ocean/dlatorne/Atlantis/day-avg-diatoms/

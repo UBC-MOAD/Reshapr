@@ -727,3 +727,187 @@ class TestCalcVarEncoding:
             "zlib": deflate,
         }
         assert encoding == expected
+
+
+class TestPrepNetcdfWrite:
+    """Unit test for prep_netcdf_write() function."""
+
+    def test_nc_path(self, log_output, tmp_path):
+        extracted_ds = xarray.Dataset(
+            attrs={"name": "test"},
+        )
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        dest_dir = tmp_path / "dest_dir"
+        dest_dir.mkdir()
+        config = {
+            "extracted dataset": {
+                "dest dir": os.fspath(dest_dir),
+                "name": f"{extracted_ds.name}.nc",
+            }
+        }
+        model_profile = {}
+
+        nc_path, _, _ = extract.prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+
+        assert nc_path == dest_dir / f"{extracted_ds.name}.nc"
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
+        assert log_output.entries[0]["nc_path"] == dest_dir / f"{extracted_ds.name}.nc"
+
+    def test_encoding(self, log_output, tmp_path):
+        extracted_ds = xarray.Dataset(
+            coords={
+                "time": numpy.arange(2),
+                "depth": numpy.arange(0, 4, 0.5),
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
+            },
+            data_vars={
+                "diatoms": xarray.DataArray(
+                    name="diatoms",
+                    data=numpy.empty((2, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time": numpy.arange(2),
+                        "depth": numpy.arange(0, 4, 0.5),
+                        "gridY": numpy.arange(9),
+                        "gridX": numpy.arange(4),
+                    },
+                )
+            },
+            attrs={"name": "test"},
+        )
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        dest_dir = tmp_path / "dest_dir"
+        dest_dir.mkdir()
+        config = {
+            "dataset": {
+                "time base": "day",
+            },
+            "extracted dataset": {
+                "dest dir": os.fspath(dest_dir),
+                "name": f"{extracted_ds.name}.nc",
+            },
+        }
+        model_profile = {"extraction time origin": "2015-01-01"}
+
+        _, encoding, _ = extract.prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+
+        expected = {
+            "time": {
+                "dtype": numpy.single,
+                "units": "days since 2015-01-01 12:00:00",
+                "chunksizes": [1],
+                "zlib": True,
+                "_FillValue": None,
+            },
+            "depth": {
+                "dtype": numpy.single,
+                "chunksizes": [numpy.arange(0, 4, 0.5).size],
+                "zlib": True,
+            },
+            "gridY": {
+                "dtype": int,
+                "chunksizes": [numpy.arange(9).size],
+                "zlib": True,
+            },
+            "gridX": {
+                "dtype": int,
+                "chunksizes": [numpy.arange(4).size],
+                "zlib": True,
+            },
+            "diatoms": {
+                "dtype": numpy.single,
+                "chunksizes": [1, 8, 9, 4],
+                "zlib": True,
+            },
+        }
+        assert encoding == expected
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
+        assert log_output.entries[0]["encoding"] == expected
+
+    @pytest.mark.parametrize(
+        "format, expected",
+        (
+            ("NETCDF4", "NETCDF4"),
+            ("NETCDF4_CLASSIC", "NETCDF4_CLASSIC"),
+            ("NETCDF3_64BIT", "NETCDF3_64BIT"),
+            ("NETCDF3_CLASSIC", "NETCDF3_CLASSIC"),
+        ),
+    )
+    def test_nc_format(self, format, expected, log_output, tmp_path):
+        extracted_ds = xarray.Dataset(
+            attrs={"name": "test"},
+        )
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        dest_dir = tmp_path / "dest_dir"
+        dest_dir.mkdir()
+        config = {
+            "extracted dataset": {
+                "dest dir": os.fspath(dest_dir),
+                "name": f"{extracted_ds.name}.nc",
+                "format": format,
+            }
+        }
+        model_profile = {}
+
+        _, _, nc_format = extract.prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+
+        assert nc_format == expected
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
+        assert log_output.entries[0]["nc_format"] == expected
+
+    def test_default_nc_format(self, log_output, tmp_path):
+        extracted_ds = xarray.Dataset(
+            attrs={"name": "test"},
+        )
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        dest_dir = tmp_path / "dest_dir"
+        dest_dir.mkdir()
+        config = {
+            "extracted dataset": {
+                "dest dir": os.fspath(dest_dir),
+                "name": f"{extracted_ds.name}.nc",
+            }
+        }
+        model_profile = {}
+
+        _, _, nc_format = extract.prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+
+        assert nc_format == "NETCDF4"
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
+        assert log_output.entries[0]["nc_format"] == "NETCDF4"
