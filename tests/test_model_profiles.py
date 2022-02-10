@@ -82,6 +82,9 @@ class TestSalishSeaCast201812:
                 "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
                 "deptht",
             ),
+            ("u velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_U.nc", "depthu"),
+            ("v velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_V.nc", "depthv"),
+            ("w velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc", "depthw"),
         ),
     )
     def test_SalishSeaCast_201812_day_datasets(
@@ -109,6 +112,9 @@ class TestSalishSeaCast201812:
                 "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_prod_T.nc",
                 "deptht",
             ),
+            ("u velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc", "depthu"),
+            ("v velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc", "depthv"),
+            ("w velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc", "depthw"),
         ),
     )
     def test_SalishSeaCast_201812_hour_datasets(
