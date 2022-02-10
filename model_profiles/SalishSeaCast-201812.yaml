@@ -41,6 +41,9 @@ results archive:
       physics tracers:
         file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
         depth coord: deptht
+      primary production:
+        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_prod_T.nc"
+        depth coord: deptht
 
 useless variables:
   - time_centered
