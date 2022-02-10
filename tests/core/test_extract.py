@@ -648,7 +648,7 @@ class TestCalcCoordEncoding:
             ("gridX", False),
         ),
     )
-    def test_depth_coord(self, grid_index, deflate):
+    def test_grid_index_coord(self, grid_index, deflate):
         dataset = xarray.Dataset(
             coords={
                 grid_index: numpy.arange(5),
@@ -664,6 +664,66 @@ class TestCalcCoordEncoding:
         expected = {
             "dtype": int,
             "chunksizes": [numpy.arange(5).size],
+            "zlib": deflate,
+        }
+        assert encoding == expected
+
+
+class TestCalcVarEncoding:
+    """Unit tests for calc_var_encoding() function."""
+
+    @pytest.mark.parametrize("deflate", (True, False))
+    def test_4d_var(self, deflate):
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {"extracted dataset": {"deflate": deflate}}
+        var = xarray.DataArray(
+            name="diatoms",
+            data=numpy.empty((2, 8, 9, 4), dtype=numpy.single),
+            coords={
+                "time": numpy.arange(2),
+                "depth": numpy.arange(0, 4, 0.5),
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
+            },
+        )
+
+        encoding = extract.calc_var_encoding(var, output_coords, config)
+
+        expected = {
+            "dtype": numpy.single,
+            "chunksizes": [1, 8, 9, 4],
+            "zlib": deflate,
+        }
+        assert encoding == expected
+
+    @pytest.mark.parametrize("deflate", (True, False))
+    def test_2d_var(self, deflate):
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {"extracted dataset": {"deflate": deflate}}
+        var = xarray.DataArray(
+            name="longitude",
+            data=numpy.empty((9, 4), dtype=numpy.single),
+            coords={
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
+            },
+        )
+
+        encoding = extract.calc_var_encoding(var, output_coords, config)
+
+        expected = {
+            "dtype": numpy.single,
+            "chunksizes": [9, 4],
             "zlib": deflate,
         }
         assert encoding == expected

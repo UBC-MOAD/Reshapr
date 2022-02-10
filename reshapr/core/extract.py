@@ -599,6 +599,37 @@ def calc_coord_encoding(ds, coord, config, model_profile):
             }
 
 
+def calc_var_encoding(var, output_coords, config):
+    """Construct the netCDF4 encoding dictionary for a variable.
+
+    :param var: Variable data array.
+    :type var: :py:class:`xarray.DataArray`
+
+    :param dict output_coords: Coordinate names to data array mapping for the extracted
+                               variable(s).
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :return: netCDF4 encoding for coordinate
+    :rtype: dict
+    """
+    chunksizes = []
+    for name in output_coords:
+        try:
+            chunksizes.append(var.coords[name].size)
+        except KeyError:
+            # Handle variables that have fewer than the full set of output coordinates;
+            # e.g. lons and lats that only have gridY and gridX coordinates
+            pass
+    if "time" in var.coords:
+        chunksizes[0] = 1
+    return {
+        "dtype": numpy.single,
+        "chunksizes": chunksizes,
+        "zlib": config["extracted dataset"].get("deflate", True),
+    }
+
+
 # This stanza facilitates running the extract sub-command in a Python debugger
 if __name__ == "__main__":
     config_file = Path(sys.argv[1])
