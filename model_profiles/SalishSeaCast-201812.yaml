@@ -25,9 +25,15 @@ results archive:
       biology:
         file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
         depth coord: deptht
+      physics tracers:
+        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+        depth coord: deptht
     hour:
       biology:
         file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+        depth coord: deptht
+      physics tracers:
+        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
         depth coord: deptht
 
 useless variables:
