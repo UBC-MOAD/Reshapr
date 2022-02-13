@@ -17,6 +17,8 @@
 
 """Command-line interface for the extract sub-command.
 """
+from pathlib import Path
+
 import click
 
 import reshapr.core.extract
@@ -30,7 +32,9 @@ import reshapr.core.extract
 )
 @click.argument(
     "config_file",
-    type=click.Path(exists=True, readable=True, file_okay=True, dir_okay=False),
+    type=click.Path(
+        exists=True, readable=True, file_okay=True, dir_okay=False, path_type=Path
+    ),
 )
 def extract(config_file):
     """Command-line interface for :py:func:`reshapr.core.extract.extract`.
