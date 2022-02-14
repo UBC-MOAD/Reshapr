@@ -23,7 +23,10 @@ import pytest
 import yaml
 
 MODEL_PROFILES_DIR = Path(__file__).parent.parent / "model_profiles"
-MODEL_PROFILES = (Path("SalishSeaCast-201812.yaml"),)
+MODEL_PROFILES = (
+    Path("SalishSeaCast-201812.yaml"),
+    Path("unused-variables.yaml"),
+)
 
 
 class TestModelProfiles:
@@ -35,6 +38,9 @@ class TestModelProfiles:
 
     @pytest.mark.parametrize("model_profile_yaml", MODEL_PROFILES)
     def test_required_items(self, model_profile_yaml):
+        if model_profile_yaml == Path("unused-variables.yaml"):
+            # unused-variables.yaml isn't a model profile, it just lives with them
+            return
         with (MODEL_PROFILES_DIR / model_profile_yaml).open("rt") as f:
             model_profile = yaml.safe_load(f)
 
@@ -44,6 +50,17 @@ class TestModelProfiles:
         assert model_profile["results archive"]["datasets"] is not None
         assert model_profile["time coord"] is not None
         assert model_profile["chunk size"] is not None
+
+    def test_unused_variables(self):
+        with (MODEL_PROFILES_DIR / "unused-variables.yaml").open("rt") as f:
+            unused_vars = yaml.safe_load(f)
+
+        expected = [
+            "time_centered",
+            "nav_lon",
+            "nav_lat",
+        ]
+        assert unused_vars == expected
 
 
 class TestSalishSeaCast201812:
@@ -66,11 +83,6 @@ class TestSalishSeaCast201812:
             "x": 398,
         }
         assert model_profile["chunk size"] == expected_chunk_size
-        assert model_profile["useless variables"] == [
-            "time_centered",
-            "nav_lon",
-            "nav_lat",
-        ]
 
     @pytest.mark.parametrize(
         "var_group, file_pattern, depth_coord",
