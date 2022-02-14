@@ -1,0 +1,25 @@
+# conda environment description file for Reshapr package user environment
+#
+# Create a conda environment for using of the package with:
+#
+#   $ conda env create -f Reshapr/envs/environment-user.yaml
+#   $ conda activate reshapr
+#   (reshapr)$ python3 -m pip install --editable Reshapr
+
+name: reshapr
+
+channels:
+  - conda-forge
+  - nodefaults
+
+dependencies:
+  - arrow
+  - click
+  - dask
+  - netCDF4
+  - pip
+  - python=3.10
+  - pyyaml
+  - rich
+  - structlog
+  - xarray
