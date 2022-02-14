@@ -59,7 +59,7 @@ class TestLoadConfig:
         with pytest.raises(SystemExit) as exc_info:
             extract._load_config(nonexistent_config_yaml)
 
-        assert exc_info.value.code == 1
+        assert exc_info.value.code == 2
         assert log_output.entries[0]["log_level"] == "error"
         assert log_output.entries[0]["config_file"] == os.fspath(
             nonexistent_config_yaml
@@ -120,7 +120,7 @@ class TestLoadModelProfile:
         with pytest.raises(SystemExit) as exc_info:
             extract._load_model_profile(nonexistent_model_profile_yaml)
 
-        assert exc_info.value.code == 1
+        assert exc_info.value.code == 2
         assert log_output.entries[0]["log_level"] == "error"
         assert log_output.entries[0]["model_profile_yaml"] == os.fspath(
             nonexistent_model_profile_yaml
@@ -133,7 +133,7 @@ class TestLoadModelProfile:
         with pytest.raises(SystemExit) as exc_info:
             extract._load_model_profile(nonexistent_model_profile_yaml)
 
-        assert exc_info.value.code == 1
+        assert exc_info.value.code == 2
         assert log_output.entries[0]["log_level"] == "error"
         model_profiles_path = Path(__file__).parent.parent.parent / "model_profiles"
         assert log_output.entries[0]["model_profile_yaml"] == os.fspath(
@@ -158,7 +158,7 @@ class TestLoadModelProfile:
         with pytest.raises(SystemExit) as exc_info:
             extract._load_model_profile(model_profile_yaml)
 
-        assert exc_info.value.code == 1
+        assert exc_info.value.code == 2
         assert log_output.entries[1]["log_level"] == "error"
         assert log_output.entries[1]["model_profile_yaml"] == os.fspath(
             model_profile_yaml

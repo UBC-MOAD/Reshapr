@@ -78,7 +78,7 @@ def _load_config(config_yaml):
             config = yaml.safe_load(f)
     except FileNotFoundError:
         log.error("config file not found")
-        raise SystemExit(1)
+        raise SystemExit(2)
     log.debug("loaded config")
     return config
 
@@ -112,13 +112,13 @@ def _load_model_profile(model_profile_yaml):
                 model_profile = yaml.safe_load(f)
         except FileNotFoundError:
             log.error("model profile file not found")
-            raise SystemExit(1)
+            raise SystemExit(2)
     log.debug("loaded model profile")
     results_archive = Path(model_profile["results archive"]["path"])
     log = log.bind(results_archive=os.fspath(results_archive))
     if not results_archive.exists():
         log.error("model results archive not found")
-        raise SystemExit(1)
+        raise SystemExit(2)
     return model_profile
 
 
@@ -262,7 +262,7 @@ def get_dask_client(dask_config_yaml):
                 return client
             except TypeError:
                 log.error("dask cluster config file not found")
-                raise SystemExit(1)
+                raise SystemExit(2)
             except ValueError:
                 log.error(
                     "unrecognized dask cluster config; expected YAML file path or host_ip:port"
