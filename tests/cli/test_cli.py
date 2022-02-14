@@ -52,5 +52,5 @@ class TestExtract:
             )
         structlog.reset_defaults()
 
-        assert result.exit_code == 1
+        assert result.exit_code == 2
         assert isinstance(result.exception, SystemExit)

@@ -69,7 +69,7 @@ class TestGetDaskClient:
         with pytest.raises(SystemExit) as exc_info:
             get_dask_client(dask_config_yaml)
 
-        assert exc_info.value.code == 1
+        assert exc_info.value.code == 2
         assert log_output.entries[0]["log_level"] == "error"
         assert log_output.entries[0]["dask_config_yaml"] == os.fspath(dask_config_yaml)
         assert log_output.entries[0]["event"] == "dask cluster config file not found"
@@ -79,7 +79,7 @@ class TestGetDaskClient:
         with pytest.raises(SystemExit) as exc_info:
             get_dask_client(nonexistent_dask_config_yaml)
 
-        assert exc_info.value.code == 1
+        assert exc_info.value.code == 2
         assert log_output.entries[0]["log_level"] == "error"
         assert log_output.entries[0]["dask_config_yaml"] == os.fspath(
             nonexistent_dask_config_yaml
