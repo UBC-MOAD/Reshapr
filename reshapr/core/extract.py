@@ -308,11 +308,17 @@ def open_dataset(ds_paths, chunk_size, config, model_profile):
     :return: Multi-file dataset.
     :rtype: :py:class:`xarray.Dataset`
     """
+    unused_vars_yaml = (
+        Path(__file__).parent.parent.parent / "model_profiles" / "unused-variables.yaml"
+    )
+    with unused_vars_yaml.open("rt") as f:
+        unused_vars = yaml.safe_load(f)
+    drop_vars = {var for var in unused_vars}
     extract_vars = {var for var in config["extract variables"]}
     # Use 1st dataset path to calculate the set of variables to drop
     with xarray.open_dataset(ds_paths[0], chunks=chunk_size) as ds:
-        drop_vars = {var for var in ds.data_vars} - extract_vars
-    drop_vars.update({var for var in model_profile["useless variables"]})
+        drop_vars.update(var for var in ds.data_vars)
+    drop_vars -= extract_vars
     ds = xarray.open_mfdataset(
         ds_paths, chunks=chunk_size, drop_variables=drop_vars, parallel=True
     )

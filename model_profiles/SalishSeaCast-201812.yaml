@@ -77,8 +77,3 @@ results archive:
       w velocity:
         file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
         depth coord: depthw
-
-useless variables:
-  - time_centered
-  - nav_lon
-  - nav_lat

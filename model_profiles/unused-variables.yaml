@@ -1,0 +1,18 @@
+# List of dataset variables that are always dropped because they have no purpose
+# in Reshapr operations.
+# Dropping them when datasets are opened reduces the memory size of the dask tasks.
+#
+# Note that the `drop_variables` arg of xarray.open_mfdataset() is robust so that
+# variables included in this list that do not appear in a dataset do not cause problems.
+
+
+# NEMO generated variable that contains the same information as `time_counter`
+- time_centered
+
+# NEMO generated longitude and latitude fields that contain -1 values for land
+# processor grid points when land processor elimination is used.
+# If you want lon/lat fields in your dataset, use `include lons lats: True` in your
+# processing configuration YAML file to get the fields from the source given by
+# the dataset's `geo ref dataset` key.
+- nav_lon
+- nav_lat
