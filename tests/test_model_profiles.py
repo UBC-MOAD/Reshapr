@@ -78,6 +78,11 @@ class TestSalishSeaCast201812:
             ("biology", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
             ("chemistry", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
             (
+                "grazing and mortality",
+                "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_dia2_T.nc",
+                "deptht",
+            ),
+            (
                 "physics tracers",
                 "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
                 "deptht",

@@ -28,6 +28,9 @@ results archive:
       chemistry:
         file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
         depth coord: deptht
+      grazing and mortality:
+        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_dia2_T.nc"
+        depth coord: deptht
       physics tracers:
         file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
         depth coord: deptht
