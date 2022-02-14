@@ -75,6 +75,7 @@ class TestSalishSeaCast201812:
     @pytest.mark.parametrize(
         "var_group, file_pattern, depth_coord",
         (
+            ("auxiliary", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
             ("biology", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
             ("chemistry", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
             (
@@ -110,6 +111,7 @@ class TestSalishSeaCast201812:
     @pytest.mark.parametrize(
         "var_group, file_pattern, depth_coord",
         (
+            ("auxiliary", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
             ("biology", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
             ("chemistry", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
             (
