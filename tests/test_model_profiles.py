@@ -72,24 +72,74 @@ class TestSalishSeaCast201812:
             "nav_lat",
         ]
 
-    def test_SalishSeaCast_201812_day_datasets(self):
+    @pytest.mark.parametrize(
+        "var_group, file_pattern, depth_coord",
+        (
+            ("auxiliary", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
+            ("biology", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
+            ("chemistry", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
+            (
+                "grazing and mortality",
+                "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_dia2_T.nc",
+                "deptht",
+            ),
+            (
+                "physics tracers",
+                "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
+                "deptht",
+            ),
+            ("u velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_U.nc", "depthu"),
+            ("v velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_V.nc", "depthv"),
+            (
+                "vertical turbulence",
+                "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
+                "depthw",
+            ),
+            ("w velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc", "depthw"),
+        ),
+    )
+    def test_SalishSeaCast_201812_day_datasets(
+        self, var_group, file_pattern, depth_coord
+    ):
         with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
             model_profile = yaml.safe_load(f)
         day_datasets = model_profile["results archive"]["datasets"]["day"]
 
-        assert (
-            day_datasets["biology"]["file pattern"]
-            == "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
-        )
-        assert day_datasets["biology"]["depth coord"] == "deptht"
+        assert day_datasets[var_group]["file pattern"] == file_pattern
+        assert day_datasets[var_group]["depth coord"] == depth_coord
 
-    def test_SalishSeaCast_201812_hour_datasets(self):
+    @pytest.mark.parametrize(
+        "var_group, file_pattern, depth_coord",
+        (
+            ("auxiliary", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
+            ("biology", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
+            ("chemistry", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
+            (
+                "physics tracers",
+                "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
+                "deptht",
+            ),
+            (
+                "primary production",
+                "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_prod_T.nc",
+                "deptht",
+            ),
+            ("u velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc", "depthu"),
+            ("v velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc", "depthv"),
+            (
+                "vertical turbulence",
+                "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
+                "depthw",
+            ),
+            ("w velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc", "depthw"),
+        ),
+    )
+    def test_SalishSeaCast_201812_hour_datasets(
+        self, var_group, file_pattern, depth_coord
+    ):
         with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
             model_profile = yaml.safe_load(f)
         hour_datasets = model_profile["results archive"]["datasets"]["hour"]
 
-        assert (
-            hour_datasets["biology"]["file pattern"]
-            == "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
-        )
-        assert hour_datasets["biology"]["depth coord"] == "deptht"
+        assert hour_datasets[var_group]["file pattern"] == file_pattern
+        assert hour_datasets[var_group]["depth coord"] == depth_coord
