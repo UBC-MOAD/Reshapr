@@ -23,7 +23,7 @@ import textwrap
 import structlog
 from click.testing import CliRunner
 
-import cli.commands
+from reshapr.cli.commands import reshapr
 
 
 class TestExtract:
@@ -47,9 +47,7 @@ class TestExtract:
 
         runner = CliRunner()
         with runner.isolated_filesystem(temp_dir=tmp_path):
-            result = runner.invoke(
-                cli.commands.reshapr, ["extract", os.fspath(config_yaml)]
-            )
+            result = runner.invoke(reshapr, ["extract", os.fspath(config_yaml)])
         structlog.reset_defaults()
 
         assert result.exit_code == 2
