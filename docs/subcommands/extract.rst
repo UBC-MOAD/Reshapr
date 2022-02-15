@@ -25,6 +25,7 @@ Contents
 
 * :ref:`ReshaprExtractYAMLFile`
 * :ref:`ReshaprDaskClusterYAMLFile`
+* :ref:`ReshaprModelProfileYAMLFile`
 
 
 .. _ReshaprExtractYAMLFile:
@@ -37,6 +38,8 @@ Example:
 .. literalinclude:: extract_example.yaml
    :language: yaml
 
+Details: Coming soon...
+
 
 .. _ReshaprDaskClusterYAMLFile:
 
@@ -48,6 +51,8 @@ Example:
 .. literalinclude:: ../../cluster_configs/salish_cluster.yaml
    :language: yaml
 
+Details: Coming soon...
+
 
 .. _ReshaprModelProfileYAMLFile:
 
@@ -58,3 +63,5 @@ Example:
 
 .. literalinclude:: ../../model_profiles/SalishSeaCast-201812.yaml
    :language: yaml
+
+Details: Coming soon...
