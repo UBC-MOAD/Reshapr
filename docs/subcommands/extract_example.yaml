@@ -18,13 +18,27 @@ extract variables:
 # entire variable field
 selection:
   # Time interval defaults to 1
-  time interval: 3  # multiple of dataset: time base
+  time interval: 12  # multiple of dataset: time base
+  grid y:
+    # y min defaults to 0
+    y min: 600
+    # y max defaults to end of the y grid
+    y max: 700
+    # y interval defaults to 1
+    y interval: 10  # multiple of grid y index; e.g. 10 means every 10th grid point
+  grid x:
+    # x min defaults to 0
+    x min: 100
+    # x max defaults to the end of the x grid
+    x max: 300
+    # x interval defaults to 1
+    x interval: 5  # multiple of grid x index; e.g. 5 means every 5th grid point
 
 include lons lats: True
 
 extracted dataset:
-  name: SalishSeaCast_hour_avg_biology_3h
-  description: Hour-averaged diatoms biomass and nitrate every 3rd hour extracted from SalishSeaCast v201812 hindcast
+  name: SalishSeaCast_hour_avg_biology_12h
+  description: Hour-averaged diatoms biomass and nitrate every 12th hour extracted from SalishSeaCast v201812 hindcast
   deflate: True
   format: NETCDF4
   dest dir: /ocean/dlatorne/hour-avg-biology/

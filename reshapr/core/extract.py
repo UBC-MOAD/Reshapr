@@ -358,7 +358,8 @@ def calc_output_coords(source_dataset, config, model_profile):
         ),
     }
     time_interval = config.get("selection", {}).get("time interval", 1)
-    time_selector = {model_profile["time coord"]: slice(None, None, time_interval)}
+    # stop=None in slice() means the length of the array without having to know what that is
+    time_selector = {model_profile["time coord"]: slice(0, None, time_interval)}
     times = create_dataarray(
         "time",
         source_dataset[model_profile["time coord"]].isel(time_selector),
@@ -389,9 +390,14 @@ def calc_output_coords(source_dataset, config, model_profile):
     )
     logger.debug("extraction depth coordinate", depth=depths)
 
+    y_min = config.get("selection", {}).get("grid y", {}).get("y min", 0)
+    y_max = config.get("selection", {}).get("grid y", {}).get("y max", None)
+    y_interval = config.get("selection", {}).get("grid y", {}).get("y interval", 1)
+    y_selector = slice(y_min, y_max, y_interval)
+    y_coord = model_profile["y coord"]
     y_indices = create_dataarray(
         "gridY",
-        source_dataset.y,
+        source_dataset.y.isel({y_coord: y_selector}),
         attrs={
             "standard_name": "y",
             "long_name": "Grid Y",
@@ -401,9 +407,14 @@ def calc_output_coords(source_dataset, config, model_profile):
     )
     logger.debug("extraction y coordinate", y_index=y_indices)
 
+    x_min = config.get("selection", {}).get("grid x", {}).get("x min", 0)
+    x_max = config.get("selection", {}).get("grid x", {}).get("x max", None)
+    x_interval = config.get("selection", {}).get("grid x", {}).get("x interval", 1)
+    x_selector = slice(x_min, x_max, x_interval)
+    x_coord = model_profile["x coord"]
     x_indices = create_dataarray(
         "gridX",
-        source_dataset.x,
+        source_dataset.x.isel({x_coord: x_selector}),
         attrs={
             "standard_name": "x",
             "long_name": "Grid X",
@@ -432,9 +443,23 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
     :return: Extracted variable data array(s).
     :rtype: list
     """
-    extracted_vars = []
     time_interval = config.get("selection", {}).get("time interval", 1)
-    selector = {model_profile["time coord"]: slice(None, None, time_interval)}
+    # stop=None in slice() means the length of the array without having to know what that is
+    time_selector = slice(0, None, time_interval)
+    y_min = config.get("selection", {}).get("grid y", {}).get("y min", 0)
+    y_max = config.get("selection", {}).get("grid y", {}).get("y max", None)
+    y_interval = config.get("selection", {}).get("grid y", {}).get("y interval", 1)
+    y_selector = slice(y_min, y_max, y_interval)
+    x_min = config.get("selection", {}).get("grid x", {}).get("x min", 0)
+    x_max = config.get("selection", {}).get("grid x", {}).get("x max", None)
+    x_interval = config.get("selection", {}).get("grid x", {}).get("x interval", 1)
+    x_selector = slice(x_min, x_max, x_interval)
+    selector = {
+        model_profile["time coord"]: time_selector,
+        model_profile["y coord"]: y_selector,
+        model_profile["x coord"]: x_selector,
+    }
+    extracted_vars = []
     for name, var in source_dataset.data_vars.items():
         extracted_var = create_dataarray(
             name,
@@ -452,10 +477,16 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
         return extracted_vars
 
     # Add longitude and latitude variables from geo ref dataset
-    with xarray.open_dataset(model_profile["geo ref dataset"]) as grid_ds:
+    with xarray.open_dataset(model_profile["geo ref dataset"]["path"]) as grid_ds:
+        y_coord = model_profile["geo ref dataset"]["y coord"]
+        x_coord = model_profile["geo ref dataset"]["x coord"]
+        selector = {
+            y_coord: y_selector,
+            x_coord: x_selector,
+        }
         lons = create_dataarray(
             "longitude",
-            grid_ds.longitude,
+            grid_ds.longitude.isel(selector),
             attrs={
                 "standard_name": "longitude",
                 "long_name": "Longitude",
@@ -471,7 +502,7 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
 
         lats = create_dataarray(
             "latitude",
-            grid_ds.latitude,
+            grid_ds.latitude.isel(selector),
             attrs={
                 "standard_name": "latitude",
                 "long_name": "Latitude",
