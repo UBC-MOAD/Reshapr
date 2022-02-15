@@ -2,7 +2,7 @@
 
 dataset:
   model profile: SalishSeaCast-201812.yaml
-  time base: day
+  time base: hour
   variables group: biology
 
 dask cluster: salish_cluster.yaml
@@ -14,11 +14,17 @@ extract variables:
   - diatoms
   - nitrate
 
+# Optional section to specify temporal and spatial selection of a subset of the
+# entire variable field
+selection:
+  # Time interval defaults to 1
+  time interval: 3  # multiple of dataset: time base
+
 include lons lats: True
 
 extracted dataset:
-  name: SalishSeaCast_day_avg_diatoms
-  description: Day-averaged diatoms biomass and nitrate extracted from SalishSeaCast v201812 hindcast
+  name: SalishSeaCast_hour_avg_biology_3h
+  description: Hour-averaged diatoms biomass and nitrate every 3rd hour extracted from SalishSeaCast v201812 hindcast
   deflate: True
   format: NETCDF4
-  dest dir: /ocean/dlatorne/Atlantis/day-avg-diatoms/
+  dest dir: /ocean/dlatorne/hour-avg-biology/
