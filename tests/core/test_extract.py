@@ -384,6 +384,50 @@ class TestCalcOutputCoords:
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extraction time coordinate"
 
+    @pytest.mark.parametrize(
+        "time_base, example",
+        (
+            ("day", "8 February 2022 have a time value of 2022-02-08 12:00:00Z"),
+            (
+                "hour",
+                "the first hour of 8 February 2022 have a time value of 2022-02-08 00:30:00Z",
+            ),
+        ),
+    )
+    def test_time_coord_selection(
+        self, time_base, example, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": time_base,
+                "variables group": "biology",
+            },
+            "selection": {
+                "time interval": 3,
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["time"].name == "time"
+        assert numpy.array_equal(
+            output_coords["time"].data,
+            source_dataset.time_counter.isel({"time_counter": slice(None, None, 3)}),
+        )
+        assert output_coords["time"].attrs["standard_name"] == "time"
+        assert output_coords["time"].attrs["long_name"] == "Time Axis"
+        expected = (
+            f"time values are UTC at the centre of the intervals over which the "
+            f"calculated model results are averaged; e.g. the field average values for "
+            f"{example}"
+        )
+        assert output_coords["time"].attrs["comment"] == expected
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extraction time coordinate"
+
     def test_depth_coord(self, source_dataset, model_profile, log_output):
         extract_config = {
             "dataset": {
@@ -465,7 +509,7 @@ class TestCalcExtractedVars:
     def fixture_source_dataset(self):
         return xarray.Dataset(
             coords={
-                "time_counter": numpy.arange(2),
+                "time_counter": numpy.arange(4),
                 "deptht": numpy.arange(0, 4, 0.5),
                 "y": numpy.arange(9),
                 "x": numpy.arange(4),
@@ -473,9 +517,9 @@ class TestCalcExtractedVars:
             data_vars={
                 "diatoms": xarray.DataArray(
                     name="diatoms",
-                    data=numpy.ones((2, 8, 9, 4), dtype=numpy.single),
+                    data=numpy.ones((4, 8, 9, 4), dtype=numpy.single),
                     coords={
-                        "time_counter": numpy.arange(2),
+                        "time_counter": numpy.arange(4),
                         "deptht": numpy.arange(0, 4, 0.5),
                         "y": numpy.arange(9),
                         "x": numpy.arange(4),
@@ -491,13 +535,53 @@ class TestCalcExtractedVars:
 
     def test_extract_var(self, source_dataset, log_output):
         output_coords = {
-            "time": numpy.arange(2),
+            "time": numpy.arange(4),
             "depth": numpy.arange(0, 4, 0.5),
             "gridY": numpy.arange(9),
             "gridX": numpy.arange(4),
         }
         config = {}
-        model_profile = {}
+        model_profile = {
+            "time coord": "time_counter",
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "diatoms"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((4, 8, 9, 4), dtype=numpy.single)
+        )
+        assert (
+            extracted_vars[0].attrs["standard_name"]
+            == "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water"
+        )
+        assert extracted_vars[0].attrs["long_name"] == "Diatoms Concentration"
+        assert extracted_vars[0].attrs["units"] == "mmol m-3"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted diatoms"
+
+    def test_extract_var_time_selection(self, source_dataset, log_output):
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {
+            "selection": {
+                "time interval": 2,
+            },
+        }
+        model_profile = {
+            "time coord": "time_counter",
+        }
 
         extracted_vars = extract.calc_extracted_vars(
             source_dataset, output_coords, config, model_profile

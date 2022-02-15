@@ -357,9 +357,11 @@ def calc_output_coords(source_dataset, config, model_profile):
             "a time value of 2022-02-08 00:30:00Z"
         ),
     }
+    time_interval = config.get("selection", {}).get("time interval", 1)
+    time_selector = {model_profile["time coord"]: slice(None, None, time_interval)}
     times = create_dataarray(
         "time",
-        source_dataset[model_profile["time coord"]],
+        source_dataset[model_profile["time coord"]].isel(time_selector),
         attrs={
             "standard_name": "time",
             "long_name": "Time Axis",
@@ -431,10 +433,12 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
     :rtype: list
     """
     extracted_vars = []
+    time_interval = config.get("selection", {}).get("time interval", 1)
+    selector = {model_profile["time coord"]: slice(None, None, time_interval)}
     for name, var in source_dataset.data_vars.items():
         extracted_var = create_dataarray(
             name,
-            var,
+            var.isel(selector),
             attrs={
                 "standard_name": var.attrs["standard_name"],
                 "long_name": var.attrs["long_name"],
