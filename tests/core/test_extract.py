@@ -321,6 +321,8 @@ class TestCalcOutputCoords:
     def fixture_model_profile(self):
         return {
             "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
             "results archive": {
                 "datasets": {
                     "day": {
@@ -414,7 +416,7 @@ class TestCalcOutputCoords:
         assert output_coords["time"].name == "time"
         assert numpy.array_equal(
             output_coords["time"].data,
-            source_dataset.time_counter.isel({"time_counter": slice(None, None, 3)}),
+            source_dataset.time_counter.isel(time_counter=slice(0, None, 3)),
         )
         assert output_coords["time"].attrs["standard_name"] == "time"
         assert output_coords["time"].attrs["long_name"] == "Time Axis"
@@ -476,6 +478,108 @@ class TestCalcOutputCoords:
         assert log_output.entries[2]["log_level"] == "debug"
         assert log_output.entries[2]["event"] == "extraction y coordinate"
 
+    def test_y_index_coord_selection_y_min(
+        self, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "grid y": {
+                    "y min": 600,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["gridY"].name == "gridY"
+        assert numpy.array_equal(
+            output_coords["gridY"].data, source_dataset.y.isel(y=slice(600, 898))
+        )
+        assert output_coords["gridY"].attrs["standard_name"] == "y"
+        assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
+        assert output_coords["gridY"].attrs["units"] == "count"
+        assert (
+            output_coords["gridY"].attrs["comment"]
+            == "gridY values are grid indices in the model y-direction"
+        )
+
+        assert log_output.entries[2]["log_level"] == "debug"
+        assert log_output.entries[2]["event"] == "extraction y coordinate"
+
+    def test_y_index_coord_selection_y_max(
+        self, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "grid y": {
+                    "y max": 300,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["gridY"].name == "gridY"
+        assert numpy.array_equal(
+            output_coords["gridY"].data, source_dataset.y.isel(y=slice(0, 300))
+        )
+        assert output_coords["gridY"].attrs["standard_name"] == "y"
+        assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
+        assert output_coords["gridY"].attrs["units"] == "count"
+        assert (
+            output_coords["gridY"].attrs["comment"]
+            == "gridY values are grid indices in the model y-direction"
+        )
+
+        assert log_output.entries[2]["log_level"] == "debug"
+        assert log_output.entries[2]["event"] == "extraction y coordinate"
+
+    def test_y_index_coord_selection_y_interval(
+        self, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "grid y": {
+                    "y interval": 10,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["gridY"].name == "gridY"
+        assert numpy.array_equal(
+            output_coords["gridY"].data, source_dataset.y.isel(y=slice(0, 898, 10))
+        )
+        assert output_coords["gridY"].attrs["standard_name"] == "y"
+        assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
+        assert output_coords["gridY"].attrs["units"] == "count"
+        assert (
+            output_coords["gridY"].attrs["comment"]
+            == "gridY values are grid indices in the model y-direction"
+        )
+
+        assert log_output.entries[2]["log_level"] == "debug"
+        assert log_output.entries[2]["event"] == "extraction y coordinate"
+
     def test_x_index_coord(self, source_dataset, model_profile, log_output):
         extract_config = {
             "dataset": {
@@ -490,6 +594,108 @@ class TestCalcOutputCoords:
 
         assert output_coords["gridX"].name == "gridX"
         assert numpy.array_equal(output_coords["gridX"].data, source_dataset.x.data)
+        assert output_coords["gridX"].attrs["standard_name"] == "x"
+        assert output_coords["gridX"].attrs["long_name"] == "Grid X"
+        assert output_coords["gridX"].attrs["units"] == "count"
+        assert (
+            output_coords["gridX"].attrs["comment"]
+            == "gridX values are grid indices in the model x-direction"
+        )
+
+        assert log_output.entries[3]["log_level"] == "debug"
+        assert log_output.entries[3]["event"] == "extraction x coordinate"
+
+    def test_x_index_coord_selection_x_min(
+        self, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "grid x": {
+                    "x min": 100,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["gridX"].name == "gridX"
+        assert numpy.array_equal(
+            output_coords["gridX"].data, source_dataset.x.isel(x=slice(100, 398))
+        )
+        assert output_coords["gridX"].attrs["standard_name"] == "x"
+        assert output_coords["gridX"].attrs["long_name"] == "Grid X"
+        assert output_coords["gridX"].attrs["units"] == "count"
+        assert (
+            output_coords["gridX"].attrs["comment"]
+            == "gridX values are grid indices in the model x-direction"
+        )
+
+        assert log_output.entries[3]["log_level"] == "debug"
+        assert log_output.entries[3]["event"] == "extraction x coordinate"
+
+    def test_x_index_coord_selection_x_max(
+        self, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "grid x": {
+                    "x max": 300,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["gridX"].name == "gridX"
+        assert numpy.array_equal(
+            output_coords["gridX"].data, source_dataset.x.isel(x=slice(0, 300))
+        )
+        assert output_coords["gridX"].attrs["standard_name"] == "x"
+        assert output_coords["gridX"].attrs["long_name"] == "Grid X"
+        assert output_coords["gridX"].attrs["units"] == "count"
+        assert (
+            output_coords["gridX"].attrs["comment"]
+            == "gridX values are grid indices in the model x-direction"
+        )
+
+        assert log_output.entries[3]["log_level"] == "debug"
+        assert log_output.entries[3]["event"] == "extraction x coordinate"
+
+    def test_x_index_coord_selection_x_interval(
+        self, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "grid x": {
+                    "x interval": 2,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["gridX"].name == "gridX"
+        assert numpy.array_equal(
+            output_coords["gridX"].data, source_dataset.x.isel(x=slice(0, 398, 2))
+        )
         assert output_coords["gridX"].attrs["standard_name"] == "x"
         assert output_coords["gridX"].attrs["long_name"] == "Grid X"
         assert output_coords["gridX"].attrs["units"] == "count"
@@ -543,6 +749,8 @@ class TestCalcExtractedVars:
         config = {}
         model_profile = {
             "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
         }
 
         extracted_vars = extract.calc_extracted_vars(
@@ -581,6 +789,8 @@ class TestCalcExtractedVars:
         }
         model_profile = {
             "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
         }
 
         extracted_vars = extract.calc_extracted_vars(
