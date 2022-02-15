@@ -15,16 +15,11 @@
 .. SPDX-License-Identifier: Apache-2.0
 
 
-*******************************
-Design and Implementation Notes
-*******************************
-
-This section is a collection of notes about the design and implementation of :kbd:`Reshapr`.
+*********
+Use Cases
+*********
 
 .. toctree::
    :caption: Contents:
 
-   motivation
-   history
-   use_cases/index
-   pkg_structure
+   atlantis_diatoms_nudge

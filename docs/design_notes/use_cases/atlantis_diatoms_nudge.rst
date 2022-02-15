@@ -15,10 +15,6 @@
 .. SPDX-License-Identifier: Apache-2.0
 
 
-*********
-Use Cases
-*********
-
 .. _DiatomsNudgingForAtlantisEcosystemModel:
 
 Diatoms Nudging for Atlantis Ecosystem Model
