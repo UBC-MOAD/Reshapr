@@ -72,3 +72,47 @@ The storage attributes of the file(s) are:
 * the chunk size for diatoms is (1, 40, 898, 398);
   i.e. the full 3D field per day
 * the chunk size for the coordinates and the other variables is their array sizes
+
+
+Execution
+---------
+
+The task described above can be accomplished using :kbd:`Reshapr` on the MOAD compute
+server :kbd:`salish` with the command:
+
+.. code-block:: bash
+
+    (reshapr)$ reshapr extract atlantis_nudge_diatoms.yaml
+
+where :file:`atlantis_nudge_diatoms.yaml` is an extraction processing configuration
+YAML file containing:
+
+.. code-block:: yaml
+
+    # reshapr extract processing configuration for diatoms nudging field
+    # for Atlantis ecosystem model
+
+    dataset:
+      model profile: SalishSeaCast-201812.yaml
+      time base: day
+      variables group: biology
+
+    dask cluster: salish_cluster.yaml
+
+    start date: 2007-01-01
+    end date: 2021-12-31
+
+    extract variables:
+      - diatoms
+
+    include lons lats: True
+
+    extracted dataset:
+      name: SalishSeaCast_day_avg_diatoms
+      description: Day-averaged diatoms biomass extracted from SalishSeaCast v201905 hindcast
+      deflate: False
+      format: NETCDF4_CLASSIC
+      dest dir: /ocean/dlatorne/day-avg-diatoms/
+
+Please see :ref:`ReshaprExtractYAMLFile` for details of meanings and choices available
+for the items in the YAML file.
