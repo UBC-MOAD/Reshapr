@@ -32,10 +32,10 @@ and salinity fields from the SalishSeaCast NEMO model 2007 to present hindcast.
 The 15+ years of SalishSeaCast fields are used in a repeating cycle over the multiple
 decades of the Atlantis run durations.
 
-There is concern that the biomass of many functional groups in the Salish Sea
-ecology that Atlantis calculates drifts over the duration of the run to values that
-are not plausible.
-A strategy to try to mitigate that drift is to periodically nudge one or more of the
+It has been identified that the biomass of some functional groups in the Salish Sea
+ecology in Atlantis are not as accurate as the biomass in SalishSeaCast, possibly 
+due to SalishSeaCast's better resolution.
+To improve the accuracy in Atlantis one can periodically nudge one or more of the
 functional groups at the base of the food web towards values obtained from outside
 of the Atlantis calculations.
 Specifically,
