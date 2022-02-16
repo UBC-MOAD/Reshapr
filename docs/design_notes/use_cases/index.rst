@@ -23,3 +23,4 @@ Use Cases
    :caption: Contents:
 
    atlantis_diatoms_nudge
+   prodigy_model_obs_assignment
