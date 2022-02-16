@@ -987,6 +987,117 @@ class TestCalcExtractedVars:
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extracted diatoms"
 
+    def test_extract_var_y_selection(self, source_dataset, log_output):
+        output_coords = {
+            "time": numpy.arange(4),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(2, 7),
+            "gridX": numpy.arange(4),
+        }
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "biology",
+            },
+            "selection": {
+                "grid y": {
+                    "y min": 2,
+                    "y max": 7,
+                }
+            },
+        }
+        model_profile = {
+            "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "depth coord": "deptht",
+                        }
+                    }
+                }
+            },
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "diatoms"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((4, 8, 5, 4), dtype=numpy.single)
+        )
+        assert (
+            extracted_vars[0].attrs["standard_name"]
+            == "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water"
+        )
+        assert extracted_vars[0].attrs["long_name"] == "Diatoms Concentration"
+        assert extracted_vars[0].attrs["units"] == "mmol m-3"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted diatoms"
+
+    def test_extract_var_x_selection(self, source_dataset, log_output):
+        output_coords = {
+            "time": numpy.arange(4),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(2, 4),
+        }
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "biology",
+            },
+            "selection": {
+                "grid x": {
+                    "x min": 2,
+                }
+            },
+        }
+        model_profile = {
+            "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "depth coord": "deptht",
+                        }
+                    }
+                }
+            },
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "diatoms"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((4, 8, 9, 2), dtype=numpy.single)
+        )
+        assert (
+            extracted_vars[0].attrs["standard_name"]
+            == "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water"
+        )
+        assert extracted_vars[0].attrs["long_name"] == "Diatoms Concentration"
+        assert extracted_vars[0].attrs["units"] == "mmol m-3"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted diatoms"
+
 
 class TestCalcExtractedDataset:
     """Unit test for calc_extracted_dataset() function."""
