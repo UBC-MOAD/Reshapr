@@ -453,6 +453,94 @@ class TestCalcOutputCoords:
         assert log_output.entries[1]["log_level"] == "debug"
         assert log_output.entries[1]["event"] == "extraction depth coordinate"
 
+    def test_depth_coord_depth_min(self, source_dataset, model_profile, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "depth": {
+                    "depth min": 5,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["depth"].name == "depth"
+        assert numpy.array_equal(
+            output_coords["depth"].data,
+            source_dataset.deptht.isel(deptht=slice(5, 901)),
+        )
+        assert output_coords["depth"].attrs["standard_name"] == "sea_floor_depth"
+        assert output_coords["depth"].attrs["long_name"] == "Sea Floor Depth"
+        assert output_coords["depth"].attrs["units"] == "metres"
+
+        assert log_output.entries[1]["log_level"] == "debug"
+        assert log_output.entries[1]["event"] == "extraction depth coordinate"
+
+    def test_depth_coord_depth_max(self, source_dataset, model_profile, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "depth": {
+                    "depth max": 25,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["depth"].name == "depth"
+        assert numpy.array_equal(
+            output_coords["depth"].data, source_dataset.deptht.isel(deptht=slice(0, 25))
+        )
+        assert output_coords["depth"].attrs["standard_name"] == "sea_floor_depth"
+        assert output_coords["depth"].attrs["long_name"] == "Sea Floor Depth"
+        assert output_coords["depth"].attrs["units"] == "metres"
+
+        assert log_output.entries[1]["log_level"] == "debug"
+        assert log_output.entries[1]["event"] == "extraction depth coordinate"
+
+    def test_depth_coord_depth_interval(
+        self, source_dataset, model_profile, log_output
+    ):
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "selection": {
+                "depth": {
+                    "depth interval": 2,
+                },
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["depth"].name == "depth"
+        assert numpy.array_equal(
+            output_coords["depth"].data,
+            source_dataset.deptht.isel(deptht=slice(0, 901, 2)),
+        )
+        assert output_coords["depth"].attrs["standard_name"] == "sea_floor_depth"
+        assert output_coords["depth"].attrs["long_name"] == "Sea Floor Depth"
+        assert output_coords["depth"].attrs["units"] == "metres"
+
+        assert log_output.entries[1]["log_level"] == "debug"
+        assert log_output.entries[1]["event"] == "extraction depth coordinate"
+
     def test_y_index_coord(self, source_dataset, model_profile, log_output):
         extract_config = {
             "dataset": {
@@ -746,11 +834,25 @@ class TestCalcExtractedVars:
             "gridY": numpy.arange(9),
             "gridX": numpy.arange(4),
         }
-        config = {}
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "biology",
+            },
+        }
         model_profile = {
             "time coord": "time_counter",
             "y coord": "y",
             "x coord": "x",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "depth coord": "deptht",
+                        }
+                    }
+                }
+            },
         }
 
         extracted_vars = extract.calc_extracted_vars(
@@ -783,6 +885,10 @@ class TestCalcExtractedVars:
             "gridX": numpy.arange(4),
         }
         config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "biology",
+            },
             "selection": {
                 "time interval": 2,
             },
@@ -791,6 +897,15 @@ class TestCalcExtractedVars:
             "time coord": "time_counter",
             "y coord": "y",
             "x coord": "x",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "depth coord": "deptht",
+                        }
+                    }
+                }
+            },
         }
 
         extracted_vars = extract.calc_extracted_vars(
@@ -800,6 +915,63 @@ class TestCalcExtractedVars:
         assert extracted_vars[0].name == "diatoms"
         assert numpy.array_equal(
             extracted_vars[0].data, numpy.ones((2, 8, 9, 4), dtype=numpy.single)
+        )
+        assert (
+            extracted_vars[0].attrs["standard_name"]
+            == "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water"
+        )
+        assert extracted_vars[0].attrs["long_name"] == "Diatoms Concentration"
+        assert extracted_vars[0].attrs["units"] == "mmol m-3"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted diatoms"
+
+    def test_extract_var_depth_selection(self, source_dataset, log_output):
+        output_coords = {
+            "time": numpy.arange(4),
+            "depth": numpy.arange(0.5, 3, 1),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "biology",
+            },
+            "selection": {
+                "depth": {
+                    "depth min": 1,
+                    "depth max": 6,
+                    "depth interval": 2,
+                }
+            },
+        }
+        model_profile = {
+            "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "depth coord": "deptht",
+                        }
+                    }
+                }
+            },
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "diatoms"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((4, 3, 9, 4), dtype=numpy.single)
         )
         assert (
             extracted_vars[0].attrs["standard_name"]
