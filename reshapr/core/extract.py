@@ -376,12 +376,19 @@ def calc_output_coords(source_dataset, config, model_profile):
     )
     logger.debug("extraction time coordinate", time=times)
 
+    depth_min = config.get("selection", {}).get("depth", {}).get("depth min", 0)
+    depth_max = config.get("selection", {}).get("depth", {}).get("depth max", None)
+    depth_interval = (
+        config.get("selection", {}).get("depth", {}).get("depth interval", 1)
+    )
+    depth_selector = slice(depth_min, depth_max, depth_interval)
     time_base = config["dataset"]["time base"]
     vars_group = config["dataset"]["variables group"]
     datasets = model_profile["results archive"]["datasets"]
+    depth_coord = datasets[time_base][vars_group]["depth coord"]
     depths = create_dataarray(
         "depth",
-        source_dataset[datasets[time_base][vars_group]["depth coord"]],
+        source_dataset[depth_coord].isel({depth_coord: depth_selector}),
         attrs={
             "standard_name": "sea_floor_depth",
             "long_name": "Sea Floor Depth",
@@ -446,6 +453,16 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
     time_interval = config.get("selection", {}).get("time interval", 1)
     # stop=None in slice() means the length of the array without having to know what that is
     time_selector = slice(0, None, time_interval)
+    depth_min = config.get("selection", {}).get("depth", {}).get("depth min", 0)
+    depth_max = config.get("selection", {}).get("depth", {}).get("depth max", None)
+    depth_interval = (
+        config.get("selection", {}).get("depth", {}).get("depth interval", 1)
+    )
+    depth_selector = slice(depth_min, depth_max, depth_interval)
+    time_base = config["dataset"]["time base"]
+    vars_group = config["dataset"]["variables group"]
+    datasets = model_profile["results archive"]["datasets"]
+    depth_coord = datasets[time_base][vars_group]["depth coord"]
     y_min = config.get("selection", {}).get("grid y", {}).get("y min", 0)
     y_max = config.get("selection", {}).get("grid y", {}).get("y max", None)
     y_interval = config.get("selection", {}).get("grid y", {}).get("y interval", 1)
@@ -456,6 +473,7 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
     x_selector = slice(x_min, x_max, x_interval)
     selector = {
         model_profile["time coord"]: time_selector,
+        depth_coord: depth_selector,
         model_profile["y coord"]: y_selector,
         model_profile["x coord"]: x_selector,
     }
