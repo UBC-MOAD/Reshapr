@@ -316,11 +316,15 @@ def open_dataset(ds_paths, chunk_size, config, model_profile):
     drop_vars = {var for var in unused_vars}
     extract_vars = {var for var in config["extract variables"]}
     # Use 1st dataset path to calculate the set of variables to drop
-    with xarray.open_dataset(ds_paths[0], chunks=chunk_size) as ds:
+    with xarray.open_dataset(ds_paths[0], chunks=chunk_size, engine="h5netcdf") as ds:
         drop_vars.update(var for var in ds.data_vars)
     drop_vars -= extract_vars
     ds = xarray.open_mfdataset(
-        ds_paths, chunks=chunk_size, drop_variables=drop_vars, parallel=True
+        ds_paths,
+        chunks=chunk_size,
+        drop_variables=drop_vars,
+        parallel=True,
+        engine="h5netcdf",
     )
     logger.debug("opened dataset", ds=ds)
     return ds
@@ -750,7 +754,11 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format):
     :param str nc_format: Format to use for netCDF4 file write.
     """
     extracted_ds.to_netcdf(
-        nc_path, format=nc_format, encoding=encoding, unlimited_dims="time"
+        nc_path,
+        format=nc_format,
+        encoding=encoding,
+        unlimited_dims="time",
+        engine="h5netcdf",
     )
     logger.info("wrote netCDF4 file", nc_path=os.fspath(nc_path))
 
