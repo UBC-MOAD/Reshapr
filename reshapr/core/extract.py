@@ -643,20 +643,20 @@ def calc_coord_encoding(ds, coord, config, model_profile):
             return {
                 "dtype": numpy.single,
                 "units": f"{quanta} since {extract_time_origin} {time_offset}",
-                "chunksizes": [1],
+                "chunksizes": (1,),
                 "zlib": config["extracted dataset"].get("deflate", True),
                 "_FillValue": None,
             }
         case "depth":
             return {
                 "dtype": numpy.single,
-                "chunksizes": [ds.coords[coord].size],
+                "chunksizes": (ds.coords[coord].size,),
                 "zlib": config["extracted dataset"].get("deflate", True),
             }
         case _:
             return {
                 "dtype": int,
-                "chunksizes": [ds.coords[coord].size],
+                "chunksizes": (ds.coords[coord].size,),
                 "zlib": config["extracted dataset"].get("deflate", True),
             }
 
@@ -687,7 +687,7 @@ def calc_var_encoding(var, output_coords, config):
         chunksizes[0] = 1
     return {
         "dtype": numpy.single,
-        "chunksizes": chunksizes,
+        "chunksizes": tuple(chunksizes),
         "zlib": config["extracted dataset"].get("deflate", True),
     }
 

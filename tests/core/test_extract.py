@@ -1170,7 +1170,7 @@ class TestCalcCoordEncoding:
         expected = {
             "dtype": numpy.single,
             "units": f"{quanta} since 2015-01-01 {time_offset}",
-            "chunksizes": [1],
+            "chunksizes": (1,),
             "zlib": True,
             "_FillValue": None,
         }
@@ -1191,7 +1191,7 @@ class TestCalcCoordEncoding:
         expected = {
             "dtype": numpy.single,
             "units": "days since 2015-01-01 12:00:00",
-            "chunksizes": [1],
+            "chunksizes": (1,),
             "zlib": False,
             "_FillValue": None,
         }
@@ -1211,7 +1211,7 @@ class TestCalcCoordEncoding:
 
         expected = {
             "dtype": numpy.single,
-            "chunksizes": [numpy.arange(0, 4, 0.5).size],
+            "chunksizes": (numpy.arange(0, 4, 0.5).size,),
             "zlib": deflate,
         }
         assert encoding == expected
@@ -1240,7 +1240,7 @@ class TestCalcCoordEncoding:
 
         expected = {
             "dtype": int,
-            "chunksizes": [numpy.arange(5).size],
+            "chunksizes": (numpy.arange(5).size,),
             "zlib": deflate,
         }
         assert encoding == expected
@@ -1273,7 +1273,7 @@ class TestCalcVarEncoding:
 
         expected = {
             "dtype": numpy.single,
-            "chunksizes": [1, 8, 9, 4],
+            "chunksizes": (1, 8, 9, 4),
             "zlib": deflate,
         }
         assert encoding == expected
@@ -1300,7 +1300,7 @@ class TestCalcVarEncoding:
 
         expected = {
             "dtype": numpy.single,
-            "chunksizes": [9, 4],
+            "chunksizes": (9, 4),
             "zlib": deflate,
         }
         assert encoding == expected
@@ -1388,28 +1388,28 @@ class TestPrepNetcdfWrite:
             "time": {
                 "dtype": numpy.single,
                 "units": "days since 2015-01-01 12:00:00",
-                "chunksizes": [1],
+                "chunksizes": (1,),
                 "zlib": True,
                 "_FillValue": None,
             },
             "depth": {
                 "dtype": numpy.single,
-                "chunksizes": [numpy.arange(0, 4, 0.5).size],
+                "chunksizes": (numpy.arange(0, 4, 0.5).size,),
                 "zlib": True,
             },
             "gridY": {
                 "dtype": int,
-                "chunksizes": [numpy.arange(9).size],
+                "chunksizes": (numpy.arange(9).size,),
                 "zlib": True,
             },
             "gridX": {
                 "dtype": int,
-                "chunksizes": [numpy.arange(4).size],
+                "chunksizes": (numpy.arange(4).size,),
                 "zlib": True,
             },
             "diatoms": {
                 "dtype": numpy.single,
-                "chunksizes": [1, 8, 9, 4],
+                "chunksizes": (1, 8, 9, 4),
                 "zlib": True,
             },
         }
