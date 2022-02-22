@@ -16,7 +16,7 @@ dependencies:
   - arrow
   - click
   - dask
-  - netCDF4
+  - h5netcdf
   - pip
   - python=3.10
   - pyyaml
