@@ -322,6 +322,9 @@ def open_dataset(ds_paths, chunk_size, config, model_profile):
     ds = xarray.open_mfdataset(
         ds_paths,
         chunks=chunk_size,
+        compat="override",
+        coords="minimal",
+        data_vars="minimal",
         drop_variables=drop_vars,
         parallel=True,
         engine="h5netcdf",
