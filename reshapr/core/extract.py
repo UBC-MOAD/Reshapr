@@ -391,26 +391,30 @@ def calc_output_coords(source_dataset, config, model_profile):
     )
     logger.debug("extraction time coordinate", time=times)
 
-    depth_min = config.get("selection", {}).get("depth", {}).get("depth min", 0)
-    depth_max = config.get("selection", {}).get("depth", {}).get("depth max", None)
-    depth_interval = (
-        config.get("selection", {}).get("depth", {}).get("depth interval", 1)
-    )
-    depth_selector = slice(depth_min, depth_max, depth_interval)
+    datasets = model_profile["results archive"]["datasets"]
     time_base = config["dataset"]["time base"]
     vars_group = config["dataset"]["variables group"]
-    datasets = model_profile["results archive"]["datasets"]
     depth_coord = datasets[time_base][vars_group]["depth coord"]
-    depths = create_dataarray(
-        "depth",
-        source_dataset[depth_coord].isel({depth_coord: depth_selector}),
-        attrs={
-            "standard_name": "sea_floor_depth",
-            "long_name": "Sea Floor Depth",
-            "units": "metres",
-        },
+    include_depth_coord = any(
+        [depth_coord in var.coords for var in source_dataset.data_vars.values()]
     )
-    logger.debug("extraction depth coordinate", depth=depths)
+    if include_depth_coord:
+        depth_min = config.get("selection", {}).get("depth", {}).get("depth min", 0)
+        depth_max = config.get("selection", {}).get("depth", {}).get("depth max", None)
+        depth_interval = (
+            config.get("selection", {}).get("depth", {}).get("depth interval", 1)
+        )
+        depth_selector = slice(depth_min, depth_max, depth_interval)
+        depths = create_dataarray(
+            "depth",
+            source_dataset[depth_coord].isel({depth_coord: depth_selector}),
+            attrs={
+                "standard_name": "sea_floor_depth",
+                "long_name": "Sea Floor Depth",
+                "units": "metres",
+            },
+        )
+        logger.debug("extraction depth coordinate", depth=depths)
 
     y_min = config.get("selection", {}).get("grid y", {}).get("y min", 0)
     y_max = config.get("selection", {}).get("grid y", {}).get("y max", None)
@@ -446,7 +450,11 @@ def calc_output_coords(source_dataset, config, model_profile):
     )
     logger.debug("extraction x coordinate", x_index=x_indices)
 
-    return {"time": times, "depth": depths, "gridY": y_indices, "gridX": x_indices}
+    return (
+        {"time": times, "depth": depths, "gridY": y_indices, "gridX": x_indices}
+        if include_depth_coord
+        else {"time": times, "gridY": y_indices, "gridX": x_indices}
+    )
 
 
 def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
@@ -494,15 +502,33 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
     }
     extracted_vars = []
     for name, var in source_dataset.data_vars.items():
+        var_selector = (
+            selector
+            if depth_coord in var.coords
+            else {
+                c_name: c_selector
+                for c_name, c_selector in selector.items()
+                if c_name != depth_coord
+            }
+        )
+        var_output_coords = (
+            output_coords
+            if depth_coord in var.coords
+            else {
+                c_name: c_selector
+                for c_name, c_selector in output_coords.items()
+                if c_name != "depth"
+            }
+        )
         extracted_var = create_dataarray(
             name,
-            var.isel(selector),
+            var.isel(var_selector),
             attrs={
                 "standard_name": var.attrs["standard_name"],
                 "long_name": var.attrs["long_name"],
                 "units": var.attrs["units"],
             },
-            coords=output_coords,
+            coords=var_output_coords,
         )
         extracted_vars.append(extracted_var)
         logger.debug(f"extracted {name}", extracted_var=extracted_var)

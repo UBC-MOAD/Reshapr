@@ -340,11 +340,28 @@ class TestCalcOutputCoords:
     def fixture_source_dataset(self):
         return xarray.Dataset(
             coords={
-                "time_counter": numpy.arange(43),
-                "deptht": numpy.arange(0, 450, 0.5),
-                "y": numpy.arange(898),
-                "x": numpy.arange(398),
-            }
+                "time_counter": numpy.arange(4),
+                "deptht": numpy.arange(0, 4, 0.5),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "diatoms": xarray.DataArray(
+                    name="diatoms",
+                    data=numpy.ones((4, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "deptht": numpy.arange(0, 4, 0.5),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water",
+                        "long_name": "Diatoms Concentration",
+                        "units": "mmol m-3",
+                    },
+                ),
+            },
         )
 
     @pytest.mark.parametrize(
@@ -436,6 +453,44 @@ class TestCalcOutputCoords:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extraction time coordinate"
+
+    def test_no_depth_coord(self, model_profile, log_output):
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(4),
+                "deptht": numpy.arange(0, 4, 0.5),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "sossheig": xarray.DataArray(
+                    name="sossheig",
+                    data=numpy.ones((4, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "sea_surface_height_above_geoid",
+                        "long_name": "Sea Surface Height",
+                        "units": "m",
+                    },
+                ),
+            },
+        )
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            }
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert "depth" not in output_coords
 
     def test_depth_coord(self, source_dataset, model_profile, log_output):
         extract_config = {
@@ -830,7 +885,7 @@ class TestCalcExtractedVars:
                         "long_name": "Diatoms Concentration",
                         "units": "mmol m-3",
                     },
-                )
+                ),
             },
         )
 
@@ -1104,6 +1159,78 @@ class TestCalcExtractedVars:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extracted diatoms"
+
+    def test_extract_surface_var(self, log_output):
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(4),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "sossheig": xarray.DataArray(
+                    name="sossheig",
+                    data=numpy.ones((4, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "sea_surface_height_above_geoid",
+                        "long_name": "Sea Surface Height",
+                        "units": "m",
+                    },
+                )
+            },
+        )
+
+        output_coords = {
+            "time": numpy.arange(4),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "biology",
+            },
+        }
+        model_profile = {
+            "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "depth coord": "deptht",
+                        }
+                    }
+                }
+            },
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "sossheig"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((4, 9, 4), dtype=numpy.single)
+        )
+        assert (
+            extracted_vars[0].attrs["standard_name"] == "sea_surface_height_above_geoid"
+        )
+        assert extracted_vars[0].attrs["long_name"] == "Sea Surface Height"
+        assert extracted_vars[0].attrs["units"] == "m"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted sossheig"
 
 
 class TestCalcExtractedDataset:
