@@ -454,7 +454,7 @@ class TestCalcOutputCoords:
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extraction time coordinate"
 
-    def test_no_depth_coord(self, model_profile, log_output):
+    def test_no_depth_coord(self, model_profile):
         source_dataset = xarray.Dataset(
             coords={
                 "time_counter": numpy.arange(4),
@@ -511,11 +511,12 @@ class TestCalcOutputCoords:
         assert output_coords["depth"].attrs["standard_name"] == "sea_floor_depth"
         assert output_coords["depth"].attrs["long_name"] == "Sea Floor Depth"
         assert output_coords["depth"].attrs["units"] == "metres"
+        assert output_coords["depth"].attrs["positive"] == "down"
 
         assert log_output.entries[1]["log_level"] == "debug"
         assert log_output.entries[1]["event"] == "extraction depth coordinate"
 
-    def test_depth_coord_depth_min(self, source_dataset, model_profile, log_output):
+    def test_depth_coord_depth_min(self, source_dataset, model_profile):
         extract_config = {
             "dataset": {
                 "time base": "day",
@@ -537,14 +538,8 @@ class TestCalcOutputCoords:
             output_coords["depth"].data,
             source_dataset.deptht.isel(deptht=slice(5, 901)),
         )
-        assert output_coords["depth"].attrs["standard_name"] == "sea_floor_depth"
-        assert output_coords["depth"].attrs["long_name"] == "Sea Floor Depth"
-        assert output_coords["depth"].attrs["units"] == "metres"
 
-        assert log_output.entries[1]["log_level"] == "debug"
-        assert log_output.entries[1]["event"] == "extraction depth coordinate"
-
-    def test_depth_coord_depth_max(self, source_dataset, model_profile, log_output):
+    def test_depth_coord_depth_max(self, source_dataset, model_profile):
         extract_config = {
             "dataset": {
                 "time base": "day",
@@ -565,16 +560,8 @@ class TestCalcOutputCoords:
         assert numpy.array_equal(
             output_coords["depth"].data, source_dataset.deptht.isel(deptht=slice(0, 25))
         )
-        assert output_coords["depth"].attrs["standard_name"] == "sea_floor_depth"
-        assert output_coords["depth"].attrs["long_name"] == "Sea Floor Depth"
-        assert output_coords["depth"].attrs["units"] == "metres"
 
-        assert log_output.entries[1]["log_level"] == "debug"
-        assert log_output.entries[1]["event"] == "extraction depth coordinate"
-
-    def test_depth_coord_depth_interval(
-        self, source_dataset, model_profile, log_output
-    ):
+    def test_depth_coord_depth_interval(self, source_dataset, model_profile):
         extract_config = {
             "dataset": {
                 "time base": "day",
@@ -596,12 +583,6 @@ class TestCalcOutputCoords:
             output_coords["depth"].data,
             source_dataset.deptht.isel(deptht=slice(0, 901, 2)),
         )
-        assert output_coords["depth"].attrs["standard_name"] == "sea_floor_depth"
-        assert output_coords["depth"].attrs["long_name"] == "Sea Floor Depth"
-        assert output_coords["depth"].attrs["units"] == "metres"
-
-        assert log_output.entries[1]["log_level"] == "debug"
-        assert log_output.entries[1]["event"] == "extraction depth coordinate"
 
     def test_y_index_coord(self, source_dataset, model_profile, log_output):
         extract_config = {

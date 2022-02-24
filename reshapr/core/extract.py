@@ -412,6 +412,7 @@ def calc_output_coords(source_dataset, config, model_profile):
                 "standard_name": "sea_floor_depth",
                 "long_name": "Sea Floor Depth",
                 "units": "metres",
+                "positive": "down",
             },
         )
         logger.debug("extraction depth coordinate", depth=depths)
