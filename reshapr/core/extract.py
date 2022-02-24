@@ -366,12 +366,21 @@ def calc_output_coords(source_dataset, config, model_profile):
     time_interval = config.get("selection", {}).get("time interval", 1)
     # stop=None in slice() means the length of the array without having to know what that is
     time_selector = {model_profile["time coord"]: slice(0, None, time_interval)}
+    extract_time_origin = model_profile["extraction time origin"]
+    match config["dataset"]["time base"]:
+        case "day":
+            time_offset = "12:00:00"
+        case "hour":
+            time_offset = "00:30:00"
+        case _:
+            time_offset = "00:30:00"
     times = create_dataarray(
         "time",
         source_dataset[model_profile["time coord"]].isel(time_selector),
         attrs={
             "standard_name": "time",
             "long_name": "Time Axis",
+            "time_origin": f"{extract_time_origin} {time_offset}",
             "comment": (
                 f"time values are UTC at the centre of the intervals over which the "
                 f"calculated model results are averaged; "

@@ -323,6 +323,7 @@ class TestCalcOutputCoords:
             "time coord": "time_counter",
             "y coord": "y",
             "x coord": "x",
+            "extraction time origin": "2015-01-01",
             "results archive": {
                 "datasets": {
                     "day": {
@@ -387,17 +388,22 @@ class TestCalcOutputCoords:
         assert log_output.entries[0]["event"] == "extraction time coordinate"
 
     @pytest.mark.parametrize(
-        "time_base, example",
+        "time_base, time_offset, example",
         (
-            ("day", "8 February 2022 have a time value of 2022-02-08 12:00:00Z"),
+            (
+                "day",
+                "12:00:00",
+                "8 February 2022 have a time value of 2022-02-08 12:00:00Z",
+            ),
             (
                 "hour",
+                "00:30:00",
                 "the first hour of 8 February 2022 have a time value of 2022-02-08 00:30:00Z",
             ),
         ),
     )
     def test_time_coord_selection(
-        self, time_base, example, source_dataset, model_profile, log_output
+        self, time_base, time_offset, example, source_dataset, model_profile, log_output
     ):
         extract_config = {
             "dataset": {
@@ -420,6 +426,7 @@ class TestCalcOutputCoords:
         )
         assert output_coords["time"].attrs["standard_name"] == "time"
         assert output_coords["time"].attrs["long_name"] == "Time Axis"
+        assert output_coords["time"].attrs["time_origin"] == f"2015-01-01 {time_offset}"
         expected = (
             f"time values are UTC at the centre of the intervals over which the "
             f"calculated model results are averaged; e.g. the field average values for "
