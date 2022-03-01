@@ -286,7 +286,7 @@ class TestCalcDsPaths:
 
 
 class TestCalcDsChunks:
-    """Unit test for calc_ds_chunk() function."""
+    """Unit tests for calc_ds_chunk() function."""
 
     def test_calc_ds_chunks(self, log_output):
         extract_config = {
@@ -321,6 +321,37 @@ class TestCalcDsChunks:
             "deptht": 40,
             "y": 898,
             "x": 398,
+        }
+        assert chunk_size == expected
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["chunk_size"] == expected
+        assert log_output.entries[0]["event"] == "chunk size for dataset loading"
+
+    def test_calc_ds_chunks_no_depth(self, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "surface fields",
+            },
+            "start date": "2015-01-01",
+            "end date": "2015-01-02",
+        }
+        model_profile = {
+            "time coord": "time_counter",
+            "chunk size": {
+                "time": 24,
+                "y": 266,
+                "x": 256,
+            },
+        }
+
+        chunk_size = extract.calc_ds_chunk_size(extract_config, model_profile)
+
+        expected = {
+            "time_counter": 24,
+            "y": 266,
+            "x": 256,
         }
         assert chunk_size == expected
 
@@ -371,6 +402,12 @@ class TestCalcOutputCoords:
             "time coord": "time_counter",
             "y coord": "y",
             "x coord": "x",
+            "chunk size": {
+                "time": 1,
+                "depth": 40,
+                "y": 898,
+                "x": 398,
+            },
             "extraction time origin": "2015-01-01",
             "results archive": {
                 "datasets": {
@@ -502,7 +539,62 @@ class TestCalcOutputCoords:
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extraction time coordinate"
 
-    def test_no_depth_coord(self, model_profile):
+    def test_no_depth_coord(self):
+        model_profile = {
+            "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
+            "chunk size": {
+                "time": 24,
+                "y": 266,
+                "x": 256,
+            },
+            "extraction time origin": "2007-01-01",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "surface fields": {},
+                    },
+                }
+            },
+        }
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(4),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "atmpres": xarray.DataArray(
+                    name="atmpres",
+                    data=numpy.ones((4, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "PRMSL_meansealevel",
+                        "long_name": "Pressure Reduced to MSL",
+                        "units": "m",
+                    },
+                ),
+            },
+        )
+        extract_config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "surface fields",
+            }
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert "depth" not in output_coords
+
+    def test_var_without_depth_coord(self, model_profile):
         source_dataset = xarray.Dataset(
             coords={
                 "time_counter": numpy.arange(4),
