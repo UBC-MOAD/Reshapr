@@ -185,10 +185,19 @@ class Test_yyyymmdd:
         assert yyyymmdd == "20220207"
 
 
-class TestCalcDsPaths:
-    """Unit test for calc_ds_paths() function."""
+class Test_nemo_yyyymmdd:
+    """Unit test for yyyymmdd() function."""
 
-    def test_calc_ds_paths(self, log_output):
+    def test_nemo_yyyymmdd(self):
+        nemo_yyyymmdd = extract.nemo_yyyymmdd(arrow.get("2022-02-28"))
+
+        assert nemo_yyyymmdd == "y2022m02d28"
+
+
+class TestCalcDsPaths:
+    """Unit tests for calc_ds_paths() function."""
+
+    def test_SalishSeaCast_ds_paths(self, log_output):
         extract_config = {
             "dataset": {
                 "time base": "day",
@@ -231,6 +240,45 @@ class TestCalcDsPaths:
             log_output.entries[0]["nc_files_pattern"]
             == "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
         )
+        assert log_output.entries[0]["start_date"] == "2015-01-01"
+        assert log_output.entries[0]["end_date"] == "2015-01-02"
+        assert log_output.entries[0]["n_datasets"] == 2
+        assert log_output.entries[0]["event"] == "collected dataset paths"
+
+    def test_HRDPS_ds_paths(self, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "surface fields",
+            },
+            "start date": "2015-01-01",
+            "end date": "2015-01-02",
+        }
+        model_profile = {
+            "results archive": {
+                "path": "/results/forcing/atmospheric/GEM2.5/operational/",
+                "datasets": {
+                    "hour": {
+                        "surface fields": {"file pattern": "ops_{nemo_yyyymmdd}.nc"},
+                    },
+                },
+            },
+        }
+
+        ds_paths = extract.calc_ds_paths(extract_config, model_profile)
+
+        expected_paths = [
+            Path("/results/forcing/atmospheric/GEM2.5/operational/ops_y2015m01d01.nc"),
+            Path("/results/forcing/atmospheric/GEM2.5/operational/ops_y2015m01d02.nc"),
+        ]
+        assert ds_paths == expected_paths
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        expected = os.fspath(Path(model_profile["results archive"]["path"]))
+        assert log_output.entries[0]["results_archive_path"] == expected
+        assert log_output.entries[0]["time_base"] == "hour"
+        assert log_output.entries[0]["vars_group"] == "surface fields"
+        assert log_output.entries[0]["nc_files_pattern"] == "ops_{nemo_yyyymmdd}.nc"
         assert log_output.entries[0]["start_date"] == "2015-01-01"
         assert log_output.entries[0]["end_date"] == "2015-01-02"
         assert log_output.entries[0]["n_datasets"] == 2

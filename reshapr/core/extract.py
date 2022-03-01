@@ -157,10 +157,18 @@ def calc_ds_paths(config, model_profile):
         ds_path = results_archive_path
         for part in nc_files_pattern.parents[:-1]:
             ds_path = ds_path.joinpath(
-                os.fspath(part).format(ddmmmyy=ddmmmyy(day), yyyymmdd=yyyymmdd(day))
+                os.fspath(part).format(
+                    ddmmmyy=ddmmmyy(day),
+                    yyyymmdd=yyyymmdd(day),
+                    nemo_yyyymmdd=nemo_yyyymmdd(day),
+                )
             )
         ds_path = ds_path.joinpath(
-            nc_files_pattern.name.format(ddmmmyy=ddmmmyy(day), yyyymmdd=yyyymmdd(day))
+            nc_files_pattern.name.format(
+                ddmmmyy=ddmmmyy(day),
+                yyyymmdd=yyyymmdd(day),
+                nemo_yyyymmdd=nemo_yyyymmdd(day),
+            )
         )
         ds_paths.append(ds_path)
     log = log.bind(n_datasets=len(ds_paths))
@@ -190,6 +198,19 @@ def yyyymmdd(arrow_date):
     :rtype: str
     """
     return arrow_date.format("YYYYMMDD").lower()
+
+
+def nemo_yyyymmdd(arrow_date):
+    """Return an Arrow date as a string formatted using the NEMO forcing date convention;
+    i.e. y2022m02d28.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as NEMO forcing date.
+    :rtype: str
+    """
+    return arrow_date.format("[y]YYYY[m]MM[d]DD")
 
 
 def calc_ds_chunk_size(config, model_profile):
