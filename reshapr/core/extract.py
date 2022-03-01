@@ -228,15 +228,14 @@ def calc_ds_chunk_size(config, model_profile):
     """
     abstract_chunk_size = model_profile["chunk size"]
     time_chunk_size = abstract_chunk_size.pop("time")
-    depth_chunk_size = abstract_chunk_size.pop("depth")
-    time_base = config["dataset"]["time base"]
-    vars_group = config["dataset"]["variables group"]
-    datasets = model_profile["results archive"]["datasets"]
-    ds_depth_coord = datasets[time_base][vars_group]["depth coord"]
-    chunk_size = {
-        model_profile["time coord"]: time_chunk_size,
-        ds_depth_coord: depth_chunk_size,
-    }
+    chunk_size = {model_profile["time coord"]: time_chunk_size}
+    if "depth" in abstract_chunk_size:
+        depth_chunk_size = abstract_chunk_size.pop("depth")
+        time_base = config["dataset"]["time base"]
+        vars_group = config["dataset"]["variables group"]
+        datasets = model_profile["results archive"]["datasets"]
+        ds_depth_coord = datasets[time_base][vars_group]["depth coord"]
+        chunk_size.update({ds_depth_coord: depth_chunk_size})
     chunk_size.update(abstract_chunk_size)
     logger.debug("chunk size for dataset loading", chunk_size=chunk_size)
     return chunk_size
@@ -417,33 +416,48 @@ def calc_output_coords(source_dataset, config, model_profile):
     )
     logger.debug("extraction time coordinate", time=times)
 
-    datasets = model_profile["results archive"]["datasets"]
-    time_base = config["dataset"]["time base"]
-    vars_group = config["dataset"]["variables group"]
-    depth_coord = datasets[time_base][vars_group]["depth coord"]
-    include_depth_coord = any(
-        [depth_coord in var.coords for var in source_dataset.data_vars.values()]
-    )
-    if include_depth_coord:
-        depth_min = config.get("selection", {}).get("depth", {}).get("depth min", 0)
-        depth_max = config.get("selection", {}).get("depth", {}).get("depth max", None)
-        depth_interval = (
-            config.get("selection", {}).get("depth", {}).get("depth interval", 1)
-        )
-        depth_selector = slice(depth_min, depth_max, depth_interval)
-        depths = create_dataarray(
-            "depth",
-            source_dataset[depth_coord].isel({depth_coord: depth_selector}),
-            attrs={
-                "standard_name": "sea_floor_depth",
-                "long_name": "Sea Floor Depth",
-                "units": "metres",
-                "positive": "down",
-            },
-        )
-        logger.debug("extraction depth coordinate", depth=depths)
-    else:
+    # There are 2 special cases for which there is no depth coordinate:
+    #   1. The dataset does not have a depth coordinate; e.g. HRDPS surface forcing fields
+    #   2. The variable does not have a depth coordinate; e.g. sea surface height
+    #      in SalishSeaCast grid_T dataset
+    if "depth" not in model_profile["chunk size"]:
+        # Dataset does not have a depth coordinate; e.g. HRDPS surface forcing fields
+        include_depth_coord = False
         depths = None
+    else:
+        datasets = model_profile["results archive"]["datasets"]
+        time_base = config["dataset"]["time base"]
+        vars_group = config["dataset"]["variables group"]
+        depth_coord = datasets[time_base][vars_group]["depth coord"]
+        include_depth_coord = any(
+            [depth_coord in var.coords for var in source_dataset.data_vars.values()]
+        )
+        if not include_depth_coord:
+            # Variable does not have a depth coordinate; e.g. sea surface height in SalishSeaCast
+            # grid_T dataset
+            depths = None
+        else:
+            # At least 1 variable has a depth coordinate, so include depth in output dataset
+            # coordinates
+            depth_min = config.get("selection", {}).get("depth", {}).get("depth min", 0)
+            depth_max = (
+                config.get("selection", {}).get("depth", {}).get("depth max", None)
+            )
+            depth_interval = (
+                config.get("selection", {}).get("depth", {}).get("depth interval", 1)
+            )
+            depth_selector = slice(depth_min, depth_max, depth_interval)
+            depths = create_dataarray(
+                "depth",
+                source_dataset[depth_coord].isel({depth_coord: depth_selector}),
+                attrs={
+                    "standard_name": "sea_floor_depth",
+                    "long_name": "Sea Floor Depth",
+                    "units": "metres",
+                    "positive": "down",
+                },
+            )
+            logger.debug("extraction depth coordinate", depth=depths)
 
     y_min = config.get("selection", {}).get("grid y", {}).get("y min", 0)
     y_max = config.get("selection", {}).get("grid y", {}).get("y max", None)
