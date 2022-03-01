@@ -421,6 +421,8 @@ def calc_output_coords(source_dataset, config, model_profile):
             },
         )
         logger.debug("extraction depth coordinate", depth=depths)
+    else:
+        depths = None
 
     y_min = config.get("selection", {}).get("grid y", {}).get("y min", 0)
     y_max = config.get("selection", {}).get("grid y", {}).get("y max", None)
