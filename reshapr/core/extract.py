@@ -138,12 +138,12 @@ def calc_ds_paths(config, model_profile):
     time_base = config["dataset"]["time base"]
     vars_group = config["dataset"]["variables group"]
     datasets = model_profile["results archive"]["datasets"]
-    nc_files_pattern = datasets[time_base][vars_group]["file pattern"]
+    nc_files_pattern = Path(datasets[time_base][vars_group]["file pattern"])
     log = logger.bind(
         results_archive_path=os.fspath(results_archive_path),
         time_base=time_base,
         vars_group=vars_group,
-        nc_files_pattern=nc_files_pattern,
+        nc_files_pattern=os.fspath(nc_files_pattern),
     )
     start_date = arrow.get(config["start date"])
     end_date = arrow.get(config["end date"])
@@ -152,19 +152,24 @@ def calc_ds_paths(config, model_profile):
         end_date=end_date.format("YYYY-MM-DD"),
     )
     date_range = arrow.Arrow.range("days", start_date, end_date)
-    ds_paths = [
-        results_archive_path
-        / ddmmmyy(day)
-        / nc_files_pattern.format(yyyymmdd=yyyymmdd(day))
-        for day in date_range
-    ]
+    ds_paths = []
+    for day in date_range:
+        ds_path = results_archive_path
+        for part in nc_files_pattern.parents[:-1]:
+            ds_path = ds_path.joinpath(
+                os.fspath(part).format(ddmmmyy=ddmmmyy(day), yyyymmdd=yyyymmdd(day))
+            )
+        ds_path = ds_path.joinpath(
+            nc_files_pattern.name.format(ddmmmyy=ddmmmyy(day), yyyymmdd=yyyymmdd(day))
+        )
+        ds_paths.append(ds_path)
     log = log.bind(n_datasets=len(ds_paths))
     log.debug("collected dataset paths")
     return ds_paths
 
 
 def ddmmmyy(arrow_date):
-    """Return an Arrow date as a string formatted as lower-cased `ddmmmyy`.
+    """Return an Arrow date as a string formatted as lower-cased `ddmmmyy`; e.g. 28feb22.
 
     :param arrow_date: Date/time to format.
     :type arrow_date: :py:class:`arrow.arrow.Arrow`
@@ -176,7 +181,7 @@ def ddmmmyy(arrow_date):
 
 
 def yyyymmdd(arrow_date):
-    """Return an Arrow date as a string of digits formatted as `yyyymmdd`.
+    """Return an Arrow date as a string of digits formatted as `yyyymmdd`; e.g. 20020228.
 
     :param arrow_date: Date/time to format.
     :type arrow_date: :py:class:`arrow.arrow.Arrow`

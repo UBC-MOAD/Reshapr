@@ -87,27 +87,51 @@ class TestSalishSeaCast201812:
     @pytest.mark.parametrize(
         "var_group, file_pattern, depth_coord",
         (
-            ("auxiliary", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
-            ("biology", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
-            ("chemistry", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
+            (
+                "auxiliary",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc",
+                "deptht",
+            ),
+            (
+                "biology",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc",
+                "deptht",
+            ),
+            (
+                "chemistry",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc",
+                "deptht",
+            ),
             (
                 "grazing and mortality",
-                "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_dia2_T.nc",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_dia2_T.nc",
                 "deptht",
             ),
             (
                 "physics tracers",
-                "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
                 "deptht",
             ),
-            ("u velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_U.nc", "depthu"),
-            ("v velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_V.nc", "depthv"),
+            (
+                "u velocity",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_U.nc",
+                "depthu",
+            ),
+            (
+                "v velocity",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_V.nc",
+                "depthv",
+            ),
             (
                 "vertical turbulence",
-                "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
                 "depthw",
             ),
-            ("w velocity", "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc", "depthw"),
+            (
+                "w velocity",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
+                "depthw",
+            ),
         ),
     )
     def test_SalishSeaCast_201812_day_datasets(
@@ -123,27 +147,51 @@ class TestSalishSeaCast201812:
     @pytest.mark.parametrize(
         "var_group, file_pattern, depth_coord",
         (
-            ("auxiliary", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
-            ("biology", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc", "deptht"),
-            ("chemistry", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc", "deptht"),
+            (
+                "auxiliary",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc",
+                "deptht",
+            ),
+            (
+                "biology",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc",
+                "deptht",
+            ),
+            (
+                "chemistry",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc",
+                "deptht",
+            ),
             (
                 "physics tracers",
-                "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
                 "deptht",
             ),
             (
                 "primary production",
-                "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_prod_T.nc",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_prod_T.nc",
                 "deptht",
             ),
-            ("u velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc", "depthu"),
-            ("v velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc", "depthv"),
+            (
+                "u velocity",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc",
+                "depthu",
+            ),
+            (
+                "v velocity",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc",
+                "depthv",
+            ),
             (
                 "vertical turbulence",
-                "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
                 "depthw",
             ),
-            ("w velocity", "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc", "depthw"),
+            (
+                "w velocity",
+                "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc",
+                "depthw",
+            ),
         ),
     )
     def test_SalishSeaCast_201812_hour_datasets(
