@@ -203,7 +203,7 @@ class TestCalcDsPaths:
                 "datasets": {
                     "day": {
                         "biology": {
-                            "file pattern": "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+                            "file pattern": "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
                         },
                     },
                 },
@@ -229,7 +229,7 @@ class TestCalcDsPaths:
         assert log_output.entries[0]["vars_group"] == "biology"
         assert (
             log_output.entries[0]["nc_files_pattern"]
-            == "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+            == "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
         )
         assert log_output.entries[0]["start_date"] == "2015-01-01"
         assert log_output.entries[0]["end_date"] == "2015-01-02"

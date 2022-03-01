@@ -6,9 +6,9 @@ time coord: time_counter
 y coord: y
 x coord: x
 
-# Chunking scheme used in the netCDF4 files
+# Chunking scheme used for the netCDF4 files
 # Note that coordinate names (keys) are conceptual here.
-# They are replaces with actual coordinate names in files in the code;
+# They are replaced with actual coordinate names in files in the code;
 # e.g. time is replaced by time_counter for dataset loading
 chunk size:
   time: 1
@@ -28,57 +28,57 @@ results archive:
   datasets:
     day:
       auxiliary:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
         depth coord: deptht
       biology:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
         depth coord: deptht
       chemistry:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
         depth coord: deptht
       grazing and mortality:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_dia2_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_dia2_T.nc"
         depth coord: deptht
       physics tracers:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
         depth coord: deptht
       u velocity:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_U.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_U.nc"
         depth coord: depthu
       v velocity:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
         depth coord: depthv
       vertical turbulence:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
         depth coord: depthw
       w velocity:
-        file pattern: "SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
         depth coord: depthw
     hour:
       auxiliary:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
         depth coord: deptht
       biology:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
         depth coord: deptht
       chemistry:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
         depth coord: deptht
       physics tracers:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
         depth coord: deptht
       primary production:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_prod_T.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_prod_T.nc"
         depth coord: deptht
       u velocity:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc"
         depth coord: depthu
       v velocity:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
         depth coord: depthv
       vertical turbulence:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
         depth coord: depthw
       w velocity:
-        file pattern: "SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
         depth coord: depthw
