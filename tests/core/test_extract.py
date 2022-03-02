@@ -1086,7 +1086,7 @@ class TestCalcExtractedVars:
                         "x": numpy.arange(4),
                     },
                     attrs={
-                        "standard_name": "PRMSL_meansealevel",
+                        "short_name": "PRMSL_meansealevel",
                         "long_name": "Pressure Reduced to MSL",
                         "units": "Pa",
                     },

@@ -575,11 +575,16 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
                 if c_name != "depth"
             }
         )
+        try:
+            std_name = var.attrs["standard_name"]
+        except KeyError:
+            # HRDPS lacks standard_name for many vars, but has short_name
+            std_name = var.attrs["short_name"]
         extracted_var = create_dataarray(
             name,
             var.isel(var_selector),
             attrs={
-                "standard_name": var.attrs["standard_name"],
+                "standard_name": std_name,
                 "long_name": var.attrs["long_name"],
                 "units": var.attrs["units"],
             },
