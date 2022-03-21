@@ -470,8 +470,10 @@ def calc_output_coords(source_dataset, config, model_profile):
         attrs={
             "standard_name": "y",
             "long_name": "Grid Y",
-            "units": "count",
-            "comment": "gridY values are grid indices in the model y-direction",
+            "units": model_profile["y coord"].get("units", "count"),
+            "comment": model_profile["y coord"].get(
+                "comment", "gridY values are grid indices in the model y-direction"
+            ),
         },
     )
     logger.debug("extraction y coordinate", y_index=y_indices)
@@ -487,8 +489,10 @@ def calc_output_coords(source_dataset, config, model_profile):
         attrs={
             "standard_name": "x",
             "long_name": "Grid X",
-            "units": "count",
-            "comment": "gridX values are grid indices in the model x-direction",
+            "units": model_profile["x coord"].get("units", "count"),
+            "comment": model_profile["x coord"].get(
+                "comment", "gridX values are grid indices in the model x-direction"
+            ),
         },
     )
     logger.debug("extraction x coordinate", x_index=x_indices)
