@@ -390,7 +390,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     }
     time_interval = config.get("selection", {}).get("time interval", 1)
     # stop=None in slice() means the length of the array without having to know what that is
-    time_selector = {model_profile["time coord"]: slice(0, None, time_interval)}
+    time_selector = {model_profile["time coord"]["name"]: slice(0, None, time_interval)}
     extract_time_origin = model_profile["extraction time origin"]
     match config["dataset"]["time base"]:
         case "day":
@@ -401,7 +401,7 @@ def calc_output_coords(source_dataset, config, model_profile):
             time_offset = "00:30:00"
     times = create_dataarray(
         "time",
-        source_dataset[model_profile["time coord"]].isel(time_selector),
+        source_dataset[model_profile["time coord"]["name"]].isel(time_selector),
         attrs={
             "standard_name": "time",
             "long_name": "Time Axis",
@@ -463,7 +463,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     y_max = config.get("selection", {}).get("grid y", {}).get("y max", None)
     y_interval = config.get("selection", {}).get("grid y", {}).get("y interval", 1)
     y_selector = slice(y_min, y_max, y_interval)
-    y_coord = model_profile["y coord"]
+    y_coord = model_profile["y coord"]["name"]
     y_indices = create_dataarray(
         "gridY",
         source_dataset[y_coord].isel({y_coord: y_selector}).astype(int),
@@ -480,7 +480,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     x_max = config.get("selection", {}).get("grid x", {}).get("x max", None)
     x_interval = config.get("selection", {}).get("grid x", {}).get("x interval", 1)
     x_selector = slice(x_min, x_max, x_interval)
-    x_coord = model_profile["x coord"]
+    x_coord = model_profile["x coord"]["name"]
     x_indices = create_dataarray(
         "gridX",
         source_dataset[x_coord].isel({x_coord: x_selector}).astype(int),

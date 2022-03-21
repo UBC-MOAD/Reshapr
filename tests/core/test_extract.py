@@ -399,9 +399,15 @@ class TestCalcOutputCoords:
     @pytest.fixture(name="model_profile", scope="class")
     def fixture_model_profile(self):
         return {
-            "time coord": "time_counter",
-            "y coord": "y",
-            "x coord": "x",
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
             "chunk size": {
                 "time": 1,
                 "depth": 40,
@@ -541,9 +547,15 @@ class TestCalcOutputCoords:
 
     def test_no_depth_coord(self):
         model_profile = {
-            "time coord": "time_counter",
-            "y coord": "y",
-            "x coord": "x",
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
             "chunk size": {
                 "time": 24,
                 "y": 266,
@@ -774,9 +786,15 @@ class TestCalcOutputCoords:
             },
         )
         model_profile = {
-            "time coord": "time_counter",
-            "y coord": "y",
-            "x coord": "x",
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
             "chunk size": {
                 "time": 24,
                 "y": 5,
@@ -974,9 +992,15 @@ class TestCalcOutputCoords:
             }
         }
         model_profile = {
-            "time coord": "time_counter",
-            "y coord": "y",
-            "x coord": "x",
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
             "chunk size": {
                 "time": 24,
                 "y": 5,
