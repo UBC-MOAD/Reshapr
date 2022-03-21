@@ -791,9 +791,13 @@ class TestCalcOutputCoords:
             },
             "y coord": {
                 "name": "y",
+                "units": "metres",
+                "comment": "gridY values are distance in metres in the model y-direction from the south-west corner of the grid",
             },
             "x coord": {
                 "name": "x",
+                "units": "metres",
+                "comment": "gridX values are distance in metres in the model x-direction from the south-west corner of the grid",
             },
             "chunk size": {
                 "time": 24,
@@ -825,10 +829,10 @@ class TestCalcOutputCoords:
         assert output_coords["gridY"].dtype == numpy.dtype(int)
         assert output_coords["gridY"].attrs["standard_name"] == "y"
         assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
-        assert output_coords["gridY"].attrs["units"] == "count"
+        assert output_coords["gridY"].attrs["units"] == "metres"
         assert (
             output_coords["gridY"].attrs["comment"]
-            == "gridY values are grid indices in the model y-direction"
+            == "gridY values are distance in metres in the model y-direction from the south-west corner of the grid"
         )
 
         assert log_output.entries[1]["log_level"] == "debug"
@@ -997,9 +1001,13 @@ class TestCalcOutputCoords:
             },
             "y coord": {
                 "name": "y",
+                "units": "metres",
+                "comment": "gridY values are distance in metres in the model y-direction from the south-west corner of the grid",
             },
             "x coord": {
                 "name": "x",
+                "units": "metres",
+                "comment": "gridX values are distance in metres in the model x-direction from the south-west corner of the grid",
             },
             "chunk size": {
                 "time": 24,
@@ -1025,10 +1033,10 @@ class TestCalcOutputCoords:
         assert output_coords["gridX"].dtype == numpy.dtype(int)
         assert output_coords["gridX"].attrs["standard_name"] == "x"
         assert output_coords["gridX"].attrs["long_name"] == "Grid X"
-        assert output_coords["gridX"].attrs["units"] == "count"
+        assert output_coords["gridX"].attrs["units"] == "metres"
         assert (
             output_coords["gridX"].attrs["comment"]
-            == "gridX values are grid indices in the model x-direction"
+            == "gridX values are distance in metres in the model x-direction from the south-west corner of the grid"
         )
 
         assert log_output.entries[2]["log_level"] == "debug"
