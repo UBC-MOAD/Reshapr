@@ -749,6 +749,73 @@ class TestCalcOutputCoords:
         assert log_output.entries[2]["log_level"] == "debug"
         assert log_output.entries[2]["event"] == "extraction y coordinate"
 
+    def test_y_index_coord_cast_to_int(self, log_output):
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(4),
+                "y": numpy.arange(9, dtype=float),
+                "x": numpy.arange(4, dtype=float),
+            },
+            data_vars={
+                "atmpres": xarray.DataArray(
+                    name="atmpres",
+                    data=numpy.ones((4, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "y": numpy.arange(9, dtype=float),
+                        "x": numpy.arange(4, dtype=float),
+                    },
+                    attrs={
+                        "short_name": "PRMSL_meansealevel",
+                        "long_name": "Pressure Reduced to MSL",
+                        "units": "Pa",
+                    },
+                ),
+            },
+        )
+        model_profile = {
+            "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
+            "chunk size": {
+                "time": 24,
+                "y": 5,
+                "x": 4,
+            },
+            "extraction time origin": "2007-01-01",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "surface fields": {},
+                    }
+                }
+            },
+        }
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            }
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["gridY"].name == "gridY"
+        assert numpy.array_equal(output_coords["gridY"].data, source_dataset.y.data)
+        assert output_coords["gridY"].dtype == numpy.dtype(int)
+        assert output_coords["gridY"].attrs["standard_name"] == "y"
+        assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
+        assert output_coords["gridY"].attrs["units"] == "count"
+        assert (
+            output_coords["gridY"].attrs["comment"]
+            == "gridY values are grid indices in the model y-direction"
+        )
+
+        assert log_output.entries[1]["log_level"] == "debug"
+        assert log_output.entries[1]["event"] == "extraction y coordinate"
+
     def test_y_index_coord_selection_y_min(
         self, source_dataset, model_profile, log_output
     ):
@@ -875,6 +942,73 @@ class TestCalcOutputCoords:
 
         assert log_output.entries[3]["log_level"] == "debug"
         assert log_output.entries[3]["event"] == "extraction x coordinate"
+
+    def test_x_index_coord_cast_to_int(self, log_output):
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(4),
+                "y": numpy.arange(9, dtype=float),
+                "x": numpy.arange(4, dtype=float),
+            },
+            data_vars={
+                "atmpres": xarray.DataArray(
+                    name="atmpres",
+                    data=numpy.ones((4, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "y": numpy.arange(9, dtype=float),
+                        "x": numpy.arange(4, dtype=float),
+                    },
+                    attrs={
+                        "short_name": "PRMSL_meansealevel",
+                        "long_name": "Pressure Reduced to MSL",
+                        "units": "Pa",
+                    },
+                ),
+            },
+        )
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            }
+        }
+        model_profile = {
+            "time coord": "time_counter",
+            "y coord": "y",
+            "x coord": "x",
+            "chunk size": {
+                "time": 24,
+                "y": 5,
+                "x": 4,
+            },
+            "extraction time origin": "2007-01-01",
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "surface fields": {},
+                    }
+                }
+            },
+        }
+
+        output_coords = extract.calc_output_coords(
+            source_dataset, extract_config, model_profile
+        )
+
+        assert output_coords["gridX"].name == "gridX"
+        assert numpy.array_equal(output_coords["gridX"].data, source_dataset.x.data)
+        assert output_coords["gridX"].dtype == numpy.dtype(int)
+        assert output_coords["gridX"].attrs["standard_name"] == "x"
+        assert output_coords["gridX"].attrs["long_name"] == "Grid X"
+        assert output_coords["gridX"].attrs["units"] == "count"
+        assert (
+            output_coords["gridX"].attrs["comment"]
+            == "gridX values are grid indices in the model x-direction"
+        )
+
+        assert log_output.entries[2]["log_level"] == "debug"
+        assert log_output.entries[2]["event"] == "extraction x coordinate"
 
     def test_x_index_coord_selection_x_min(
         self, source_dataset, model_profile, log_output
