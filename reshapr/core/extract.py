@@ -466,7 +466,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     y_coord = model_profile["y coord"]
     y_indices = create_dataarray(
         "gridY",
-        source_dataset[y_coord].isel({y_coord: y_selector}),
+        source_dataset[y_coord].isel({y_coord: y_selector}).astype(int),
         attrs={
             "standard_name": "y",
             "long_name": "Grid Y",
@@ -483,7 +483,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     x_coord = model_profile["x coord"]
     x_indices = create_dataarray(
         "gridX",
-        source_dataset[x_coord].isel({x_coord: x_selector}),
+        source_dataset[x_coord].isel({x_coord: x_selector}).astype(int),
         attrs={
             "standard_name": "x",
             "long_name": "Grid X",
