@@ -2,9 +2,12 @@
 
 name: SalishSeaCast.201812
 
-time coord: time_counter
-y coord: y
-x coord: x
+time coord:
+  name: time_counter
+y coord:
+  name: y
+x coord:
+  name: x
 
 # Chunking scheme used for the netCDF4 files
 # Note that coordinate names (keys) are conceptual here.

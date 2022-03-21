@@ -45,11 +45,18 @@ class TestModelProfiles:
             model_profile = yaml.safe_load(f)
 
         assert model_profile["name"] is not None
+        assert model_profile["time coord"]["name"] is not None
+        assert model_profile["y coord"]["name"] is not None
+        assert model_profile["x coord"]["name"] is not None
+        assert model_profile["chunk size"] is not None
+        assert model_profile["geo ref dataset"] is not None
+        assert model_profile["geo ref dataset"]["path"] is not None
+        assert model_profile["geo ref dataset"]["y coord"] is not None
+        assert model_profile["geo ref dataset"]["x coord"] is not None
+        assert model_profile["extraction time origin"] is not None
         assert model_profile["results archive"] is not None
         assert model_profile["results archive"]["path"] is not None
         assert model_profile["results archive"]["datasets"] is not None
-        assert model_profile["time coord"] is not None
-        assert model_profile["chunk size"] is not None
 
     def test_unused_variables(self):
         with (MODEL_PROFILES_DIR / "unused-variables.yaml").open("rt") as f:
@@ -64,7 +71,7 @@ class TestModelProfiles:
 
 
 class TestSalishSeaCast201812:
-    """Test of contents of SalishSeaCast-201812 model profile YAML."""
+    """Tests of contents of SalishSeaCast-201812 model profile YAML."""
 
     def test_SalishSeaCast_201812(self):
         with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
@@ -75,7 +82,11 @@ class TestSalishSeaCast201812:
             model_profile["results archive"]["path"]
             == "/results/SalishSea/nowcast-green.201812/"
         )
-        assert model_profile["time coord"] == "time_counter"
+        assert model_profile["time coord"]["name"] == "time_counter"
+        assert "units" not in model_profile["y coord"]
+        assert "comment" not in model_profile["y coord"]
+        assert "units" not in model_profile["y coord"]
+        assert "comment" not in model_profile["y coord"]
         expected_chunk_size = {
             "time": 1,
             "depth": 40,
