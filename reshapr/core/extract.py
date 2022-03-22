@@ -226,7 +226,7 @@ def calc_ds_chunk_size(config, model_profile):
     :return: Chunks size dict to use for loading model datasets.
     :rtype: dict
     """
-    abstract_chunk_size = model_profile["chunk size"]
+    abstract_chunk_size = model_profile["chunk size"].copy()
     time_chunk_size = abstract_chunk_size.pop("time")
     chunk_size = {model_profile["time coord"]["name"]: time_chunk_size}
     if "depth" in abstract_chunk_size:
