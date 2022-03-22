@@ -228,7 +228,7 @@ def calc_ds_chunk_size(config, model_profile):
     """
     abstract_chunk_size = model_profile["chunk size"]
     time_chunk_size = abstract_chunk_size.pop("time")
-    chunk_size = {model_profile["time coord"]: time_chunk_size}
+    chunk_size = {model_profile["time coord"]["name"]: time_chunk_size}
     if "depth" in abstract_chunk_size:
         depth_chunk_size = abstract_chunk_size.pop("depth")
         time_base = config["dataset"]["time base"]
@@ -548,16 +548,16 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
     x_selector = slice(x_min, x_max, x_interval)
     if include_depth_coord:
         selector = {
-            model_profile["time coord"]: time_selector,
+            model_profile["time coord"]["name"]: time_selector,
             depth_coord: depth_selector,
-            model_profile["y coord"]: y_selector,
-            model_profile["x coord"]: x_selector,
+            model_profile["y coord"]["name"]: y_selector,
+            model_profile["x coord"]["name"]: x_selector,
         }
     else:
         selector = {
-            model_profile["time coord"]: time_selector,
-            model_profile["y coord"]: y_selector,
-            model_profile["x coord"]: x_selector,
+            model_profile["time coord"]["name"]: time_selector,
+            model_profile["y coord"]["name"]: y_selector,
+            model_profile["x coord"]["name"]: x_selector,
         }
     extracted_vars = []
     for name, var in source_dataset.data_vars.items():

@@ -298,7 +298,9 @@ class TestCalcDsChunks:
             "end date": "2015-01-02",
         }
         model_profile = {
-            "time coord": "time_counter",
+            "time coord": {
+                "name": "time_counter",
+            },
             "chunk size": {
                 "time": 1,
                 "depth": 40,
@@ -338,7 +340,9 @@ class TestCalcDsChunks:
             "end date": "2015-01-02",
         }
         model_profile = {
-            "time coord": "time_counter",
+            "time coord": {
+                "name": "time_counter",
+            },
             "chunk size": {
                 "time": 24,
                 "y": 266,
@@ -1179,9 +1183,15 @@ class TestCalcExtractedVars:
     @pytest.fixture(name="model_profile", scope="class")
     def fixture_model_profile(self):
         return {
-            "time coord": "time_counter",
-            "y coord": "y",
-            "x coord": "x",
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
             "chunk size": {
                 "time": 24,
                 "depth": 8,
@@ -1271,9 +1281,15 @@ class TestCalcExtractedVars:
             },
         }
         model_profile = {
-            "time coord": "time_counter",
-            "y coord": "y",
-            "x coord": "x",
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
             "chunk size": {
                 "time": 24,
                 "y": 5,
