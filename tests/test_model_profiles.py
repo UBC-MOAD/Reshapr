@@ -25,6 +25,7 @@ import yaml
 MODEL_PROFILES_DIR = Path(__file__).parent.parent / "model_profiles"
 MODEL_PROFILES = (
     Path("SalishSeaCast-201812.yaml"),
+    Path("HRDPS-2.5km-operational.yaml"),
     Path("unused-variables.yaml"),
 )
 
@@ -214,3 +215,31 @@ class TestSalishSeaCast201812:
 
         assert hour_datasets[var_group]["file pattern"] == file_pattern
         assert hour_datasets[var_group]["depth coord"] == depth_coord
+
+
+class TestHRDPS2_5kmOperational:
+    """Test of contents of HRDPS-2.5km-operational model profile YAML."""
+
+    def test_HRDPS2_5kmOperational_dataset(self):
+        with (MODEL_PROFILES_DIR / "HRDPS-2.5km-operational.yaml").open("rt") as f:
+            model_profile = yaml.safe_load(f)
+        dataset_hour = model_profile["results archive"]["datasets"]["hour"]
+
+        assert model_profile["y coord"]["units"] == "metres"
+        assert (
+            model_profile["y coord"]["comment"]
+            == "gridY values are distance in metres in the model y-direction from the south-west corner of the grid"
+        )
+        assert model_profile["x coord"]["units"] == "metres"
+        assert (
+            model_profile["x coord"]["comment"]
+            == "gridX values are distance in metres in the model x-direction from the south-west corner of the grid"
+        )
+        assert (
+            model_profile["geo ref dataset"]["path"]
+            == "https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSaAtmosphereGridV1"
+        )
+        assert (
+            dataset_hour["surface fields"]["file pattern"] == "ops_{nemo_yyyymmdd}.nc"
+        )
+        assert "depth coord" not in dataset_hour["surface fields"]
