@@ -363,6 +363,47 @@ class TestCalcDsChunks:
         assert log_output.entries[0]["chunk_size"] == expected
         assert log_output.entries[0]["event"] == "chunk size for dataset loading"
 
+    def test_model_profile_chunk_size_unchanged(self, log_output):
+        """Test to demonstrate bug whereby model profile chunk size dict was getting changed
+        in the course of calculating the dataset loading chunk size dict.
+        """
+        extract_config = {
+            "dataset": {
+                "time base": "day",
+                "variables group": "biology",
+            },
+            "start date": "2015-01-01",
+            "end date": "2015-01-02",
+        }
+        model_profile = {
+            "time coord": {
+                "name": "time_counter",
+            },
+            "chunk size": {
+                "time": 1,
+                "depth": 40,
+                "y": 898,
+                "x": 398,
+            },
+            "results archive": {
+                "datasets": {
+                    "day": {
+                        "biology": {"depth coord": "deptht"},
+                    },
+                },
+            },
+        }
+
+        extract.calc_ds_chunk_size(extract_config, model_profile)
+
+        expected = {
+            "time": 1,
+            "depth": 40,
+            "y": 898,
+            "x": 398,
+        }
+        assert model_profile["chunk size"] == expected
+
 
 class TestCreateDataarray:
     """Unit tests for create_dataarray() function."""
