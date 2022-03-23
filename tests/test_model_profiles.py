@@ -26,6 +26,7 @@ MODEL_PROFILES_DIR = Path(__file__).parent.parent / "model_profiles"
 MODEL_PROFILES = (
     Path("SalishSeaCast-201812.yaml"),
     Path("HRDPS-2.5km-operational.yaml"),
+    Path("HRDPS-2.5km-GEMLAM-pre22sep11.yaml"),
     Path("unused-variables.yaml"),
 )
 
@@ -95,6 +96,12 @@ class TestSalishSeaCast201812:
             "x": 398,
         }
         assert model_profile["chunk size"] == expected_chunk_size
+        assert (
+            model_profile["geo ref dataset"]["path"]
+            == "https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetryV17-02"
+        )
+        assert model_profile["geo ref dataset"]["y coord"] == "gridY"
+        assert model_profile["geo ref dataset"]["x coord"] == "gridX"
 
     @pytest.mark.parametrize(
         "var_group, file_pattern, depth_coord",
@@ -239,7 +246,39 @@ class TestHRDPS2_5kmOperational:
             model_profile["geo ref dataset"]["path"]
             == "https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSaAtmosphereGridV1"
         )
+        assert model_profile["geo ref dataset"]["y coord"] == "gridY"
+        assert model_profile["geo ref dataset"]["x coord"] == "gridX"
         assert (
             dataset_hour["surface fields"]["file pattern"] == "ops_{nemo_yyyymmdd}.nc"
+        )
+        assert "depth coord" not in dataset_hour["surface fields"]
+
+
+class TestHRDPS2_5kmGEMLAM_pre22sep11:
+    """Test of contents of HRDPS-2.5km-GEMLAM-pre22sep11 model profile YAML."""
+
+    def test_HRDPS2_5kmGEMLAM_pre22sep11_dataset(self):
+        with (MODEL_PROFILES_DIR / "HRDPS-2.5km-GEMLAM-pre22sep11.yaml").open(
+            "rt"
+        ) as f:
+            model_profile = yaml.safe_load(f)
+        dataset_hour = model_profile["results archive"]["datasets"]["hour"]
+
+        assert model_profile["time coord"]["name"] == "time_counter"
+        assert "units" not in model_profile["y coord"]
+        assert "comment" not in model_profile["y coord"]
+        assert "units" not in model_profile["y coord"]
+        assert "comment" not in model_profile["y coord"]
+        assert (
+            model_profile["geo ref dataset"]["path"]
+            == "/results/forcing/atmospheric/GEM2.5/gemlam/gemlam_y2007m01d03.nc"
+        )
+        assert model_profile["geo ref dataset"]["y coord"] == "y"
+        assert model_profile["geo ref dataset"]["longitude var"] == "nav_lon"
+        assert model_profile["geo ref dataset"]["x coord"] == "x"
+        assert model_profile["geo ref dataset"]["latitude var"] == "nav_lat"
+        assert (
+            dataset_hour["surface fields"]["file pattern"]
+            == "gemlam_{nemo_yyyymmdd}.nc"
         )
         assert "depth coord" not in dataset_hour["surface fields"]
