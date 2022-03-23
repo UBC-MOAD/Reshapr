@@ -15,40 +15,15 @@
 .. SPDX-License-Identifier: Apache-2.0
 
 
-******************************
-:command:`extract` Sub-command
-******************************
+.. _ReshaprModelProfileYAMLFiles:
 
-
-Contents
-========
-
-* :ref:`ReshaprExtractYAMLFile`
-* :ref:`ReshaprDaskClusterYAMLFile`
-* :ref:`ReshaprModelProfileYAMLFiles`
-
-
-.. _ReshaprExtractYAMLFile:
-
-:command:`extract` Process Configuration File
-=============================================
+*******************
+Model Profile Files
+*******************
 
 Example:
 
-.. literalinclude:: extract_example.yaml
-   :language: yaml
-
-Details: Coming soon...
-
-
-.. _ReshaprDaskClusterYAMLFile:
-
-Dask Cluster Configuration File
-===============================
-
-Example:
-
-.. literalinclude:: ../../cluster_configs/salish_cluster.yaml
+.. literalinclude:: ../model_profiles/SalishSeaCast-201812.yaml
    :language: yaml
 
 Details: Coming soon...

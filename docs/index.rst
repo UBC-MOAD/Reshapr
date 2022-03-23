@@ -22,11 +22,11 @@ Reshapr Documentation
 This is the documentation for the :kbd:`Reshapr` Python package.
 
 .. toctree::
-   :maxdepth: 2
    :caption: Contents:
 
    installation
    subcommands/index
+   model_profiles
    pkg_development
    design_notes/index
 
