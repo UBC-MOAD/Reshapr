@@ -76,7 +76,7 @@ in particular:
 
 .. _Python: https://www.python.org/
 .. _formatted string literals: https://docs.python.org/3/reference/lexical_analysis.html#f-strings
-.. _structural pattern matching: https://www.python.org/dev/peps/pep-0636/
+.. _structural pattern matching: https://peps.python.org/pep-0636/
 
 .. _ReshaprGettingTheCode:
 
@@ -155,7 +155,7 @@ The :kbd:`Reshapr` package uses the `black`_ code formatting tool to maintain a
 coding style that is very close to `PEP 8`_.
 
 .. _black: https://black.readthedocs.io/en/stable/
-.. _PEP 8: https://www.python.org/dev/peps/pep-0008/
+.. _PEP 8: https://peps.python.org/pep-0008/
 
 :command:`black` is installed as part of the :ref:`ReshaprDevelopmentEnvironment` setup.
 
