@@ -602,14 +602,16 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
     # Add longitude and latitude variables from geo ref dataset
     with xarray.open_dataset(model_profile["geo ref dataset"]["path"]) as grid_ds:
         y_coord = model_profile["geo ref dataset"]["y coord"]
+        lon_var = model_profile["geo ref dataset"].get("longitude var", "longitude")
         x_coord = model_profile["geo ref dataset"]["x coord"]
+        lat_var = model_profile["geo ref dataset"].get("latitude var", "latitude")
         selector = {
             y_coord: y_selector,
             x_coord: x_selector,
         }
         lons = create_dataarray(
             "longitude",
-            grid_ds.longitude.isel(selector),
+            grid_ds[lon_var].isel(selector),
             attrs={
                 "standard_name": "longitude",
                 "long_name": "Longitude",
@@ -625,7 +627,7 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
 
         lats = create_dataarray(
             "latitude",
-            grid_ds.latitude.isel(selector),
+            grid_ds[lat_var].isel(selector),
             attrs={
                 "standard_name": "latitude",
                 "long_name": "Latitude",
