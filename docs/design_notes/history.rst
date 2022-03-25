@@ -22,7 +22,7 @@ History
 Origins
 =======
 
-Many elements of Dask that are foundational in the design of :kbd:`Reshapr` are explored
+Many elements of Dask that are foundational in the design of :py:obj:`Reshapr` are explored
 in `this dask_expts notebook`_
 (best viewed via nbviewer.org at `dask_expts.ipynb`_).
 Those elements include:
@@ -37,7 +37,7 @@ Those elements include:
 .. _dask_expts.ipynb: https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb
 
 The results of that exploration were applied to one of the research task needs that is
-a motivator for :kbd:`Reshapr`:
+a motivator for :py:obj:`Reshapr`:
 
 * extraction of time series of diatoms biomass from the 2007 to present SalishSeaCast
   hindcast to be used to nudge the Atlantis ecosystem model
@@ -53,6 +53,6 @@ Code from that notebook was extracted into a `Python module`_ with a minimal com
 interface.
 That module was the prototype for the :command:`reshapr extract` sub-command
 and contributed to the conceptualization of several of the abstractions that are used in
-:kbd:`Reshapr`.
+:py:obj:`Reshapr`.
 
 .. _Python module: https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.py

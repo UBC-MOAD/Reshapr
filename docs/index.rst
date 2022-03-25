@@ -19,7 +19,7 @@
 Reshapr Documentation
 *********************
 
-This is the documentation for the :kbd:`Reshapr` Python package.
+This is the documentation for the :py:obj:`Reshapr` Python package.
 
 .. toctree::
    :caption: Contents:

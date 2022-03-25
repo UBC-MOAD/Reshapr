@@ -19,7 +19,7 @@
 Design and Implementation Notes
 *******************************
 
-This section is a collection of notes about the design and implementation of :kbd:`Reshapr`.
+This section is a collection of notes about the design and implementation of :py:obj:`Reshapr`.
 
 .. toctree::
    :caption: Contents:

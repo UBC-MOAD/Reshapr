@@ -17,9 +17,9 @@
 
 .. _ReshaprPackagedDevelopment:
 
-**********************************************************
-:kbd:`Reshapr` Package Development
-**********************************************************
+*************************************
+:py:obj:`Reshapr` Package Development
+*************************************
 
 
 .. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
@@ -50,7 +50,7 @@
     :target: https://github.com/UBC-MOAD/Reshapr/issues
     :alt: Issue Tracker
 
-The Reshapr package (:kbd:`Reshapr`) is Command-line tool based on Xarray and Dask
+The Reshapr package (:py:obj:`Reshapr`) is Command-line tool based on Xarray and Dask
 for extraction of model variable time series from model products like
 SalishSeaCast, HRDPS & CANESM2/CGCM4.
 
@@ -64,7 +64,7 @@ Python Versions
     :target: https://docs.python.org/3.10/
     :alt: Python Version
 
-The :kbd:`Reshapr` package is developed and tested using `Python`_ 3.10.
+The :py:obj:`Reshapr` package is developed and tested using `Python`_ 3.10.
 The package uses some Python language features that are not available in various earlier versions,
 in particular:
 
@@ -151,7 +151,7 @@ Coding Style
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
 
-The :kbd:`Reshapr` package uses the `black`_ code formatting tool to maintain a
+The :py:obj:`Reshapr` package uses the `black`_ code formatting tool to maintain a
 coding style that is very close to `PEP 8`_.
 
 .. _black: https://black.readthedocs.io/en/stable/
@@ -184,7 +184,7 @@ Building the Documentation
     :target: https://reshapr.readthedocs.io/en/latest/
     :alt: Documentation Status
 
-The documentation for the :kbd:`Reshapr` package is written in `reStructuredText`_
+The documentation for the :py:obj:`Reshapr` package is written in `reStructuredText`_
 and converted to HTML using `Sphinx`_.
 Creating a :ref:`ReshaprDevelopmentEnvironment` as described above includes the installation of Sphinx.
 Building the documentation is driven by the :file:`docs/Makefile`.
@@ -319,7 +319,7 @@ Look for any errors in the above output or in _build/linkcheck/output.txt
 Running the Unit Tests
 ======================
 
-The test suite for the :kbd:`Reshapr` package is in :file:`Reshapr/tests/`.
+The test suite for the :py:obj:`Reshapr` package is in :file:`Reshapr/tests/`.
 The `pytest`_ tool is used for test parametrization and as the test runner for the suite.
 
 .. _pytest: https://docs.pytest.org/en/latest/
@@ -388,7 +388,7 @@ Continuous Integration
     :target: https://app.codecov.io/gh/UBC-MOAD/Reshapr
     :alt: Codecov Testing Coverage Report
 
-The :kbd:`Reshapr` package unit test suite is run and a coverage report is generated
+The :py:obj:`Reshapr` package unit test suite is run and a coverage report is generated
 whenever changes are pushed to GitHub.
 The results are visible on the `repo actions page`_,
 from the green checkmarks beside commits on the `repo commits page`_,
@@ -416,7 +416,7 @@ Version Control Repository
     :target: https://github.com/UBC-MOAD/Reshapr
     :alt: Git on GitHub
 
-The :kbd:`Reshapr` package code and documentation source files are available
+The :py:obj:`Reshapr` package code and documentation source files are available
 as a `Git`_ repository at https://github.com/UBC-MOAD/Reshapr.
 
 .. _Git: https://git-scm.com/
