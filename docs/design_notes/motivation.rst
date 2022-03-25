@@ -21,7 +21,7 @@ Motivation
 
 This is lightly edited version of a blurb written in December 2021 to provide background
 for a contract from the Institute of Ocean Sciences (IOS) of the Fisheries and Oceans Canada (DFO)
-that supported part of the development of :kbd:`Reshapr`.
+that supported part of the development of :py:obj:`Reshapr`.
 
 Output from ocean and climate models is generally stored in NetCDF-4 files.
 While atmospheric models often store results in GRIB2 files,
@@ -94,7 +94,7 @@ such as extracting model variable time series,
 that could be beneficially implemented in a Python package that codifies his experience
 and the best practices he has learned.
 
-That lead to the beginnings of the design of the :kbd:`Reshapr` package.
+That lead to the beginnings of the design of the :py:obj:`Reshapr` package.
 The immediate goal was to provide a command-line tool that is capable of extracting
 time series of one or more model variables from the model results files that are used
 in the SalishSeaCast project.
@@ -111,7 +111,7 @@ Longer term goals include a Python API in addition to a command-line interface,
 and more complex analysis operations such as temporal and spatial resampling,
 and climatology calculations.
 
-Apart from the codification of experience and knowledge, :kbd:`Reshapr` is motivated by
+Apart from the codification of experience and knowledge, :py:obj:`Reshapr` is motivated by
 research task needs like:
 
 * extraction of time series of diatoms biomass from the 2007 to present SalishSeaCast
@@ -127,7 +127,7 @@ research task needs like:
   model
 
 As `open-source code on GitHub`_,
-:kbd:`Reshapr` is available for use by DFO researchers and others,
+:py:obj:`Reshapr` is available for use by DFO researchers and others,
 to provide implementation guidance for other applications of Xarray and Dask.
 It is able to accept contributions of knowledge about operating on other model datasets
 of interest,

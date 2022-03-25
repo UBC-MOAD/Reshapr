@@ -47,10 +47,10 @@ from the :guilabel:`Code` button on the `repository`_ page.
 Conda Environment and Package Installation
 ==========================================
 
-Running :kbd:`Reshapr` in an isolated `Conda`_ environment using is highly recommended.
+Running :py:obj:`Reshapr` in an isolated `Conda`_ environment using is highly recommended.
 Assuming that you have `Miniconda3`_ installed,
 you can create and activate an environment called :kbd:`reshapr` that will have
-all of the Python packages necessary use :kbd:`Reshapr`,
+all of the Python packages necessary use :py:obj:`Reshapr`,
 and install the package with the commands below.
 
 .. _Conda: https://conda.io/en/latest/
@@ -68,12 +68,12 @@ the package from the cloned repo via symlinks so that the installed package will
 automatically updated as the repo evolves.
 Please see :ref:`ReshaprUpdateInstallation` for more details.
 
-You can confirm that you have successfully installed :kbd:`Reshapr`
+You can confirm that you have successfully installed :py:obj:`Reshapr`
 by typing :kbd:`reshapr` in your activated environment.
 You should see the top level command help information and the list of available
 :ref:`ReshaprSubcommands`.
 
-You can show the version of :kbd:`Reshapr` that you have installed with:
+You can show the version of :py:obj:`Reshapr` that you have installed with:
 
 .. code-block:: bash
 
@@ -86,14 +86,14 @@ To deactivate the environment use:
     (reshapr-dev)$ conda deactivate
 
 .. note::
-    If you want to make code changes in the :kbd:`Reshapr` package,
+    If you want to make code changes in the :py:obj:`Reshapr` package,
     please see :ref:`ReshaprPackagedDevelopment` for information on how to work in
     the package development environment.
 
-If you want to use :kbd:`Reshapr` in a different `Conda`_ environment,
+If you want to use :py:obj:`Reshapr` in a different `Conda`_ environment,
 edit your environment description to include the packages listed in the
 :kbd:`dependencies:` section of :file:`envs/environment-user.yaml`,
-then update your environment and install :kbd:`Reshapr` with:
+then update your environment and install :py:obj:`Reshapr` with:
 
 .. code-block:: bash
 
@@ -107,7 +107,7 @@ Updating Your Installation
 ==========================
 
 In general,
-all you need to do to update your :kbd:`Reshapr` installation is pull the latest updates
+all you need to do to update your :py:obj:`Reshapr` installation is pull the latest updates
 from GitHub:
 
 .. code-block:: bash
@@ -129,7 +129,7 @@ added since your last update.
 Uninstalling
 ============
 
-If you want to uninstall :kbd:`Reshapr`,
+If you want to uninstall :py:obj:`Reshapr`,
 you can remove the `Conda`_ environment with:
 
 .. code-block:: bash

@@ -29,7 +29,7 @@ The 15+ years of SalishSeaCast fields are used in a repeating cycle over the mul
 decades of the Atlantis run durations.
 
 It has been identified that the biomass of some functional groups in the Salish Sea
-ecology in Atlantis are not as accurate as the biomass in SalishSeaCast, possibly 
+ecology in Atlantis are not as accurate as the biomass in SalishSeaCast, possibly
 due to SalishSeaCast's better resolution.
 To improve the accuracy in Atlantis one can periodically nudge one or more of the
 functional groups at the base of the food web towards values obtained from outside
@@ -73,7 +73,7 @@ The storage attributes of the file(s) are:
 Execution
 ---------
 
-The task described above can be accomplished using :kbd:`Reshapr` on the MOAD compute
+The task described above can be accomplished using :py:obj:`Reshapr` on the MOAD compute
 server :kbd:`salish` with the command:
 
 .. code-block:: bash

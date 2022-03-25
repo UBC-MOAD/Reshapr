@@ -48,7 +48,7 @@ The parameters of the SalishSeaCast datasets to be provided to the students are:
 Execution
 ---------
 
-The task described above can be accomplished using :kbd:`Reshapr` on the MOAD compute
+The task described above can be accomplished using :py:obj:`Reshapr` on the MOAD compute
 server :kbd:`salish` with the commands:
 
 .. code-block:: bash
