@@ -77,7 +77,7 @@ or,
 at worst,
 fails due to exhausting the physical and virtual memory of the machine they are using.
 Few researchers have the patience or computing background to delve into the nuances of
-Dask’s task graph architecture,
+Dask's task graph architecture,
 the details of its threads,
 processes,
 and cluster schedulers,
