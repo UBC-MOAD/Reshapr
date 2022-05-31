@@ -1,0 +1,75 @@
+# Reshapr model profile for SalishSeaCast version 201905 NEMO model results
+
+name: SalishSeaCast.201905
+
+time coord:
+  name: time_counter
+y coord:
+  name: y
+x coord:
+  name: x
+
+# Chunking scheme used for the netCDF4 files
+# Note that coordinate names (keys) are conceptual here.
+# They are replaced with actual coordinate names in files in the code;
+# e.g. time is replaced by time_counter for dataset loading
+chunk size:
+  time: 1
+  depth: 40
+  y: 898
+  x: 398
+
+geo ref dataset:
+  path: https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetryV17-02
+  y coord: gridY
+  x coord: gridX
+
+extraction time origin: 2007-01-01
+
+results archive:
+  path: /results2/SalishSea/nowcast-green.201905/
+  datasets:
+    day:
+      auxiliary:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
+        depth coord: deptht
+      biology:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+        depth coord: deptht
+      biology and chemistry rates:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_prod_T.nc"
+        depth coord: deptht
+      chemistry:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
+        depth coord: deptht
+      grazing and mortality:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_dia2_T.nc"
+        depth coord: deptht
+      physics tracers:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+        depth coord: deptht
+    hour:
+      auxiliary:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
+        depth coord: deptht
+      biology:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+        depth coord: deptht
+      chemistry:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_carp_T.nc"
+        depth coord: deptht
+      physics tracers:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+        depth coord: deptht
+      u velocity:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc"
+        depth coord: depthu
+      v velocity:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
+        depth coord: depthv
+      vertical turbulence:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        depth coord: depthw
+      w velocity:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        depth coord: depthw
