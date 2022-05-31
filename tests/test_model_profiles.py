@@ -81,15 +81,13 @@ class TestSalishSeaCast201812:
             model_profile = yaml.safe_load(f)
 
         assert model_profile["name"] == "SalishSeaCast.201812"
-        assert (
-            model_profile["results archive"]["path"]
-            == "/results/SalishSea/nowcast-green.201812/"
-        )
         assert model_profile["time coord"]["name"] == "time_counter"
+        assert model_profile["y coord"]["name"] == "y"
         assert "units" not in model_profile["y coord"]
         assert "comment" not in model_profile["y coord"]
-        assert "units" not in model_profile["y coord"]
-        assert "comment" not in model_profile["y coord"]
+        assert model_profile["x coord"]["name"] == "x"
+        assert "units" not in model_profile["x coord"]
+        assert "comment" not in model_profile["x coord"]
         expected_chunk_size = {
             "time": 1,
             "depth": 40,
@@ -103,6 +101,11 @@ class TestSalishSeaCast201812:
         )
         assert model_profile["geo ref dataset"]["y coord"] == "gridY"
         assert model_profile["geo ref dataset"]["x coord"] == "gridX"
+        assert model_profile["extraction time origin"] == arrow.get("2015-01-01").date()
+        assert (
+            model_profile["results archive"]["path"]
+            == "/results/SalishSea/nowcast-green.201812/"
+        )
 
     @pytest.mark.parametrize(
         "var_group, file_pattern, depth_coord",
