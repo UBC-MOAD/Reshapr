@@ -371,22 +371,37 @@ class TestHRDPS2_5kmOperational:
             model_profile = yaml.safe_load(f)
         dataset_hour = model_profile["results archive"]["datasets"]["hour"]
 
+        assert model_profile["name"] == "HRDPS-2.5km-operational"
+        assert model_profile["time coord"]["name"] == "time_counter"
+        assert model_profile["y coord"]["name"] == "y"
         assert model_profile["y coord"]["units"] == "metres"
         assert (
             model_profile["y coord"]["comment"]
             == "gridY values are distance in metres in the model y-direction from the south-west corner of the grid"
         )
+        assert model_profile["x coord"]["name"] == "x"
         assert model_profile["x coord"]["units"] == "metres"
         assert (
             model_profile["x coord"]["comment"]
             == "gridX values are distance in metres in the model x-direction from the south-west corner of the grid"
         )
+        expected_chunk_size = {
+            "time": 24,
+            "y": 266,
+            "x": 256,
+        }
+        assert model_profile["chunk size"] == expected_chunk_size
         assert (
             model_profile["geo ref dataset"]["path"]
             == "https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSaAtmosphereGridV1"
         )
         assert model_profile["geo ref dataset"]["y coord"] == "gridY"
         assert model_profile["geo ref dataset"]["x coord"] == "gridX"
+        assert model_profile["extraction time origin"] == arrow.get("2007-01-01").date()
+        assert (
+            model_profile["results archive"]["path"]
+            == "/results/forcing/atmospheric/GEM2.5/operational/"
+        )
         assert (
             dataset_hour["surface fields"]["file pattern"] == "ops_{nemo_yyyymmdd}.nc"
         )
