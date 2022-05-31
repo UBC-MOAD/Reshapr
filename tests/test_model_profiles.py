@@ -418,11 +418,20 @@ class TestHRDPS2_5kmGEMLAM_pre22sep11:
             model_profile = yaml.safe_load(f)
         dataset_hour = model_profile["results archive"]["datasets"]["hour"]
 
+        assert model_profile["name"] == "HRDPS-2.5km-GEMLAM-pre22sep11"
         assert model_profile["time coord"]["name"] == "time_counter"
+        assert model_profile["y coord"]["name"] == "y"
         assert "units" not in model_profile["y coord"]
         assert "comment" not in model_profile["y coord"]
-        assert "units" not in model_profile["y coord"]
-        assert "comment" not in model_profile["y coord"]
+        assert model_profile["x coord"]["name"] == "x"
+        assert "units" not in model_profile["x coord"]
+        assert "comment" not in model_profile["x coord"]
+        expected_chunk_size = {
+            "time": 24,
+            "y": 266,
+            "x": 256,
+        }
+        assert model_profile["chunk size"] == expected_chunk_size
         assert (
             model_profile["geo ref dataset"]["path"]
             == "/results/forcing/atmospheric/GEM2.5/gemlam/gemlam_y2007m01d03.nc"
@@ -431,6 +440,7 @@ class TestHRDPS2_5kmGEMLAM_pre22sep11:
         assert model_profile["geo ref dataset"]["longitude var"] == "nav_lon"
         assert model_profile["geo ref dataset"]["x coord"] == "x"
         assert model_profile["geo ref dataset"]["latitude var"] == "nav_lat"
+        assert model_profile["extraction time origin"] == arrow.get("2007-01-01").date()
         assert (
             dataset_hour["surface fields"]["file pattern"]
             == "gemlam_{nemo_yyyymmdd}.nc"
