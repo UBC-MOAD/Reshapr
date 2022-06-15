@@ -378,41 +378,13 @@ def calc_output_coords(source_dataset, config, model_profile):
     :return: Mapping of coordinate names to their data arrays.
     :rtype: dict
     """
-    time_examples = {
-        "day": (
-            "e.g. the field average values for 8 February 2022 have "
-            "a time value of 2022-02-08 12:00:00Z"
-        ),
-        "hour": (
-            "e.g. the field average values for the first hour of 8 February 2022 have "
-            "a time value of 2022-02-08 00:30:00Z"
-        ),
-    }
     time_interval = config.get("selection", {}).get("time interval", 1)
     # stop=None in slice() means the length of the array without having to know what that is
     time_selector = {model_profile["time coord"]["name"]: slice(0, None, time_interval)}
-    extract_time_origin = model_profile["extraction time origin"]
-    match config["dataset"]["time base"]:
-        case "day":
-            time_offset = "12:00:00"
-        case "hour":
-            time_offset = "00:30:00"
-        case _:
-            time_offset = "00:30:00"
     times = create_dataarray(
         "time",
         source_dataset[model_profile["time coord"]["name"]].isel(time_selector),
-        attrs={
-            "standard_name": "time",
-            "long_name": "Time Axis",
-            "time_origin": f"{extract_time_origin} {time_offset}",
-            "comment": (
-                f"time values are UTC at the centre of the intervals over which the "
-                f"calculated model results are averaged; "
-                f"{time_examples[config['dataset']['time base']]}"
-            ),
-            # time_origin and units are provided by encoding when dataset is written to netCDF file
-        },
+        attrs=calc_time_coord_attrs(config["dataset"]["time base"], model_profile),
     )
     logger.debug("extraction time coordinate", time=times)
 
@@ -502,6 +474,54 @@ def calc_output_coords(source_dataset, config, model_profile):
         if include_depth_coord
         else {"time": times, "gridY": y_indices, "gridX": x_indices}
     )
+
+
+def calc_time_coord_attrs(time_base, model_profile):
+    """
+    :param str time_base: Time base for extraction or time interval for resampling.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Time coordinate netCDF attributes.
+    :rtype: dict
+    """
+    extract_time_origin = model_profile["extraction time origin"]
+    match time_base:
+        case "hour":
+            time_offset = "00:30:00"
+            example = (
+                "e.g. the field average values for the first hour of 8 February 2022 have "
+                "a time value of 2022-02-08 00:30:00Z"
+            )
+        case "day":
+            time_offset = "12:00:00"
+            example = (
+                "e.g. the field average values for 8 February 2022 have "
+                "a time value of 2022-02-08 12:00:00Z"
+            )
+        case "month":
+            time_offset = "12:00:00"
+            example = (
+                "e.g. the field average values for January 2022 have "
+                "a time value of 2022-01-15 12:00:00Z, "
+                "and those for April 2022 have a time value of 2022-04-15 00:00:00Z"
+            )
+        case _:
+            time_offset = "00:30:00"
+            example = ""
+    comment = (
+        "time values are UTC at the centre of the intervals over which the "
+        "calculated model results are averaged"
+    )
+    comment = f"{comment}; {example}" if example else comment
+    time_attrs = {
+        "standard_name": "time",
+        "long_name": "Time Axis",
+        "time_origin": f"{extract_time_origin} {time_offset}",
+        "comment": comment,
+        # time_origin and units are provided by encoding when dataset is written to netCDF file
+    }
+    return time_attrs
 
 
 def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
