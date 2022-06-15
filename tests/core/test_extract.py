@@ -1740,6 +1740,66 @@ class TestCalcCoordEncoding:
         assert encoding == expected
 
 
+class TestCalcTimeCoordAttrs:
+    """Unit tests for calc_time_coord_attrs() function."""
+
+    @pytest.mark.parametrize(
+        "time_base, time_offset, example",
+        (
+            (
+                "hour",
+                "00:30:00",
+                "e.g. the field average values for the first hour of 8 February 2022 have "
+                "a time value of 2022-02-08 00:30:00Z",
+            ),
+            (
+                "day",
+                "12:00:00",
+                "e.g. the field average values for 8 February 2022 have "
+                "a time value of 2022-02-08 12:00:00Z",
+            ),
+            (
+                "month",
+                "12:00:00",
+                "e.g. the field average values for January 2022 have "
+                "a time value of 2022-01-15 12:00:00Z, "
+                "and those for April 2022 have a time value of 2022-04-15 00:00:00Z",
+            ),
+        ),
+    )
+    def test_calc_time_coord_attrs(self, time_base, time_offset, example):
+        model_profile = {"extraction time origin": "2007-01-01"}
+        time_attrs = extract.calc_time_coord_attrs(time_base, model_profile)
+
+        expected = {
+            "standard_name": "time",
+            "long_name": "Time Axis",
+            "time_origin": f"2007-01-01 {time_offset}",
+            "comment": (
+                f"time values are UTC at the centre of the intervals over which the "
+                f"calculated model results are averaged; {example}"
+            ),
+        }
+        assert time_attrs == expected
+
+    def test_unrecognized_time_base(self):
+        model_profile = {"extraction time origin": "2007-01-01"}
+        time_attrs = extract.calc_time_coord_attrs(
+            "unusual offset alias", model_profile
+        )
+
+        expected = {
+            "standard_name": "time",
+            "long_name": "Time Axis",
+            "time_origin": f"2007-01-01 00:30:00",
+            "comment": (
+                f"time values are UTC at the centre of the intervals over which the "
+                f"calculated model results are averaged"
+            ),
+        }
+        assert time_attrs == expected
+
+
 class TestCalcVarEncoding:
     """Unit tests for calc_var_encoding() function."""
 
