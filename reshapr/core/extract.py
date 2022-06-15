@@ -32,16 +32,23 @@ import yaml
 logger = structlog.get_logger()
 
 
-def extract(config_file):
+def extract(config_file, start_date, end_date):
     """Extract model variable time series from model products.
 
     :param config_file: File path and name of the YAML file to read processing configuration
                         dictionary from.
                         Please see :ref:`ReshaprExtractYAMLFile` for details.
     :type config_file: :py:class:`pathlib.Path`
+
+    :param str start_date: Start date for extraction. Overrides start date in config file.
+
+    :param str end_date: End date for extraction. Overrides end date in config file.
     """
     t_start = time.time()
     config = _load_config(config_file)
+    config["start date"], config["end date"] = _override_start_end_date(
+        config, start_date, end_date
+    )
     model_profile = _load_model_profile(Path(config["dataset"]["model profile"]))
     ds_paths = calc_ds_paths(config, model_profile)
     chunk_size = calc_ds_chunk_size(config, model_profile)
@@ -84,6 +91,21 @@ def _load_config(config_yaml):
         raise SystemExit(2)
     log.debug("loaded config")
     return config
+
+
+def _override_start_end_date(config, start_date, end_date):
+    """Override config file start/end dates with those from command-line
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param str start_date: Start date for extraction. Overrides start date in config file.
+
+    :param str end_date: End date for extraction. Overrides end date in config file.
+
+    :return: Possibly updated Extraction processing configuration dictionary.
+    :rtype: dict
+    """
+    return start_date or config["start date"], end_date or config["end date"]
 
 
 def _load_model_profile(model_profile_yaml):
@@ -934,4 +956,16 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format):
 # This stanza facilitates running the extract sub-command in a Python debugger
 if __name__ == "__main__":
     config_file = Path(sys.argv[1])
-    extract(config_file)
+    try:
+        idx = sys.argv.index("--start-date")
+        start_date = sys.argv[idx + 1]
+    except ValueError:
+        # No --start-date in command-line
+        start_date = ""
+    try:
+        idx = sys.argv.index("--end-date")
+        end_date = sys.argv[idx + 1]
+    except ValueError:
+        # No --end-date in command-line
+        end_date = ""
+    extract(config_file, start_date, end_date)
