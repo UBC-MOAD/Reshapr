@@ -36,12 +36,24 @@ import reshapr.core.extract
         exists=True, readable=True, file_okay=True, dir_okay=False, path_type=Path
     ),
 )
-def extract(config_file):
+@click.option(
+    "--start-date",
+    help="Start date for extraction. Overrides start date in config file. Use YYYY-MM-DD format.",
+)
+@click.option(
+    "--end-date",
+    help="End date for extraction. Overrides end date in config file. Use YYYY-MM-DD format.",
+)
+def extract(config_file, start_date, end_date):
     """Command-line interface for :py:func:`reshapr.core.extract.extract`.
 
     :param config_file: File path and name of the YAML file to read processing configuration
                         dictionary from.
                         Please see :ref:`ReshaprExtractYAMLFile` for details.
     :type config_file: :py:class:`pathlib.Path`
+
+    :param str start_date: Start date for extraction. Overrides start date in config file.
+
+    :param str end_date: End date for extraction. Overrides end date in config file.
     """
-    reshapr.core.extract.extract(config_file)
+    reshapr.core.extract.extract(config_file, start_date, end_date)

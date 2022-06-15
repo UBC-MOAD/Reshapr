@@ -69,6 +69,38 @@ class TestLoadConfig:
         assert log_output.entries[0]["event"] == "config file not found"
 
 
+class TestOverrideStartEndDate:
+    """Unit tests for _override_start_end_date() function."""
+
+    def test_no_override(self):
+        config = {
+            "start date": "2007-01-01",
+            "end date": "2007-12-31",
+        }
+        start_date, end_date = "", ""
+
+        config["start date"], config["end date"] = extract._override_start_end_date(
+            config, start_date, end_date
+        )
+
+        assert config["start date"] == "2007-01-01"
+        assert config["end date"] == "2007-12-31"
+
+    def test_override(self):
+        config = {
+            "start date": "2007-01-01",
+            "end date": "2007-12-31",
+        }
+        start_date, end_date = "2022-06-15", "2022-06-16"
+
+        config["start date"], config["end date"] = extract._override_start_end_date(
+            config, start_date, end_date
+        )
+
+        assert config["start date"] == "2022-06-15"
+        assert config["end date"] == "2022-06-16"
+
+
 class TestLoadModelProfile:
     """Unit tests for core.extract._load_model_profile() function."""
 

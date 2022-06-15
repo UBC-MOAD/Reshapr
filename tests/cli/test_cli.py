@@ -47,7 +47,10 @@ class TestExtract:
 
         runner = CliRunner()
         with runner.isolated_filesystem(temp_dir=tmp_path):
-            result = runner.invoke(reshapr, ["extract", os.fspath(config_yaml)])
+            start_date, end_date = "", ""
+            result = runner.invoke(
+                reshapr, ["extract", os.fspath(config_yaml), start_date, end_date]
+            )
         structlog.reset_defaults()
 
         assert result.exit_code == 2
