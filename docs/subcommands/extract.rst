@@ -24,6 +24,7 @@ Contents
 ========
 
 * :ref:`ReshaprExtractYAMLFile`
+* :ref:`ReshaprExtractResampleYAMLFile`
 * :ref:`ReshaprDaskClusterYAMLFile`
 * :ref:`ReshaprModelProfileYAMLFiles`
 
@@ -36,6 +37,19 @@ Contents
 Example:
 
 .. literalinclude:: extract_example.yaml
+   :language: yaml
+
+Details: Coming soon...
+
+
+.. _ReshaprExtractResampleYAMLFile:
+
+:command:`extract` Process Configuration File for Resampling
+============================================================
+
+Example:
+
+.. literalinclude:: extract_resample.yaml
    :language: yaml
 
 Details: Coming soon...

@@ -53,6 +53,8 @@ def extract(config_file):
         extracted_ds = calc_extracted_dataset(
             extracted_vars, output_coords, config, config_file
         )
+        if "resample" in config:
+            extracted_ds = _resample(extracted_ds, config, model_profile)
         nc_path, encoding, nc_format = prep_netcdf_write(
             extracted_ds, output_coords, config, model_profile
         )
@@ -739,6 +741,48 @@ def calc_extracted_dataset(extracted_vars, output_coords, config, config_yaml):
     )
     logger.debug("extracted dataset metadata", extracted_ds=extracted_ds)
     return extracted_ds
+
+
+def _resample(extracted_ds, config, model_profile):
+    """
+    :param extracted_ds: Dataset containing extracted variable(s).
+    :type extracted_ds: :py:class:`xarray.Dataset`
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Resampled dataset containing extracted variable(s).
+    :rtype: :py:class:`xarray.Dataset`
+    """
+    freq = config["resample"]["time interval"]
+    aggregation = config["resample"].get("aggregation", "mean")
+    logger.info(
+        "resampling dataset", resampling_time_interval=freq, aggregation=aggregation
+    )
+    start_date = arrow.get(config["start date"])
+    end_date = arrow.get(config["end date"])
+    resampler = extracted_ds.resample(
+        time=freq,
+        label="left",
+        loffset=(end_date.shift(days=+1) - start_date) / 2,
+        # There shouldn't be missing values, so don't skip them in down-sampling
+        # (e.g. month-average) aggregations to force there to be missing values in result
+        # dataset rather than hard to find erroneous values.
+        skipna=False,
+    )
+    resampled_ds = getattr(resampler, aggregation)("time", keep_attrs=True)
+    if freq.endswith("M"):
+        time_base = "month"
+    else:
+        time_base = "unexpected"
+        logger.warning(
+            "unexpected resampling time interval; time coordinate metadata will be generic",
+            resample_time_interval=freq,
+        )
+    resampled_ds.time.attrs.update(calc_time_coord_attrs(time_base, model_profile))
+    logger.debug("resampled dataset metadata", resampled_ds=resampled_ds)
+    return resampled_ds
 
 
 def calc_coord_encoding(ds, coord, config, model_profile):

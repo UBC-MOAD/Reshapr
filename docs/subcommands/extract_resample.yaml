@@ -1,0 +1,33 @@
+# Example configuration file for `reshapr extract` sub-command
+# to resample day-averaged fields to month-averaged
+
+dataset:
+  model profile: SalishSeaCast-201905.yaml
+  time base: day
+  variables group: biology
+
+dask cluster: salish_cluster.yaml
+
+start date: 2009-02-01
+end date: 2009-02-28
+
+extract variables:
+  - diatoms
+  - nitrate
+
+resample:
+  # A pandas time series frequency offset alias
+  # with an optional multiplier digit prefix
+  time interval: 1M
+  # An xarray dataset reduction method to use for aggregation.
+  # See the "resampling and grouped operations" sub-section in the Time Series Data
+  # section fo the xarray User Guide.
+  # default: mean
+  aggregation: mean
+
+extracted dataset:
+  name: SalishSeaCast_1m_ptrc_T
+  description: Month-averaged diatoms biomass and nitrate extracted from SalishSeaCast v201905 hindcast
+  deflate: True
+  format: NETCDF4
+  dest dir: /ocean/dlatorne/
