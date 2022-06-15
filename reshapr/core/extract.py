@@ -47,6 +47,7 @@ def extract(config_file):
     chunk_size = calc_ds_chunk_size(config, model_profile)
     dask_client = get_dask_client(config["dask cluster"])
     with open_dataset(ds_paths, chunk_size, config, model_profile) as ds:
+        logger.info("extracting variables")
         output_coords = calc_output_coords(ds, config, model_profile)
         extracted_vars = calc_extracted_vars(ds, output_coords, config, model_profile)
         extracted_ds = calc_extracted_dataset(
