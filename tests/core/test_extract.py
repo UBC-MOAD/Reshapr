@@ -23,6 +23,8 @@ from pathlib import Path
 
 import arrow
 import numpy
+import pandas
+import pandas.tseries.offsets
 import pytest
 import xarray
 
@@ -1636,6 +1638,96 @@ class TestCalcExtractedDataset:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extracted dataset metadata"
+
+
+class TestResample:
+    """Unit test for _resample() function."""
+
+    def test_resample(self, log_output, monkeypatch):
+        extracted_ds = xarray.Dataset(
+            coords={
+                "time": pandas.date_range(
+                    "2015-04-01",
+                    periods=30,
+                    freq=pandas.tseries.offsets.DateOffset(days=1),
+                ),
+                "depth": numpy.arange(0, 4, 0.5),
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
+            },
+            data_vars={
+                "diatoms": xarray.DataArray(
+                    name="diatoms",
+                    data=numpy.empty((30, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time": pandas.date_range(
+                            "2015-04-01",
+                            periods=30,
+                            freq=pandas.tseries.offsets.DateOffset(days=1),
+                        ),
+                        "depth": numpy.arange(0, 4, 0.5),
+                        "gridY": numpy.arange(9),
+                        "gridX": numpy.arange(4),
+                    },
+                )
+            },
+            attrs={
+                "name": "test_20150401_20150430",
+                "description": "Month-averaged diatoms biomass extracted from SalishSeaCast v201905 hindcast",
+            },
+        )
+
+        config = {
+            "start date": "2015-04-01",
+            "end date": "2015-04-30",
+            "resample": {
+                "time interval": "1M",
+            },
+        }
+        model_profile = {"extraction time origin": "2007-01-01"}
+
+        resampled_ds = extract._resample(extracted_ds, config, model_profile)
+
+        assert log_output.entries[0]["log_level"] == "info"
+        assert log_output.entries[0]["event"] == "resampling dataset"
+        assert log_output.entries[0]["resampling_time_interval"] == "1M"
+        assert log_output.entries[0]["aggregation"] == "mean"
+
+        assert resampled_ds.name == "test_20150401_20150430"
+        assert resampled_ds.attrs["name"] == "test_20150401_20150430"
+        assert (
+            resampled_ds.attrs["description"]
+            == "Month-averaged diatoms biomass extracted from SalishSeaCast v201905 hindcast"
+        )
+        expected = xarray.DataArray(
+            pandas.date_range(
+                "2015-04-15", periods=1, freq=pandas.tseries.offsets.DateOffset(days=1)
+            ),
+            coords={
+                "time": pandas.date_range(
+                    "2015-04-15",
+                    periods=1,
+                    freq=pandas.tseries.offsets.DateOffset(days=1),
+                )
+            },
+            dims="time",
+            attrs={
+                "standard_name": "time",
+                "long_name": "Time Axis",
+                "time_origin": "2007-01-01 12:00:00",
+                "comment": (
+                    "time values are UTC at the centre of the intervals over which the "
+                    "calculated model results are averaged; "
+                    "e.g. the field average values for January 2022 have "
+                    "a time value of 2022-01-15 12:00:00Z, "
+                    "and those for April 2022 have a time value of 2022-04-15 00:00:00Z"
+                ),
+            },
+        )
+        assert resampled_ds.time == expected
+
+        assert log_output.entries[1]["log_level"] == "debug"
+        assert log_output.entries[1]["event"] == "resampled dataset metadata"
 
 
 class TestCalcCoordEncoding:
