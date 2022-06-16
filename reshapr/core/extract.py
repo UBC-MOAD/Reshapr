@@ -279,7 +279,7 @@ def get_dask_client(dask_config_yaml):
 
     :param dask_config_yaml: File path and name of the YAML file to read the dask cluster configuration
                              dictionary from,
-                             or a :kbd:`host_ip:port` string of an existing dask cluster fot connect to.
+                             or a :kbd:`host_ip:port` string of an existing dask cluster to connect to.
                              Please see :ref:`ReshaprDaskClusterYAMLFile` for details.
     :type dask_config_yaml: :py:class:`pathlib.Path` or str
 
@@ -294,7 +294,7 @@ def get_dask_client(dask_config_yaml):
         with Path(dask_config_yaml).open("rt") as f:
             cluster_config = yaml.safe_load(f)
     except FileNotFoundError:
-        # Fall back to try to find model profile in Reshapr/model_profiles/
+        # Fall back to try to find cluster description in Reshapr/cluster_configs/
         cluster_configs_path = Path(__file__).parent.parent.parent / "cluster_configs"
         try:
             with Path(cluster_configs_path / dask_config_yaml).open("rt") as f:
