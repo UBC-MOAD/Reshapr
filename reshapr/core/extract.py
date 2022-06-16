@@ -89,7 +89,7 @@ def _load_config(config_yaml):
     except FileNotFoundError:
         log.error("config file not found")
         raise SystemExit(2)
-    log.debug("loaded config")
+    log.info("loaded config")
     return config
 
 
@@ -138,7 +138,7 @@ def _load_model_profile(model_profile_yaml):
         except FileNotFoundError:
             log.error("model profile file not found")
             raise SystemExit(2)
-    log.debug("loaded model profile")
+    log.info("loaded model profile")
     results_archive = Path(model_profile["results archive"]["path"])
     log = log.bind(results_archive=os.fspath(results_archive))
     if not results_archive.exists():

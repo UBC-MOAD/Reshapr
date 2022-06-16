@@ -51,7 +51,7 @@ class TestLoadConfig:
 
         assert config["dask cluster"] == "docs/subcommands/salish_cluster.yaml"
 
-        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["log_level"] == "info"
         assert log_output.entries[0]["config_file"] == os.fspath(extract_config_yaml)
         assert log_output.entries[0]["event"] == "loaded config"
 
@@ -123,7 +123,7 @@ class TestLoadModelProfile:
 
         assert model_profile["name"] == "SomeModel"
 
-        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["log_level"] == "info"
         assert log_output.entries[0]["model_profile_yaml"] == os.fspath(
             model_profile_yaml
         )
@@ -141,7 +141,7 @@ class TestLoadModelProfile:
 
         assert model_profile["name"] == "SalishSeaCast.201812"
 
-        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["log_level"] == "info"
         model_profiles_path = Path(__file__).parent.parent.parent / "model_profiles"
         assert log_output.entries[0]["model_profile_yaml"] == os.fspath(
             model_profiles_path / model_profile_yaml
