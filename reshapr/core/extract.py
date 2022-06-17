@@ -46,6 +46,7 @@ def extract(config_file, start_date, end_date):
     """
     t_start = time.time()
     config = _load_config(config_file)
+    end_date = _normalize_end_date(end_date)
     config["start date"], config["end date"] = _override_start_end_date(
         config, start_date, end_date
     )
@@ -91,6 +92,32 @@ def _load_config(config_yaml):
         raise SystemExit(2)
     log.info("loaded config")
     return config
+
+
+def _normalize_end_date(end_date):
+    """
+    :param str end_date: End date for extraction from command-line.
+
+    :return: Normalized end date.
+    :rtype: str
+    """
+    if end_date == "":
+        return end_date
+    try:
+        # Is end_date a valid date?
+        arrow.get(end_date)
+        return end_date
+    except ValueError:
+        # Invalid date. Assume that day value is > last day of month and change it to
+        # valid last day of month.
+        # This is so that we can do command-line loops like:
+        #   for mm in {01..12}; do reshapr extract ... --end-date 2022-${mm}-31; done
+        # without having to mess with the last day of the month.
+        return (
+            arrow.get(f"{end_date.rsplit('-', 1)[0]}-01")
+            .ceil("month")
+            .format("YYYY-MM-DD")
+        )
 
 
 def _override_start_end_date(config, start_date, end_date):
