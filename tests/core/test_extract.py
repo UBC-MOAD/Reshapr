@@ -69,6 +69,25 @@ class TestLoadConfig:
         assert log_output.entries[0]["event"] == "config file not found"
 
 
+class TestNormalizeEndDate:
+    """Unit tests for _normalize_end_date() function."""
+
+    @pytest.mark.parametrize(
+        "end_date, expected",
+        (
+            ("", ""),
+            ("2022-01-31", "2022-01-31"),
+            ("2022-02-31", "2022-02-28"),
+            ("2020-02-31", "2020-02-29"),
+            ("2022-06-31", "2022-06-30"),
+        ),
+    )
+    def test_normalize_end_date(self, end_date, expected):
+        adjusted_end_date = extract._normalize_end_date(end_date)
+
+        assert adjusted_end_date == expected
+
+
 class TestOverrideStartEndDate:
     """Unit tests for _override_start_end_date() function."""
 
