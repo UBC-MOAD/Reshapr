@@ -1,0 +1,43 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "sphinx clean build",
+            "type": "shell",
+            "command": "source activate reshapr-dev && make clean html",
+            "options": {
+                "cwd": "docs"
+            },
+            "problemMatcher":[
+                {
+                    "owner": "sphinx-problem-matcher",
+                    "fileLocation": ["autoDetect", "${workspaceFolder}"],
+                    "pattern": [
+                        {
+                            "regexp": "^(.*):(\\d+):\\s+(\\w*):\\s+(.*)$",
+                            "file": 1,
+                            "line": 2,
+                            "severity": 3,
+                            "message": 4
+                        }
+                    ]
+                }
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "sphinx linkcheck",
+            "type": "shell",
+            "command": "source activate  reshapr-dev && make clean linkcheck",
+            "options": {
+                "cwd": "docs"
+            },
+            "problemMatcher": [],
+        }
+    ]
+}
