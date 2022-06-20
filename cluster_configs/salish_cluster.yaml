@@ -2,5 +2,5 @@
 
 name: salish dask cluster
 processes: True
-number of workers: 8
-threads per worker: 10
+number of workers: 4
+threads per worker: 4
