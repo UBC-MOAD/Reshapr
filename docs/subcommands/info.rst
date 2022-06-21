@@ -15,14 +15,6 @@
 .. SPDX-License-Identifier: Apache-2.0
 
 
-.. _ReshaprSubcommands:
-
-********************
-Reshapr Sub-commands
-********************
-
-.. toctree::
-   :caption: Contents:
-
-   extract
-   info
+***************************
+:command:`info` Sub-command
+***************************

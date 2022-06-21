@@ -23,6 +23,7 @@ import click
 import structlog
 
 from reshapr.cli.extract import extract
+from reshapr.cli.info import info
 
 
 @click.group(
@@ -59,3 +60,4 @@ def reshapr(verbosity):
 
 
 reshapr.add_command(extract)
+reshapr.add_command(info)
