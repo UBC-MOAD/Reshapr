@@ -15,5 +15,23 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Unit test for core.info module.
+"""Unit tests for core.info module.
 """
+from importlib import metadata
+
+import pytest
+
+from reshapr.core import info
+
+
+class TestInfo:
+    """Unit tests for core.info.info() function."""
+
+    @pytest.mark.parametrize(
+        "pkg, line", (("reshapr", 0), ("xarray", 1), ("dask", 2), ("netcdf4", 3))
+    )
+    def test_pkg_version(self, pkg, line, capsys):
+        info.info()
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        assert stdout_lines[line] == f"{pkg}, version {metadata.version(pkg)}"

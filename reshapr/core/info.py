@@ -15,13 +15,24 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Provide information about dask clusters and model profiles.
+"""Provide information about reshapr, dask clusters, and model profiles.
 """
-import structlog
+from importlib import metadata
 
-logger = structlog.get_logger()
+from rich.console import Console
 
 
 def info():
     """Provide information about dask clusters and model profiles."""
-    pass
+    console = Console()
+
+    versions = {
+        pkg: metadata.version(pkg) for pkg in ("reshapr", "xarray", "dask", "netcdf4")
+    }
+    for pkg, version in versions.items():
+        console.print(f"{pkg}, version [magenta]{version}")
+
+
+# This stanza facilitates running the info sub-command in a Python debugger
+if __name__ == "__main__":
+    info()
