@@ -35,3 +35,19 @@ class TestInfo:
 
         stdout_lines = capsys.readouterr().out.splitlines()
         assert stdout_lines[line] == f"{pkg}, version {metadata.version(pkg)}"
+
+    def test_cluster_configs(self, capsys):
+        info.info()
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        assert stdout_lines[6] == "  salish_cluster.yaml"
+
+
+class TestGetClusterConfigs:
+    """Unit test for core.info._get_cluster_configs() function."""
+
+    def test_get_cluster_configs(self):
+        cluster_configs = info._get_cluster_configs()
+
+        expected = ["salish_cluster.yaml"]
+        assert cluster_configs == expected
