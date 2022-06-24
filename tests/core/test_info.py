@@ -44,26 +44,30 @@ class TestInfo:
         info.info()
 
         stdout_lines = capsys.readouterr().out.splitlines()
-        assert stdout_lines[6] == "  salish_cluster.yaml"
+        expected = {"salish_cluster.yaml"}
+        assert set(line.strip() for line in stdout_lines[6:7]) == expected
 
     def test_model_profiles(self, capsys):
         info.info()
 
         stdout_lines = capsys.readouterr().out.splitlines()
-        assert stdout_lines[9] == "  SalishSeaCast-201905.yaml"
-        assert stdout_lines[10] == "  SalishSeaCast-201812.yaml"
-        assert stdout_lines[11] == "  HRDPS-2.5km-GEMLAM-22sep11onward.yaml"
-        assert stdout_lines[12] == "  HRDPS-2.5km-GEMLAM-pre22sep11.yaml"
-        assert stdout_lines[13] == "  HRDPS-2.5km-operational.yaml"
+        expected = {
+            "SalishSeaCast-201905.yaml",
+            "SalishSeaCast-201812.yaml",
+            "HRDPS-2.5km-GEMLAM-22sep11onward.yaml",
+            "HRDPS-2.5km-GEMLAM-pre22sep11.yaml",
+            "HRDPS-2.5km-operational.yaml",
+        }
+        assert set(line.strip() for line in stdout_lines[9:14]) == expected
 
 
 class TestGetClusterConfigs:
     """Unit test for core.info._get_cluster_configs() function."""
 
     def test_get_cluster_configs(self):
-        cluster_configs = info._get_cluster_configs()
+        cluster_configs = set(info._get_cluster_configs())
 
-        expected = ["salish_cluster.yaml"]
+        expected = {"salish_cluster.yaml"}
         assert cluster_configs == expected
 
 
@@ -71,13 +75,13 @@ class TestGetModelProfiles:
     """Unit test for core.info._get_model_profiles() function."""
 
     def test_get_model_profiles(self):
-        model_profiles = info._get_model_profiles()
+        model_profiles = set(info._get_model_profiles())
 
-        expected = [
+        expected = {
             "SalishSeaCast-201905.yaml",
             "SalishSeaCast-201812.yaml",
             "HRDPS-2.5km-GEMLAM-22sep11onward.yaml",
             "HRDPS-2.5km-GEMLAM-pre22sep11.yaml",
             "HRDPS-2.5km-operational.yaml",
-        ]
+        }
         assert model_profiles == expected
