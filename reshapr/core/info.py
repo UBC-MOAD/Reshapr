@@ -43,6 +43,11 @@ def info():
     for model_profile in model_profiles:
         console.print(f"  [magenta]{model_profile}")
 
+    console.print(
+        "\nPlease use [blue]reshapr info --help[/blue] to learn how to get deeper information,"
+    )
+    console.print("or [blue]reshapr --help[/blue] to learn about other sub-commands.")
+
 
 def _get_cluster_configs():
     cluster_configs_path = Path(__file__).parent.parent.parent / "cluster_configs"
