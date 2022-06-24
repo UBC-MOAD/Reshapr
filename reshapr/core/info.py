@@ -17,16 +17,24 @@
 
 """Provide information about reshapr, dask clusters, and model profiles.
 """
+import sys
 from importlib import metadata
 from pathlib import Path
 
 from rich.console import Console
 
 
-def info():
-    """Provide information about dask clusters and model profiles."""
+def info(cluster_or_model):
+    """Provide information about reshapr, dask clusters, and model profiles."""
     console = Console()
 
+    if cluster_or_model == "":
+        _basic_info(console)
+        return
+
+
+def _basic_info(console):
+    """Show info when no cluster or model profile is specified."""
     versions = {
         pkg: metadata.version(pkg) for pkg in ("reshapr", "xarray", "dask", "netcdf4")
     }
