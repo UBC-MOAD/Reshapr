@@ -70,5 +70,9 @@ def _get_model_profiles():
 
 
 # This stanza facilitates running the info sub-command in a Python debugger
-if __name__ == "__main__":
-    info()
+if __name__ == "__main__":  # pragma: nocover
+    try:
+        cluster_or_model = sys.argv[1]
+    except IndexError:
+        cluster_or_model = ""
+    info(cluster_or_model)

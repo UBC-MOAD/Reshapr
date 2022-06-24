@@ -992,7 +992,7 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format):
 
 
 # This stanza facilitates running the extract sub-command in a Python debugger
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: nocover
     config_file = Path(sys.argv[1])
     try:
         idx = sys.argv.index("--start-date")
