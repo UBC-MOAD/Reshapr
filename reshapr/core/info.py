@@ -18,6 +18,7 @@
 """Provide information about reshapr, dask clusters, and model profiles.
 """
 from importlib import metadata
+from pathlib import Path
 
 from rich.console import Console
 
@@ -31,6 +32,21 @@ def info():
     }
     for pkg, version in versions.items():
         console.print(f"{pkg}, version [magenta]{version}")
+
+    console.print("\ndask cluster configurations included in this package:")
+    cluster_configs = _get_cluster_configs()
+    for cluster_config in cluster_configs:
+        console.print(f"  [magenta]{cluster_config}")
+
+
+def _get_cluster_configs():
+    cluster_configs_path = Path(__file__).parent.parent.parent / "cluster_configs"
+    cluster_configs = [
+        config.name
+        for config in cluster_configs_path.glob("*.yaml")
+        if config.name != "unit_test_cluster.yaml"
+    ]
+    return cluster_configs
 
 
 # This stanza facilitates running the info sub-command in a Python debugger
