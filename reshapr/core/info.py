@@ -38,6 +38,11 @@ def info():
     for cluster_config in cluster_configs:
         console.print(f"  [magenta]{cluster_config}")
 
+    console.print("\nmodel profiles included in this package:")
+    model_profiles = _get_model_profiles()
+    for model_profile in model_profiles:
+        console.print(f"  [magenta]{model_profile}")
+
 
 def _get_cluster_configs():
     cluster_configs_path = Path(__file__).parent.parent.parent / "cluster_configs"
@@ -47,6 +52,16 @@ def _get_cluster_configs():
         if config.name != "unit_test_cluster.yaml"
     ]
     return cluster_configs
+
+
+def _get_model_profiles():
+    model_profiles_path = Path(__file__).parent.parent.parent / "model_profiles"
+    model_profiles = [
+        profile.name
+        for profile in model_profiles_path.glob("*.yaml")
+        if profile.name != "unused-variables.yaml"
+    ]
+    return model_profiles
 
 
 # This stanza facilitates running the info sub-command in a Python debugger
