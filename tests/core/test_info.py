@@ -24,8 +24,8 @@ import pytest
 from reshapr.core import info
 
 
-class TestInfo:
-    """Unit tests for core.info.info() function.
+class TestBasicInfo:
+    """Unit tests for core.info.info() function with empty cluster_or_model argument.
 
     NOTE: These tests are a bit brittle because they rely on hard-coded line numbers in the
     captured stdout.
@@ -35,20 +35,20 @@ class TestInfo:
         "pkg, line", (("reshapr", 0), ("xarray", 1), ("dask", 2), ("netcdf4", 3))
     )
     def test_pkg_version(self, pkg, line, capsys):
-        info.info()
+        info.info(cluster_or_model="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         assert stdout_lines[line] == f"{pkg}, version {metadata.version(pkg)}"
 
     def test_cluster_configs(self, capsys):
-        info.info()
+        info.info(cluster_or_model="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = {"salish_cluster.yaml"}
         assert set(line.strip() for line in stdout_lines[6:7]) == expected
 
     def test_model_profiles(self, capsys):
-        info.info()
+        info.info(cluster_or_model="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = {

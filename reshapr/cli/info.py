@@ -28,6 +28,10 @@ import reshapr.core.info
     """,
     short_help="Provide information about dask clusters and model profiles",
 )
-def info():
+@click.argument(
+    "cluster_or_model",
+    default="",
+)
+def info(cluster_or_model):
     """Command-line interface for :py:func:`reshapr.core.info.info`."""
-    reshapr.core.info.info()
+    reshapr.core.info.info(cluster_or_model)
