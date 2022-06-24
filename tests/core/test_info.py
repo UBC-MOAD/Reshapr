@@ -59,29 +59,3 @@ class TestInfo:
             "HRDPS-2.5km-operational.yaml",
         }
         assert set(line.strip() for line in stdout_lines[9:14]) == expected
-
-
-class TestGetClusterConfigs:
-    """Unit test for core.info._get_cluster_configs() function."""
-
-    def test_get_cluster_configs(self):
-        cluster_configs = set(info._get_cluster_configs())
-
-        expected = {"salish_cluster.yaml"}
-        assert cluster_configs == expected
-
-
-class TestGetModelProfiles:
-    """Unit test for core.info._get_model_profiles() function."""
-
-    def test_get_model_profiles(self):
-        model_profiles = set(info._get_model_profiles())
-
-        expected = {
-            "SalishSeaCast-201905.yaml",
-            "SalishSeaCast-201812.yaml",
-            "HRDPS-2.5km-GEMLAM-22sep11onward.yaml",
-            "HRDPS-2.5km-GEMLAM-pre22sep11.yaml",
-            "HRDPS-2.5km-operational.yaml",
-        }
-        assert model_profiles == expected
