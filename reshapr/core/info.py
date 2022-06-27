@@ -22,6 +22,11 @@ from importlib import metadata
 from pathlib import Path
 
 from rich.console import Console
+from rich.padding import Padding
+from rich.syntax import Syntax
+
+CLUSTER_CONFIGS_PATH = Path(__file__).parent.parent.parent / "cluster_configs"
+MODEL_PROFILES_PATH = Path(__file__).parent.parent.parent / "model_profiles"
 
 
 def info(cluster_or_model):
@@ -30,6 +35,9 @@ def info(cluster_or_model):
 
     if cluster_or_model == "":
         _basic_info(console)
+        return
+    if _is_cluster(cluster_or_model):
+        _cluster_info(cluster_or_model, console)
         return
 
 
@@ -57,21 +65,39 @@ def _basic_info(console):
     console.print("or [blue]reshapr --help[/blue] to learn about other sub-commands.")
 
 
+def _is_cluster(cluster_or_model):
+    cluster_configs = _get_cluster_configs()
+    return (
+        cluster_or_model in cluster_configs
+        or f"{cluster_or_model}.yaml" in cluster_configs
+    )
+
+
+def _cluster_info(cluster, console):
+    cluster = cluster if cluster.endswith(".yaml") else f"{cluster}.yaml"
+    console.print(f"{cluster}:")
+    syntax = Syntax.from_path(CLUSTER_CONFIGS_PATH / cluster)
+    console.print(Padding(syntax, (0, 2)))
+
+    console.print(
+        "\nPlease use [blue]reshapr info --help[/blue] to learn how to get other information,"
+    )
+    console.print("or [blue]reshapr --help[/blue] to learn about other sub-commands.")
+
+
 def _get_cluster_configs():
-    cluster_configs_path = Path(__file__).parent.parent.parent / "cluster_configs"
     cluster_configs = [
         config.name
-        for config in cluster_configs_path.glob("*.yaml")
+        for config in CLUSTER_CONFIGS_PATH.glob("*.yaml")
         if config.name != "unit_test_cluster.yaml"
     ]
     return cluster_configs
 
 
 def _get_model_profiles():
-    model_profiles_path = Path(__file__).parent.parent.parent / "model_profiles"
     model_profiles = [
         profile.name
-        for profile in model_profiles_path.glob("*.yaml")
+        for profile in MODEL_PROFILES_PATH.glob("*.yaml")
         if profile.name != "unused-variables.yaml"
     ]
     return model_profiles

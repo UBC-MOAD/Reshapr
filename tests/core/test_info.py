@@ -17,6 +17,7 @@
 
 """Unit tests for core.info module.
 """
+import textwrap
 from importlib import metadata
 
 import pytest
@@ -59,3 +60,57 @@ class TestBasicInfo:
             "HRDPS-2.5km-operational.yaml",
         }
         assert set(line.strip() for line in stdout_lines[9:14]) == expected
+
+
+class TestClusterInfo:
+    """Unit tests for core.info.info() function with cluster as argument.
+
+    NOTE: These tests are a bit brittle because they rely on hard-coded line numbers in the
+    captured stdout.
+    """
+
+    @pytest.mark.parametrize(
+        "cluster, expected",
+        (
+            ("salish_cluster", "salish_cluster.yaml:"),
+            ("salish_cluster.yaml", "salish_cluster.yaml:"),
+        ),
+    )
+    def test_cluster_file_name(self, cluster, expected, capsys):
+        info.info(cluster)
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        assert stdout_lines[0] == expected
+
+    def test_cluster_file_contents(self, capsys):
+        info.info("salish_cluster.yaml")
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        expected = textwrap.dedent(
+            """\
+                # Configuration for a dask cluster on salish
+
+                name: salish dask cluster
+                processes: True
+                number of workers: 4
+                threads per worker: 4
+            """
+        ).splitlines()
+        assert [line.strip() for line in stdout_lines[1:7]] == expected
+
+
+class TestIsCluster:
+    """Unit tests for core.info._is_cluster() function."""
+
+    @pytest.mark.parametrize(
+        "cluster, expected",
+        (
+            ("salish_cluster", True),
+            ("salish_cluster.yaml", True),
+            ("foo", False),
+        ),
+    )
+    def test_is_cluster(self, cluster, expected):
+        is_cluster = info._is_cluster(cluster)
+
+        assert is_cluster is expected

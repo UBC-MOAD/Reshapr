@@ -42,3 +42,54 @@ Here is an example of the most basic level of output from :command:`reshapr info
 
     Please use reshapr info --help to learn how to get deeper information,
     or reshapr --help to learn about other sub-commands.
+
+:command:`reshaper info --help` will show you how you can get other information to help you
+use ``Reshapr``:
+
+.. code-block:: text
+
+    Usage: reshapr info [OPTIONS] [CLUSTER_OR_MODEL]
+
+      Provide information about the installed Reshapr package.
+
+      With no cluster or model profile the following information is shown:
+
+      * versions of reshapr, xarray, dask & netcdf4 packages
+
+      * list of dask cluster configurations included in the package
+
+      * list of model profiles included in the package
+
+      Specify a dask cluster configuration (e.g. `reshapr info salish_cluster`) or
+      a model profile (e.g. `reshpr info SalishSeaCast-201905`) to get information
+      about them.
+
+    Options:
+      --help  Show this message and exit.
+
+
+:command:`info cluster`
+=======================
+
+:command:`reshaper info` followed by one of the dask cluster configurations shown in the
+basic information list will show you the cluster settings.
+Please see :ref:`ReshaprDaskClusterYAMLFile` for details about cluster configs.
+
+Example:
+
+.. code-block:: bash
+
+    (reshapr)$ reshapr info salish_cluster.yaml
+
+.. code-block:: text
+
+    salish_cluster.yaml:
+      # Configuration for a dask cluster on salish
+
+      name: salish dask cluster
+      processes: True
+      number of workers: 4
+      threads per worker: 4
+
+    Please use reshapr info --help to learn how to get other information,
+    or reshapr --help to learn about other sub-commands.

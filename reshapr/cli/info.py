@@ -24,7 +24,19 @@ import reshapr.core.info
 
 @click.command(
     help="""
-    Provide information about dask clusters and model profiles.
+    Provide information about the installed Reshapr package.
+
+    With no cluster or model profile the following information is shown:
+
+    * versions of reshapr, xarray, dask & netcdf4 packages
+
+    * list of dask cluster configurations included in the package
+
+    * list of model profiles included in the package
+
+    Specify a dask cluster configuration (e.g. `reshapr info salish_cluster`)
+    or a model profile (e.g. `reshpr info SalishSeaCast-201905`) to get information
+    about them.
     """,
     short_help="Provide information about dask clusters and model profiles",
 )
