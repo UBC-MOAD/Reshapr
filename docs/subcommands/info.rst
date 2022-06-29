@@ -93,3 +93,46 @@ Example:
 
     Please use reshapr info --help to learn how to get other information,
     or reshapr --help to learn about other sub-commands.
+
+
+:command:`info model-profile`
+=============================
+
+:command:`reshaper info` followed by one of the model profiles shown in the
+basic information list will show you information about model product time intervals
+and variable groups.
+Please see :ref:`ReshaprModelProfileYAMLFiles` for details about model profiles.
+
+Example:
+
+.. code-block:: bash
+
+    (reshapr)$ reshapr info SalishSeaCast-201905.yaml
+
+.. code-block:: text
+
+    SalishSeaCast-201905.yaml:
+    variable groups from time intervals in this model:
+      day
+        auxiliary
+        biology
+        biology and chemistry rates
+        chemistry
+        grazing and mortality
+        physics tracers
+      hour
+        auxiliary
+        biology
+        chemistry
+        physics tracers
+        u velocity
+        v velocity
+        vertical turbulence
+        w velocity
+
+    Please use reshapr info model-profile time-interval variable-group
+    (e.g. reshapr info SalishSeaCast-201905 hour biology)
+    to get the list of variables in a variable group.
+
+    Please use reshapr info --help to learn how to get other information,
+    or reshapr --help to learn about other sub-commands.

@@ -21,12 +21,16 @@ import sys
 from importlib import metadata
 from pathlib import Path
 
+import structlog
+import yaml
 from rich.console import Console
 from rich.padding import Padding
 from rich.syntax import Syntax
 
 CLUSTER_CONFIGS_PATH = Path(__file__).parent.parent.parent / "cluster_configs"
 MODEL_PROFILES_PATH = Path(__file__).parent.parent.parent / "model_profiles"
+
+logger = structlog.get_logger()
 
 
 def info(cluster_or_model):
@@ -39,6 +43,13 @@ def info(cluster_or_model):
     if _is_cluster(cluster_or_model):
         _cluster_info(cluster_or_model, console)
         return
+    elif _is_model_profile(cluster_or_model):
+        _model_profile_info(cluster_or_model, console)
+        return
+    else:
+        logger.error(
+            "unrecognized cluster or model profile", cluster_or_model=cluster_or_model
+        )
 
 
 def _basic_info(console):
@@ -75,10 +86,46 @@ def _is_cluster(cluster_or_model):
 
 def _cluster_info(cluster, console):
     cluster = cluster if cluster.endswith(".yaml") else f"{cluster}.yaml"
-    console.print(f"{cluster}:")
+    console.print(f"[green]{cluster}:")
     syntax = Syntax.from_path(CLUSTER_CONFIGS_PATH / cluster)
     console.print(Padding(syntax, (0, 2)))
 
+    console.print(
+        "\nPlease use [blue]reshapr info --help[/blue] to learn how to get other information,"
+    )
+    console.print("or [blue]reshapr --help[/blue] to learn about other sub-commands.")
+
+
+def _is_model_profile(cluster_or_model):
+    model_profiles = _get_model_profiles()
+    return (
+        cluster_or_model in model_profiles
+        or f"{cluster_or_model}.yaml" in model_profiles
+    )
+
+
+def _model_profile_info(profile, console):
+    profile_file = profile if profile.endswith(".yaml") else f"{profile}.yaml"
+    console.print(f"[green]{profile_file}:", highlight=False)
+    with (MODEL_PROFILES_PATH / profile_file).open("rt") as f:
+        model_profile = yaml.safe_load(f)
+
+    console.print(
+        "[cyan]variable groups[/cyan] from [magenta]time intervals[/magenta] in this model:"
+    )
+    datasets = model_profile["results archive"]["datasets"]
+    for time_base in datasets:
+        console.print(f"  [magenta]{time_base}")
+        var_groups = datasets[time_base]
+        for var_group in var_groups:
+            console.print(f"    [cyan]{var_group}")
+
+    console.print(
+        "\nPlease use [blue]reshapr info model-profile time-interval variable-group[/blue]\n"
+        "(e.g. [blue]reshapr info SalishSeaCast-201905 hour biology[/blue])\n"
+        "to get the list of variables in a [cyan]variable group[/cyan].",
+        highlight=False,
+    )
     console.print(
         "\nPlease use [blue]reshapr info --help[/blue] to learn how to get other information,"
     )

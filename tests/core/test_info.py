@@ -59,7 +59,27 @@ class TestBasicInfo:
             "HRDPS-2.5km-GEMLAM-pre22sep11.yaml",
             "HRDPS-2.5km-operational.yaml",
         }
-        assert set(line.strip() for line in stdout_lines[9:14]) == expected
+        assert (
+            set(line.strip() for line in stdout_lines[9 : len(expected) + 9])
+            == expected
+        )
+
+
+class TestIsCluster:
+    """Unit tests for core.info._is_cluster() function."""
+
+    @pytest.mark.parametrize(
+        "cluster, expected",
+        (
+            ("salish_cluster", True),
+            ("salish_cluster.yaml", True),
+            ("foo", False),
+        ),
+    )
+    def test_is_cluster(self, cluster, expected):
+        is_cluster = info._is_cluster(cluster)
+
+        assert is_cluster is expected
 
 
 class TestClusterInfo:
@@ -99,18 +119,78 @@ class TestClusterInfo:
         assert [line.strip() for line in stdout_lines[1:7]] == expected
 
 
-class TestIsCluster:
-    """Unit tests for core.info._is_cluster() function."""
+class TestIsModelProfile:
+    """Unit tests for core.info._is_model_profile() function."""
 
     @pytest.mark.parametrize(
-        "cluster, expected",
+        "model_profile, expected",
         (
-            ("salish_cluster", True),
-            ("salish_cluster.yaml", True),
+            ("SalishSeaCast-201905", True),
+            ("SalishSeaCast-201905.yaml", True),
             ("foo", False),
         ),
     )
-    def test_is_cluster(self, cluster, expected):
-        is_cluster = info._is_cluster(cluster)
+    def test_is_model_profile(self, model_profile, expected):
+        is_profile = info._is_model_profile(model_profile)
 
-        assert is_cluster is expected
+        assert is_profile is expected
+
+
+class TestModelProfileInfo:
+    """Unit tests for core.info.info() function with model profile as argument.
+
+    NOTE: These tests are a bit brittle because they rely on hard-coded line numbers in the
+    captured stdout.
+    """
+
+    @pytest.mark.parametrize(
+        "model_profile, expected",
+        (
+            ("SalishSeaCast-201905", "SalishSeaCast-201905.yaml:"),
+            ("SalishSeaCast-201905.yaml", "SalishSeaCast-201905.yaml:"),
+        ),
+    )
+    def test_model_profile_file_name(self, model_profile, expected, capsys):
+        info.info(model_profile)
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        assert stdout_lines[0] == expected
+
+    def test_time_bases_and_var_groups(self, capsys):
+        info.info("SalishSeaCast-201905")
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        expected = [
+            "day",
+            "auxiliary",
+            "biology",
+            "biology and chemistry rates",
+            "chemistry",
+            "grazing and mortality",
+            "physics tracers",
+            "hour",
+            "auxiliary",
+            "biology",
+            "chemistry",
+            "physics tracers",
+            "u velocity",
+            "v velocity",
+            "vertical turbulence",
+            "w velocity",
+        ]
+        assert set(line.strip() for line in stdout_lines[2 : len(expected) + 2]) == set(
+            expected
+        )
+
+
+class TestUnrecognizedClusterOrModelProfile:
+    """Unit test for core.info.info() is an argument value that is not recognized as either
+    a cluster or a model profile.
+    """
+
+    def test_bad_cluster_or_model(self, log_output):
+        info.info("foo")
+
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["cluster_or_model"] == "foo"
+        assert log_output.entries[0]["event"] == "unrecognized cluster or model profile"
