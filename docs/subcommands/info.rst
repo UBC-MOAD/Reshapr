@@ -73,6 +73,7 @@ use ``Reshapr``:
 
 :command:`reshaper info` followed by one of the dask cluster configurations shown in the
 basic information list will show you the cluster settings.
+
 Please see :ref:`ReshaprDaskClusterYAMLFile` for details about cluster configs.
 
 Example:
@@ -101,6 +102,7 @@ Example:
 :command:`reshaper info` followed by one of the model profiles shown in the
 basic information list will show you information about model product time intervals
 and variable groups.
+
 Please see :ref:`ReshaprModelProfileYAMLFiles` for details about model profiles.
 
 Example:
@@ -133,6 +135,43 @@ Example:
     Please use reshapr info model-profile time-interval variable-group
     (e.g. reshapr info SalishSeaCast-201905 hour biology)
     to get the list of variables in a variable group.
+
+    Please use reshapr info --help to learn how to get other information,
+    or reshapr --help to learn about other sub-commands.
+
+
+:command:`info model-profile time-interval variable-group`
+==========================================================
+
+:command:`reshaper info model-profile` followed by one of the time intervals,
+and one of the variable group names for that time interval
+(shown in the model profile information output)
+will show you the list of model variables available in the variable group for
+that time interval.
+
+Please see :ref:`ReshaprModelProfileYAMLFiles` for details about model profiles.
+
+Example:
+
+.. code-block:: bash
+
+    (reshapr)$ reshapr info SalishSeaCast-201905.yaml hour biology
+
+.. code-block:: text
+
+    SalishSeaCast-201905.yaml:
+    hour-averaged variables in biology group:
+      - nitrate : Nitrate Concentration [mmol m-3]
+      - ammonium : Ammonium Concentration [mmol m-3]
+      - silicon : Silicon Concentration [mmol m-3]
+      - diatoms : Diatoms Concentration [mmol m-3]
+      - flagellates : Flagellates Concentration [mmol m-3]
+      - ciliates : Mesodinium rubrum Concentration [mmol m-3]
+      - microzooplankton : Microzooplankton Concentration [mmol m-3]
+      - dissolved_organic_nitrogen : Dissolved Organic N Concentration [mmol m-3]
+      - particulate_organic_nitrogen : Particulate Organic N Concentration [mmol m-3]
+      - biogenic_silicon : Biogenic Silicon Concentration [mmol m-3]
+      - mesozooplankton : Mesozooplankton Concentration [mmol m-3]
 
     Please use reshapr info --help to learn how to get other information,
     or reshapr --help to learn about other sub-commands.

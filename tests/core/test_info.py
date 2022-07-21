@@ -17,10 +17,15 @@
 
 """Unit tests for core.info module.
 """
+import os
 import textwrap
 from importlib import metadata
 
+import numpy
+import pandas
 import pytest
+import xarray
+from rich.console import Console
 
 from reshapr.core import info
 
@@ -36,20 +41,20 @@ class TestBasicInfo:
         "pkg, line", (("reshapr", 0), ("xarray", 1), ("dask", 2), ("netcdf4", 3))
     )
     def test_pkg_version(self, pkg, line, capsys):
-        info.info(cluster_or_model="")
+        info.info(cluster_or_model="", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         assert stdout_lines[line] == f"{pkg}, version {metadata.version(pkg)}"
 
     def test_cluster_configs(self, capsys):
-        info.info(cluster_or_model="")
+        info.info(cluster_or_model="", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = {"salish_cluster.yaml"}
         assert set(line.strip() for line in stdout_lines[6:7]) == expected
 
     def test_model_profiles(self, capsys):
-        info.info(cluster_or_model="")
+        info.info(cluster_or_model="", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = {
@@ -97,13 +102,13 @@ class TestClusterInfo:
         ),
     )
     def test_cluster_file_name(self, cluster, expected, capsys):
-        info.info(cluster)
+        info.info(cluster, time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         assert stdout_lines[0] == expected
 
     def test_cluster_file_contents(self, capsys):
-        info.info("salish_cluster.yaml")
+        info.info("salish_cluster.yaml", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = textwrap.dedent(
@@ -151,13 +156,13 @@ class TestModelProfileInfo:
         ),
     )
     def test_model_profile_file_name(self, model_profile, expected, capsys):
-        info.info(model_profile)
+        info.info(model_profile, time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         assert stdout_lines[0] == expected
 
     def test_time_bases_and_var_groups(self, capsys):
-        info.info("SalishSeaCast-201905")
+        info.info("SalishSeaCast-201905", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = [
@@ -182,6 +187,24 @@ class TestModelProfileInfo:
             expected
         )
 
+    @pytest.mark.parametrize(
+        "time_interval, vars_group",
+        (
+            ("hour", ""),
+            ("", "biology"),
+        ),
+    )
+    def test_missing_time_interval_or_var_group(
+        self, time_interval, vars_group, log_output
+    ):
+        info.info("SalishSeaCast-201905", time_interval, vars_group)
+
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["time_interval"] == time_interval
+        assert log_output.entries[0]["vars_group"] == vars_group
+        expected = "both time interval and variable group are required"
+        assert log_output.entries[0]["event"] == expected
+
 
 class TestUnrecognizedClusterOrModelProfile:
     """Unit test for core.info.info() is an argument value that is not recognized as either
@@ -189,8 +212,131 @@ class TestUnrecognizedClusterOrModelProfile:
     """
 
     def test_bad_cluster_or_model(self, log_output):
-        info.info("foo")
+        info.info("foo", time_interval="", vars_group="")
 
         assert log_output.entries[0]["log_level"] == "error"
         assert log_output.entries[0]["cluster_or_model"] == "foo"
         assert log_output.entries[0]["event"] == "unrecognized cluster or model profile"
+
+
+class TestVarsList:
+    """Unit tests for core.info._vars_list() function."""
+
+    def test_bad_time_interval(self, log_output):
+        model_profile = {
+            "results archive": {
+                "path": "/results2/SalishSea/nowcast-green.201905/",
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "file pattern": "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+                        }
+                    }
+                },
+            }
+        }
+        info._vars_list(model_profile, "foo", "biology", Console())
+
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["time_interval"] == "foo"
+        assert log_output.entries[0]["event"] == "time interval is not in model profile"
+
+    def test_bad_vars_group(self, log_output):
+        model_profile = {
+            "results archive": {
+                "path": "/results2/SalishSea/nowcast-green.201905/",
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "file pattern": "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+                        }
+                    }
+                },
+            }
+        }
+        info._vars_list(model_profile, "hour", "foo", Console())
+
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["vars_group"] == "foo"
+        assert (
+            log_output.entries[0]["event"] == "variables group is not in model profile"
+        )
+
+    def test_vars_list(self, capsys, tmp_path, monkeypatch):
+        model_results_archive = tmp_path / "model_results/"
+        model_results_archive.mkdir()
+        ds = xarray.Dataset(
+            coords={
+                "time": pandas.date_range(
+                    "2022-07-21",
+                    periods=1,
+                    freq=pandas.DateOffset(days=1),
+                ),
+                "depth": numpy.arange(0, 4, 0.5),
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
+            },
+            data_vars={
+                "vosaline": xarray.DataArray(
+                    name="vosaline",
+                    data=numpy.empty((1, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time": pandas.date_range(
+                            "2022-07-21",
+                            periods=1,
+                            freq=pandas.DateOffset(days=1),
+                        ),
+                        "depth": numpy.arange(0, 4, 0.5),
+                        "gridY": numpy.arange(9),
+                        "gridX": numpy.arange(4),
+                    },
+                    attrs={
+                        "long_name": "salinity",
+                        "units": "g kg-1",
+                    },
+                ),
+                "votemper": xarray.DataArray(
+                    name="votemper",
+                    data=numpy.empty((1, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time": pandas.date_range(
+                            "2022-07-21",
+                            periods=1,
+                            freq=pandas.DateOffset(days=1),
+                        ),
+                        "depth": numpy.arange(0, 4, 0.5),
+                        "gridY": numpy.arange(9),
+                        "gridX": numpy.arange(4),
+                    },
+                    attrs={
+                        "long_name": "temperature",
+                        "units": "degC",
+                    },
+                ),
+            },
+            attrs={
+                "name": "test_20220721_20220721_grid_T.nc",
+                "description": "test dataset for TestVarsList",
+            },
+        )
+        ds.to_netcdf(model_results_archive / "test_20220721_20220721_grid_T.nc")
+
+        model_profile = {
+            "name": "TestModel",
+            "results archive": {
+                "path": os.fspath(model_results_archive),
+                "datasets": {
+                    "hour": {
+                        "physics tracers": {
+                            "file pattern": "test_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
+                        },
+                    },
+                },
+            },
+        }
+        info._vars_list(model_profile, "hour", "physics tracers", Console())
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        assert stdout_lines[0] == "hour-averaged variables in physics tracers group:"
+        assert stdout_lines[1] == "  - vosaline : salinity [g kg-1]"
+        assert stdout_lines[2] == "  - votemper : temperature [degC]"

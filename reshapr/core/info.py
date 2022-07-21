@@ -22,8 +22,10 @@ from importlib import metadata
 from pathlib import Path
 
 import structlog
+import xarray
 import yaml
 from rich.console import Console
+from rich.markup import escape
 from rich.padding import Padding
 from rich.syntax import Syntax
 
@@ -33,7 +35,7 @@ MODEL_PROFILES_PATH = Path(__file__).parent.parent.parent / "model_profiles"
 logger = structlog.get_logger()
 
 
-def info(cluster_or_model):
+def info(cluster_or_model, time_interval, vars_group):
     """Provide information about reshapr, dask clusters, and model profiles."""
     console = Console()
 
@@ -44,7 +46,7 @@ def info(cluster_or_model):
         _cluster_info(cluster_or_model, console)
         return
     elif _is_model_profile(cluster_or_model):
-        _model_profile_info(cluster_or_model, console)
+        _model_profile_info(cluster_or_model, time_interval, vars_group, console)
         return
     else:
         logger.error(
@@ -104,11 +106,22 @@ def _is_model_profile(cluster_or_model):
     )
 
 
-def _model_profile_info(profile, console):
+def _model_profile_info(profile, time_interval, vars_group, console):
     profile_file = profile if profile.endswith(".yaml") else f"{profile}.yaml"
     console.print(f"[green]{profile_file}:", highlight=False)
     with (MODEL_PROFILES_PATH / profile_file).open("rt") as f:
         model_profile = yaml.safe_load(f)
+
+    if time_interval and vars_group:
+        _vars_list(model_profile, time_interval, vars_group, console)
+        return
+    if time_interval or vars_group:
+        logger.error(
+            "both time interval and variable group are required",
+            time_interval=time_interval,
+            vars_group=vars_group,
+        )
+        return
 
     console.print(
         "[cyan]variable groups[/cyan] from [magenta]time intervals[/magenta] in this model:"
@@ -116,9 +129,8 @@ def _model_profile_info(profile, console):
     datasets = model_profile["results archive"]["datasets"]
     for time_base in datasets:
         console.print(f"  [magenta]{time_base}")
-        var_groups = datasets[time_base]
-        for var_group in var_groups:
-            console.print(f"    [cyan]{var_group}")
+        for vars_group in datasets[time_base]:
+            console.print(f"    [cyan]{vars_group}")
 
     console.print(
         "\nPlease use [blue]reshapr info model-profile time-interval variable-group[/blue]\n"
@@ -126,6 +138,50 @@ def _model_profile_info(profile, console):
         "to get the list of variables in a [cyan]variable group[/cyan].",
         highlight=False,
     )
+    console.print(
+        "\nPlease use [blue]reshapr info --help[/blue] to learn how to get other information,"
+    )
+    console.print("or [blue]reshapr --help[/blue] to learn about other sub-commands.")
+
+
+def _vars_list(model_profile, time_interval, vars_group, console):
+    unused_vars_yaml = (
+        Path(__file__).parent.parent.parent / "model_profiles" / "unused-variables.yaml"
+    )
+    with unused_vars_yaml.open("rt") as f:
+        unused_vars = yaml.safe_load(f)
+    drop_vars = {var for var in unused_vars}
+    results_archive_path = Path(model_profile["results archive"]["path"])
+    datasets = model_profile["results archive"]["datasets"]
+    try:
+        vars_groups = datasets[time_interval]
+    except KeyError:
+        logger.error(
+            "time interval is not in model profile", time_interval=time_interval
+        )
+        return
+    try:
+        dataset = vars_groups[vars_group]
+    except KeyError:
+        logger.error("variables group is not in model profile", vars_group=vars_group)
+        return
+    nc_files_pattern = dataset["file pattern"].format(
+        ddmmmyy="*",
+        yyyymmdd="*",
+        nemo_yyyymmdd="*",
+    )
+    ds_path = next(results_archive_path.glob(nc_files_pattern))
+    console.print(
+        f"[magenta]{time_interval}[/magenta]-averaged variables in [cyan]{vars_group}[/cyan] group:"
+    )
+    with xarray.open_dataset(ds_path, drop_variables=drop_vars) as ds:
+        for var in ds.data_vars:
+            long_name = ds[var].attrs["long_name"]
+            units = f"[{ds[var].attrs['units']}]"
+            console.print(
+                f"  - [red]{var}[/red] : {long_name} {escape(units)}", highlight=False
+            )
+
     console.print(
         "\nPlease use [blue]reshapr info --help[/blue] to learn how to get other information,"
     )
@@ -152,8 +208,17 @@ def _get_model_profiles():
 
 # This stanza facilitates running the info sub-command in a Python debugger
 if __name__ == "__main__":  # pragma: nocover
+    cluster_or_model, time_interval, var_group = "", "", ""
     try:
         cluster_or_model = sys.argv[1]
     except IndexError:
-        cluster_or_model = ""
-    info(cluster_or_model)
+        pass
+    try:
+        time_interval = sys.argv[2]
+    except IndexError:
+        pass
+    try:
+        var_group = " ".join(sys.argv[3:])
+    except IndexError:
+        pass
+    info(cluster_or_model, time_interval, var_group)

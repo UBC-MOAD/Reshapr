@@ -69,6 +69,15 @@ class TestModelProfiles:
             "time_centered",
             "nav_lon",
             "nav_lat",
+            "bounds_lat",
+            "bounds_lon",
+            "deptht_bounds",
+            "depthu_bounds",
+            "depthv_bounds",
+            "depthw_bounds",
+            "time_centered_bounds",
+            "time_counter_bounds",
+            "area",
         ]
         assert unused_vars == expected
 
