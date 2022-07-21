@@ -16,3 +16,16 @@
 # the dataset's `geo ref dataset` key.
 - nav_lon
 - nav_lat
+
+# NEMO generated bounds variables
+- bounds_lat
+- bounds_lon
+- deptht_bounds
+- depthu_bounds
+- depthv_bounds
+- depthw_bounds
+- time_centered_bounds
+- time_counter_bounds
+
+# NEMO generated grid cell area variable
+- area

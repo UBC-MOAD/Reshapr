@@ -35,15 +35,29 @@ import reshapr.core.info
     * list of model profiles included in the package
 
     Specify a dask cluster configuration (e.g. `reshapr info salish_cluster`)
-    or a model profile (e.g. `reshpr info SalishSeaCast-201905`) to get information
+    or a model profile (e.g. `reshapr info SalishSeaCast-201905`) to get information
     about them.
+
+    Specify a model profile, time interval, and variable group
+    (e.g. `reshapr info SalishSeaCast-201905 hour biology`) to get the list of variables
+    available in that dataset.
     """,
     short_help="Provide information about dask clusters and model profiles",
 )
 @click.argument(
     "cluster_or_model",
     default="",
+    nargs=1,
 )
-def info(cluster_or_model):
+@click.argument(
+    "time_interval",
+    default="",
+    nargs=1,
+)
+@click.argument(
+    "vars_group",
+    nargs=-1,
+)
+def info(cluster_or_model, time_interval, vars_group):
     """Command-line interface for :py:func:`reshapr.core.info.info`."""
-    reshapr.core.info.info(cluster_or_model)
+    reshapr.core.info.info(cluster_or_model, time_interval, " ".join(vars_group))
