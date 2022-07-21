@@ -38,10 +38,12 @@ import reshapr.core.extract
 )
 @click.option(
     "--start-date",
+    default="",
     help="Start date for extraction. Overrides start date in config file. Use YYYY-MM-DD format.",
 )
 @click.option(
     "--end-date",
+    default="",
     help="End date for extraction. Overrides end date in config file. Use YYYY-MM-DD format.",
 )
 def extract(config_file, start_date, end_date):

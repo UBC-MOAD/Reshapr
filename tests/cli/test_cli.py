@@ -23,7 +23,8 @@ import textwrap
 import structlog
 from click.testing import CliRunner
 
-from reshapr.cli.commands import reshapr
+import reshapr.cli.extract
+from reshapr.cli import commands
 
 
 class TestExtract:
@@ -49,9 +50,44 @@ class TestExtract:
         with runner.isolated_filesystem(temp_dir=tmp_path):
             start_date, end_date = "", ""
             result = runner.invoke(
-                reshapr, ["extract", os.fspath(config_yaml), start_date, end_date]
+                commands.reshapr,
+                ["extract", os.fspath(config_yaml), start_date, end_date],
             )
         structlog.reset_defaults()
 
         assert result.exit_code == 2
         assert isinstance(result.exception, SystemExit)
+
+    def test_start_end_dates_default_to_empty_string(self, tmp_path, monkeypatch):
+        """re: GitHub issue #34: https://github.com/UBC-MOAD/Reshapr/issues/34
+
+        Values from --start-date and --end-date CLI options should default to empty strings to
+        prevent TypeError from arrow parser.
+        """
+
+        def mock_extract(config_file, start_date, end_date):
+            assert start_date == ""
+            assert end_date == ""
+
+        monkeypatch.setattr(
+            reshapr.cli.extract.reshapr.core.extract, "extract", mock_extract
+        )
+
+        config_yaml = tmp_path / "foo.yaml"
+        config_yaml.write_text(
+            textwrap.dedent(
+                """\
+                dataset:
+                  model profile: bar
+                """
+            )
+        )
+
+        runner = CliRunner()
+        with runner.isolated_filesystem(temp_dir=tmp_path):
+            result = runner.invoke(
+                commands.reshapr, ["extract", os.fspath(config_yaml)]
+            )
+        structlog.reset_defaults()
+
+        assert result.exit_code == 0
