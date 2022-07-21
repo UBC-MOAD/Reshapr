@@ -60,17 +60,17 @@ def _basic_info(console):
         pkg: metadata.version(pkg) for pkg in ("reshapr", "xarray", "dask", "netcdf4")
     }
     for pkg, version in versions.items():
-        console.print(f"{pkg}, version [magenta]{version}")
+        console.print(f"{pkg}, version [magenta]{version}", highlight=False)
 
     console.print("\ndask cluster configurations included in this package:")
     cluster_configs = _get_cluster_configs()
     for cluster_config in cluster_configs:
-        console.print(f"  [magenta]{cluster_config}")
+        console.print(f"  [magenta]{cluster_config}", highlight=False)
 
     console.print("\nmodel profiles included in this package:")
     model_profiles = _get_model_profiles()
     for model_profile in model_profiles:
-        console.print(f"  [magenta]{model_profile}")
+        console.print(f"  [magenta]{model_profile}", highlight=False)
 
     console.print(
         "\nPlease use [blue]reshapr info --help[/blue] to learn how to get deeper information,"
