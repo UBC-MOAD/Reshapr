@@ -1,0 +1,24 @@
+# reshapr extract processing configuration for diatoms nudging field
+# for Atlantis ecosystem model
+
+dataset:
+  model profile: SalishSeaCast-201905.yaml
+  time base: day
+  variables group: biology
+
+dask cluster: salish_cluster.yaml
+
+start date: 2007-01-01
+end date: 2021-12-31
+
+extract variables:
+  - diatoms
+
+include lons lats: True
+
+extracted dataset:
+  name: SalishSeaCast_day_avg_diatoms_compressed
+  description: Day-averaged diatoms biomass extracted from SalishSeaCast v201905 hindcast
+  deflate: False
+  format: NETCDF4_CLASSIC
+  dest dir: /ocean/dlatorne/Atlantis/day-avg-diatoms/
