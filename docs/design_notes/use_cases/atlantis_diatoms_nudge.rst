@@ -30,7 +30,7 @@ decades of the Atlantis run durations.
 
 It has been identified that the biomass of some functional groups in the Salish Sea
 ecology in Atlantis are not as accurate as the biomass in SalishSeaCast, possibly
-due to SalishSeaCast's better resolution.
+due to SalishSeaCast's more detailed resolution.
 To improve the accuracy in Atlantis one can periodically nudge one or more of the
 functional groups at the base of the food web towards values obtained from outside
 of the Atlantis calculations.
@@ -83,32 +83,8 @@ server :kbd:`salish` with the command:
 where :file:`atlantis_nudge_diatoms.yaml` is an extraction processing configuration
 YAML file containing:
 
-.. code-block:: yaml
-
-    # reshapr extract processing configuration for diatoms nudging field
-    # for Atlantis ecosystem model
-
-    dataset:
-      model profile: SalishSeaCast-201812.yaml
-      time base: day
-      variables group: biology
-
-    dask cluster: salish_cluster.yaml
-
-    start date: 2007-01-01
-    end date: 2021-12-31
-
-    extract variables:
-      - diatoms
-
-    include lons lats: True
-
-    extracted dataset:
-      name: SalishSeaCast_day_avg_diatoms
-      description: Day-averaged diatoms biomass extracted from SalishSeaCast v201905 hindcast
-      deflate: False
-      format: NETCDF4_CLASSIC
-      dest dir: /ocean/dlatorne/day-avg-diatoms/
+.. literalinclude:: extract_atlantis_diatoms.yaml
+   :language: yaml
 
 Please see :ref:`ReshaprExtractYAMLFile` for details of meanings and choices available
 for the items in the YAML file.
