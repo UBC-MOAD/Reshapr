@@ -1,0 +1,29 @@
+# reshapr extract processing configuration for hour-averaged temperature
+# and salinity fields in northern Salish Sea during event described in
+# Evans, et al (2019)
+
+dataset:
+  model profile: SalishSeaCast-201812.yaml
+  time base: hour
+  variables group: physics tracers
+
+dask cluster: salish_cluster.yaml
+
+start date: 2015-07-25
+end date: 2015-08-04
+
+extract variables:
+  - votemper
+  - vosaline
+
+selection:
+  time interval: 3
+  depth:
+    depth max: 25
+  grid y:
+    y min: 600
+
+extracted dataset:
+  name: SalishSeaCast_hour_physics
+  description: Hourly physics extracted from SalishSeaCast v201812 hindcast
+  dest dir: /data/sallen/results/PRODIGY/

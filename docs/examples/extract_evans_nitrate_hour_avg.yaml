@@ -1,0 +1,27 @@
+# reshapr extract processing configuration for hour-averaged nitrate field
+# in northern Salish Sea during event described in Evans, et al (2019)
+
+dataset:
+  model profile: SalishSeaCast-201812.yaml
+  time base: hour
+  variables group: biology
+
+dask cluster: salish_cluster.yaml
+
+start date: 2015-07-25
+end date: 2015-08-04
+
+extract variables:
+  - nitrate
+
+selection:
+  time interval: 3
+  depth:
+    depth max: 25
+  grid y:
+    y min: 600
+
+extracted dataset:
+  name: SalishSeaCast_hour_nitrate
+  description: Hourly nitrate extracted from SalishSeaCast v201812 hindcast
+  dest dir: /data/sallen/results/PRODIGY/

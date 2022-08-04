@@ -15,9 +15,14 @@
 .. SPDX-License-Identifier: Apache-2.0
 
 
-*********
-Use Cases
-*********
+.. _ExamplesOfUse:
 
-Many of the :ref:`ExamplesOfUse` of Reshapr were use cases considered in its design,
-or the motivation for the addition of features.
+***************
+Examples of Use
+***************
+
+.. toctree::
+   :caption: Contents:
+
+   atlantis_diatoms_nudge
+   prodigy_model_obs_assignment

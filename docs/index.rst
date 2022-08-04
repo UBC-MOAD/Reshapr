@@ -26,6 +26,7 @@ This is the documentation for the :py:obj:`Reshapr` Python package.
 
    installation
    subcommands/index
+   examples/index
    model_profiles
    dask_clusters
    pkg_development
