@@ -22,7 +22,7 @@ Installation
 Get the Code
 ============
 
-  Clone the code and documentation `repository`_ from GitHub with:
+Clone the code and documentation `repository`_ from GitHub with:
 
 .. _repository: https://github.com/UBC-MOAD/Reshapr
 
@@ -98,7 +98,7 @@ then update your environment and install :py:obj:`Reshapr` with:
 .. code-block:: bash
 
     (your-env)$ conda env update -f your-env-yaml
-    (your-env)$ python3 -m pip install --editable Reshapr
+    (your-env)$ python3 -m pip install --editable path/to/Reshapr
 
 
 .. _ReshaprUpdateInstallation:
