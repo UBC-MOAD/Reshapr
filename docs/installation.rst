@@ -73,11 +73,12 @@ by typing :kbd:`reshapr` in your activated environment.
 You should see the top level command help information and the list of available
 :ref:`ReshaprSubcommands`.
 
-You can show the version of :py:obj:`Reshapr` that you have installed with:
+You can show the version of :py:obj:`Reshapr` that you have installed
+and other important information with:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ reshapr --version
+    (reshapr-dev)$ reshapr info
 
 To deactivate the environment use:
 
