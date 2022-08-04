@@ -55,8 +55,8 @@ The variables in the file(s) are:
 
 * diatoms: the (time, depth, gridY, gridX) field of mole concentration of diatoms
   expressed as nitrogen in seawater
-* longitudes: the (gridY, girdX) field of longitude values of the model grid points
-* latitudes: the (gridY, girdX) field of latitude values of the model grid points
+* longitudes: the (gridY, gridX) field of longitude values of the model grid points
+* latitudes: the (gridY, gridX) field of latitude values of the model grid points
 
 The storage attributes of the file(s) are:
 
