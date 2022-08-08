@@ -971,7 +971,8 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format):
 
     :param dict encoding: Encoding to use for netCDF4 file write.
 
-    :param str nc_format: Format to use for netCDF4 file write.
+    :param nc_format: Format to use for netCDF4 file write.
+    :type nc_format: Literal["NETCDF4", "NETCDF4_CLASSIC", "NETCDF3_64BIT", "NETCDF3_CLASSIC"]
     """
     extracted_ds.to_netcdf(
         nc_path,
