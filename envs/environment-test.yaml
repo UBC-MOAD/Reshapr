@@ -13,8 +13,10 @@ channels:
 
 dependencies:
   - arrow
+  - bottleneck
   - click
   - dask
+  - flox
   - netCDF4
   - pip
   - python
