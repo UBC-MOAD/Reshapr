@@ -61,12 +61,14 @@ and install the package with the commands below.
     $ cd Reshapr
     $ conda env create -f envs/environment-user.yaml
     $ conda activate reshapr
-    (reshapr)$ python3 -m pip install --editable .
 
-The :kbd:`--editable` option in the :command:`pip install` command above installs
-the package from the cloned repo via symlinks so that the installed package will be
-automatically updated as the repo evolves.
+:py:obj:`Reshapr` is installed in `editable install mode`_ as part of the conda environment
+creation process.
+That means that the package is installed from the cloned repo via symlinks so that
+it will be automatically updated as the repo evolves.
 Please see :ref:`ReshaprUpdateInstallation` for more details.
+
+.. _editable install mode: https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
 
 You can confirm that you have successfully installed :py:obj:`Reshapr`
 by typing :kbd:`reshapr` in your activated environment.
