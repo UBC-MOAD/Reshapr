@@ -37,3 +37,6 @@ dependencies:
   - pip:
     # For unit tests
     - pytest-randomly
+
+    # editable install of Reshapr package
+    - --editable ../
