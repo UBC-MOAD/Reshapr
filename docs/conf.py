@@ -43,13 +43,16 @@ release = reshapr.__version__
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.intersphinx"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+]
 
 intersphinx_mapping = {
     "arrow": ("https://arrow.readthedocs.io/en/latest/", None),
     "dask": ("https://docs.dask.org/en/stable/", None),
     "moaddocs": ("https://ubc-moad-docs.readthedocs.io/en/latest/", None),
-    "xarray": ("http://xarray.pydata.org/en/latest/", None),
+    "xarray": ("https://docs.xarray.dev/en/latest/", None),
 }
 
 # Add any paths that contain templates here, relative to this directory.

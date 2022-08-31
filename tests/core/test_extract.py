@@ -220,51 +220,6 @@ class TestLoadModelProfile:
         assert log_output.entries[1]["event"] == "model results archive not found"
 
 
-class Test_ddmmmyy:
-    """Unit test for ddmmmyy() function."""
-
-    def test_ddmmmyy(self):
-        ddmmmyy = extract.ddmmmyy(arrow.get("2022-02-07"))
-
-        assert ddmmmyy == "07feb22"
-
-
-class Test_yyyymmdd:
-    """Unit test for yyyymmdd() function."""
-
-    def test_yyyymmdd(self):
-        yyyymmdd = extract.yyyymmdd(arrow.get("2022-02-07"))
-
-        assert yyyymmdd == "20220207"
-
-
-class Test_yyyy:
-    """Unit test for yyyy() function."""
-
-    def test_yyyy(self):
-        yyyy = extract.yyyy(arrow.get("2022-08-31"))
-
-        assert yyyy == "2022"
-
-
-class Test_nemo_yyyymm:
-    """Unit test for nemo_yyyymm() function."""
-
-    def test_nemo_yyyymmdd(self):
-        nemo_yyyymmdd = extract.nemo_yyyymm(arrow.get("2022-08-08"))
-
-        assert nemo_yyyymmdd == "y2022m08"
-
-
-class Test_nemo_yyyymmdd:
-    """Unit test for nemo_yyyymmdd() function."""
-
-    def test_nemo_yyyymmdd(self):
-        nemo_yyyymmdd = extract.nemo_yyyymmdd(arrow.get("2022-02-28"))
-
-        assert nemo_yyyymmdd == "y2022m02d28"
-
-
 class TestCalcDsPaths:
     """Unit tests for calc_ds_paths() function."""
 
