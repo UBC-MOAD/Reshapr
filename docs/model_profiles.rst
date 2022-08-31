@@ -380,15 +380,22 @@ Stanza items:
 
 :py:attr:`file pattern` (Required)
    The dataset path/file pattern for the model variables in a group.
-   The file patterns are relative the the model dataset :py:attr:`path`
+   The file patterns are relative to the model dataset :py:attr:`path`
    described above.
    Elements of the pattern in brace brackets;
    e.g. ``{yyyymmdd}`` are replaced by dates in the format indicated.
-   There are presently 3 supported date formats:
+   For example,
+   for the date ``2022-05-27`` these are some of the date format pattern elements
+   and the resulting formatted date strings:
 
-   #. ``ddmmmyy``; e.g. ``27may22``
-   #. ``yyyymmdd``; e.g. ``20220527``
-   #. ``nemo_yyyymmdd``; e.g. ``y2022m05d27``
+   * ``ddmmmyy``; e.g. ``27may22``
+   * ``yyyymmdd``; e.g. ``20220527``
+   * ``yyyy``; e.g. ``2022``
+   * ``nemo_yyyymmdd``; e.g. ``y2022m05d27``
+   * ``nemo_yyyymm``; e.g. ``y2022m05``
+
+   The supported date format pattern elements are the names of the :ref:`DateFormatters`
+   functions.
 
 :py:attr:`depth coord` (Required)
    The name of the netCDF depth coordinate in the variables group dataset.

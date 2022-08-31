@@ -29,6 +29,8 @@ import structlog
 import xarray
 import yaml
 
+from reshapr.utils import date_formatters
+
 logger = structlog.get_logger()
 
 
@@ -207,11 +209,11 @@ def calc_ds_paths(config, model_profile):
     ds_paths = [
         results_archive_path.joinpath(
             nc_files_pattern.format(
-                ddmmmyy=ddmmmyy(day),
-                yyyymmdd=yyyymmdd(day),
-                yyyy=yyyy(day),
-                nemo_yyyymm=nemo_yyyymm(day),
-                nemo_yyyymmdd=nemo_yyyymmdd(day),
+                ddmmmyy=date_formatters.ddmmmyy(day),
+                yyyymmdd=date_formatters.yyyymmdd(day),
+                yyyy=date_formatters.yyyy(day),
+                nemo_yyyymm=date_formatters.nemo_yyyymm(day),
+                nemo_yyyymmdd=date_formatters.nemo_yyyymmdd(day),
             )
         )
         for day in date_range
@@ -219,68 +221,6 @@ def calc_ds_paths(config, model_profile):
     log = log.bind(n_datasets=len(ds_paths))
     log.debug("collected dataset paths")
     return ds_paths
-
-
-def ddmmmyy(arrow_date):
-    """Return an Arrow date as a string formatted as lower-cased `ddmmmyy`; e.g. 28feb22.
-
-    :param arrow_date: Date/time to format.
-    :type arrow_date: :py:class:`arrow.arrow.Arrow`
-
-    :return: Date formatted as lower-cased `ddmmmyy`.
-    :rtype: str
-    """
-    return arrow_date.format("DDMMMYY").lower()
-
-
-def yyyymmdd(arrow_date):
-    """Return an Arrow date as a string of digits formatted as `yyyymmdd`; e.g. 20220228.
-
-    :param arrow_date: Date/time to format.
-    :type arrow_date: :py:class:`arrow.arrow.Arrow`
-
-    :return: Date formatted as `yyyymmdd` digits.
-    :rtype: str
-    """
-    return arrow_date.format("YYYYMMDD")
-
-
-def yyyy(arrow_date):
-    """Return an Arrow date as a string of digits formatted as `yyyy`; e.g. 2022.
-
-    :param arrow_date: Date/time to format.
-    :type arrow_date: :py:class:`arrow.arrow.Arrow`
-
-    :return: Date formatted as `yyyy` digits.
-    :rtype: str
-    """
-    return arrow_date.format("YYYY")
-
-
-def nemo_yyyymm(arrow_date):
-    """Return an Arrow date as a string formatted using the NEMO forcing date convention;
-    i.e. y2022m02.
-
-    :param arrow_date: Date/time to format.
-    :type arrow_date: :py:class:`arrow.arrow.Arrow`
-
-    :return: Date formatted as NEMO forcing date.
-    :rtype: str
-    """
-    return arrow_date.format("[y]YYYY[m]MM")
-
-
-def nemo_yyyymmdd(arrow_date):
-    """Return an Arrow date as a string formatted using the NEMO forcing date convention;
-    i.e. y2022m02d28.
-
-    :param arrow_date: Date/time to format.
-    :type arrow_date: :py:class:`arrow.arrow.Arrow`
-
-    :return: Date formatted as NEMO forcing date.
-    :rtype: str
-    """
-    return arrow_date.format("[y]YYYY[m]MM[d]DD")
 
 
 def calc_ds_chunk_size(config, model_profile):
@@ -797,7 +737,7 @@ def calc_extracted_dataset(
     ds_name_root = config["extracted dataset"]["name"]
     start_date = arrow.get(config["start date"])
     end_date = arrow.get(config["end date"])
-    ds_name = f"{ds_name_root}_{yyyymmdd(start_date)}_{yyyymmdd(end_date)}"
+    ds_name = f"{ds_name_root}_{date_formatters.yyyymmdd(start_date)}_{date_formatters.yyyymmdd(end_date)}"
     ds_desc = config["extracted dataset"]["description"]
     history = (
         f"{arrow.now('local').format('YYYY-MM-DD HH:mm ZZ')}: "

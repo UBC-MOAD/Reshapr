@@ -29,6 +29,7 @@ This is the documentation for the :py:obj:`Reshapr` Python package.
    examples/index
    model_profiles
    dask_clusters
+   api
    pkg_development
    design_notes/index
 
