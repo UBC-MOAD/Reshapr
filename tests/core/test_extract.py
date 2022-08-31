@@ -238,6 +238,15 @@ class Test_yyyymmdd:
         assert yyyymmdd == "20220207"
 
 
+class Test_yyyy:
+    """Unit test for yyyy() function."""
+
+    def test_yyyy(self):
+        yyyy = extract.yyyy(arrow.get("2022-08-31"))
+
+        assert yyyy == "2022"
+
+
 class Test_nemo_yyyymm:
     """Unit test for nemo_yyyymm() function."""
 

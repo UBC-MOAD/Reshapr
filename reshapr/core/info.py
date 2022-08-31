@@ -168,6 +168,7 @@ def _vars_list(model_profile, time_interval, vars_group, console):
     nc_files_pattern = dataset["file pattern"].format(
         ddmmmyy="*",
         yyyymmdd="*",
+        yyyy="*",
         nemo_yyyymm="*",
         nemo_yyyymmdd="*",
     )
