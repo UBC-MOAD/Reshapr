@@ -209,6 +209,7 @@ def calc_ds_paths(config, model_profile):
             nc_files_pattern.format(
                 ddmmmyy=ddmmmyy(day),
                 yyyymmdd=yyyymmdd(day),
+                yyyy=yyyy(day),
                 nemo_yyyymm=nemo_yyyymm(day),
                 nemo_yyyymmdd=nemo_yyyymmdd(day),
             )
@@ -233,7 +234,7 @@ def ddmmmyy(arrow_date):
 
 
 def yyyymmdd(arrow_date):
-    """Return an Arrow date as a string of digits formatted as `yyyymmdd`; e.g. 20020228.
+    """Return an Arrow date as a string of digits formatted as `yyyymmdd`; e.g. 20220228.
 
     :param arrow_date: Date/time to format.
     :type arrow_date: :py:class:`arrow.arrow.Arrow`
@@ -241,7 +242,19 @@ def yyyymmdd(arrow_date):
     :return: Date formatted as `yyyymmdd` digits.
     :rtype: str
     """
-    return arrow_date.format("YYYYMMDD").lower()
+    return arrow_date.format("YYYYMMDD")
+
+
+def yyyy(arrow_date):
+    """Return an Arrow date as a string of digits formatted as `yyyy`; e.g. 2022.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as `yyyy` digits.
+    :rtype: str
+    """
+    return arrow_date.format("YYYY")
 
 
 def nemo_yyyymm(arrow_date):
