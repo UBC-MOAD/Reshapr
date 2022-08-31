@@ -375,7 +375,7 @@ Stanza items:
    The sub-stanza key(s) for the collections of model variables in particular
    dataset files.
    The variable group keys are used as the value for the ``variable group`` item
-   in the :ref:`ReshaprExtractYAMLFile` as part of the specifation of which dataset
+   in the :ref:`ReshaprExtractYAMLFile` as part of the specification of which dataset
    to extract variables from.
 
 :py:attr:`file pattern` (Required)
@@ -397,5 +397,23 @@ Stanza items:
    The supported date format pattern elements are the names of the :ref:`DateFormatters`
    functions.
 
-:py:attr:`depth coord` (Required)
+:py:attr:`depth coord` (Required for all but purely surface datasets)
    The name of the netCDF depth coordinate in the variables group dataset.
+
+   For datasets that contain *only* surface fields
+   (i.e. *none* of the variables have a depth coordinate)
+   the :py:attr:`depth coord` item is omitted.
+
+   Example:
+
+   .. code-block:: yaml
+
+      results archive:
+        path: /results/forcing/atmospheric/GEM2.5/operational/
+        datasets:
+          hour:
+            surface fields:
+              file pattern: "ops_{nemo_yyyymmdd}.nc"
+
+   The :py:attr:`depth coord` item is required for datasets that contain a mixture of
+   surface and depth-varying variables.
