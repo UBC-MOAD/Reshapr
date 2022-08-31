@@ -23,6 +23,7 @@ This is the documentation for the :py:obj:`Reshapr` Python package.
 
 .. toctree::
    :caption: Contents:
+   :maxdepth: 2
 
    installation
    subcommands/index
