@@ -168,6 +168,7 @@ def _vars_list(model_profile, time_interval, vars_group, console):
     nc_files_pattern = dataset["file pattern"].format(
         ddmmmyy="*",
         yyyymmdd="*",
+        nemo_yyyymm="*",
         nemo_yyyymmdd="*",
     )
     ds_path = next(results_archive_path.glob(nc_files_pattern))

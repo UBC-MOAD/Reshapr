@@ -209,6 +209,7 @@ def calc_ds_paths(config, model_profile):
             nc_files_pattern.format(
                 ddmmmyy=ddmmmyy(day),
                 yyyymmdd=yyyymmdd(day),
+                nemo_yyyymm=nemo_yyyymm(day),
                 nemo_yyyymmdd=nemo_yyyymmdd(day),
             )
         )
@@ -241,6 +242,19 @@ def yyyymmdd(arrow_date):
     :rtype: str
     """
     return arrow_date.format("YYYYMMDD").lower()
+
+
+def nemo_yyyymm(arrow_date):
+    """Return an Arrow date as a string formatted using the NEMO forcing date convention;
+    i.e. y2022m02.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as NEMO forcing date.
+    :rtype: str
+    """
+    return arrow_date.format("[y]YYYY[m]MM")
 
 
 def nemo_yyyymmdd(arrow_date):
