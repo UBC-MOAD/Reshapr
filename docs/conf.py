@@ -46,6 +46,7 @@ release = reshapr.__version__
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.viewcode",
 ]
 
 intersphinx_mapping = {
