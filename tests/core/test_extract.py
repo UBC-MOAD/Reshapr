@@ -873,7 +873,7 @@ class TestCalcOutputCoords:
                 "comment": "gridX values are distance in metres in the model x-direction from the south-west corner of the grid",
             },
             "chunk size": {
-                "time": 24,
+                "time": 4,
                 "y": 5,
                 "x": 4,
             },
@@ -921,7 +921,7 @@ class TestCalcOutputCoords:
             },
             "selection": {
                 "grid y": {
-                    "y min": 600,
+                    "y min": 6,
                 },
             },
         }
@@ -932,7 +932,7 @@ class TestCalcOutputCoords:
 
         assert output_coords["gridY"].name == "gridY"
         assert numpy.array_equal(
-            output_coords["gridY"].data, source_dataset.y.isel(y=slice(600, 898))
+            output_coords["gridY"].data, source_dataset.y.isel(y=slice(6, None))
         )
         assert output_coords["gridY"].attrs["standard_name"] == "y"
         assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
@@ -955,7 +955,7 @@ class TestCalcOutputCoords:
             },
             "selection": {
                 "grid y": {
-                    "y max": 300,
+                    "y max": 3,
                 },
             },
         }
@@ -966,7 +966,7 @@ class TestCalcOutputCoords:
 
         assert output_coords["gridY"].name == "gridY"
         assert numpy.array_equal(
-            output_coords["gridY"].data, source_dataset.y.isel(y=slice(0, 300))
+            output_coords["gridY"].data, source_dataset.y.isel(y=slice(0, 3))
         )
         assert output_coords["gridY"].attrs["standard_name"] == "y"
         assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
@@ -989,7 +989,7 @@ class TestCalcOutputCoords:
             },
             "selection": {
                 "grid y": {
-                    "y interval": 10,
+                    "y interval": 2,
                 },
             },
         }
@@ -1000,7 +1000,7 @@ class TestCalcOutputCoords:
 
         assert output_coords["gridY"].name == "gridY"
         assert numpy.array_equal(
-            output_coords["gridY"].data, source_dataset.y.isel(y=slice(0, 898, 10))
+            output_coords["gridY"].data, source_dataset.y.isel(y=slice(0, None, 2))
         )
         assert output_coords["gridY"].attrs["standard_name"] == "y"
         assert output_coords["gridY"].attrs["long_name"] == "Grid Y"
