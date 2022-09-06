@@ -465,7 +465,7 @@ class TestCreateDataarray:
 
 
 class TestCalcOutputCoords:
-    "Unit tests for calc_output_coords() function."
+    """Unit tests for calc_output_coords() function."""
 
     @pytest.fixture(name="model_profile", scope="class")
     def fixture_model_profile(self):
@@ -481,9 +481,9 @@ class TestCalcOutputCoords:
             },
             "chunk size": {
                 "time": 1,
-                "depth": 40,
-                "y": 898,
-                "x": 398,
+                "depth": 9,
+                "y": 9,
+                "x": 4,
             },
             "extraction time origin": "2015-01-01",
             "results archive": {
@@ -739,7 +739,7 @@ class TestCalcOutputCoords:
         assert log_output.entries[1]["log_level"] == "debug"
         assert log_output.entries[1]["event"] == "extraction depth coordinate"
 
-    def test_depth_coord_depth_min(self, source_dataset, model_profile):
+    def test_depth_coord_depth_selection_min(self, source_dataset, model_profile):
         extract_config = {
             "dataset": {
                 "time base": "day",
@@ -759,10 +759,11 @@ class TestCalcOutputCoords:
         assert output_coords["depth"].name == "depth"
         assert numpy.array_equal(
             output_coords["depth"].data,
-            source_dataset.deptht.isel(deptht=slice(5, 901)),
+            # stop=None in slice() means the length of the array without having to know what that is
+            source_dataset.deptht.isel(deptht=slice(5, None)),
         )
 
-    def test_depth_coord_depth_max(self, source_dataset, model_profile):
+    def test_depth_coord_depth_selection_max(self, source_dataset, model_profile):
         extract_config = {
             "dataset": {
                 "time base": "day",
@@ -770,7 +771,7 @@ class TestCalcOutputCoords:
             },
             "selection": {
                 "depth": {
-                    "depth max": 25,
+                    "depth max": 5,
                 },
             },
         }
@@ -781,10 +782,10 @@ class TestCalcOutputCoords:
 
         assert output_coords["depth"].name == "depth"
         assert numpy.array_equal(
-            output_coords["depth"].data, source_dataset.deptht.isel(deptht=slice(0, 25))
+            output_coords["depth"].data, source_dataset.deptht.isel(deptht=slice(0, 5))
         )
 
-    def test_depth_coord_depth_interval(self, source_dataset, model_profile):
+    def test_depth_coord_depth_selection_interval(self, source_dataset, model_profile):
         extract_config = {
             "dataset": {
                 "time base": "day",
@@ -804,7 +805,8 @@ class TestCalcOutputCoords:
         assert output_coords["depth"].name == "depth"
         assert numpy.array_equal(
             output_coords["depth"].data,
-            source_dataset.deptht.isel(deptht=slice(0, 901, 2)),
+            # stop=None in slice() means the length of the array without having to know what that is
+            source_dataset.deptht.isel(deptht=slice(0, None, 2)),
         )
 
     def test_y_index_coord(self, source_dataset, model_profile, log_output):
