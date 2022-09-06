@@ -1083,7 +1083,7 @@ class TestCalcOutputCoords:
                 "comment": "gridX values are distance in metres in the model x-direction from the south-west corner of the grid",
             },
             "chunk size": {
-                "time": 24,
+                "time": 4,
                 "y": 5,
                 "x": 4,
             },
@@ -1125,7 +1125,7 @@ class TestCalcOutputCoords:
             },
             "selection": {
                 "grid x": {
-                    "x min": 100,
+                    "x min": 1,
                 },
             },
         }
@@ -1135,8 +1135,9 @@ class TestCalcOutputCoords:
         )
 
         assert output_coords["gridX"].name == "gridX"
+        # stop=None in slice() means the length of the array without having to know what that is
         assert numpy.array_equal(
-            output_coords["gridX"].data, source_dataset.x.isel(x=slice(100, 398))
+            output_coords["gridX"].data, source_dataset.x.isel(x=slice(1, None))
         )
         assert output_coords["gridX"].attrs["standard_name"] == "x"
         assert output_coords["gridX"].attrs["long_name"] == "Grid X"
@@ -1159,7 +1160,7 @@ class TestCalcOutputCoords:
             },
             "selection": {
                 "grid x": {
-                    "x max": 300,
+                    "x max": 3,
                 },
             },
         }
@@ -1170,7 +1171,7 @@ class TestCalcOutputCoords:
 
         assert output_coords["gridX"].name == "gridX"
         assert numpy.array_equal(
-            output_coords["gridX"].data, source_dataset.x.isel(x=slice(0, 300))
+            output_coords["gridX"].data, source_dataset.x.isel(x=slice(0, 3))
         )
         assert output_coords["gridX"].attrs["standard_name"] == "x"
         assert output_coords["gridX"].attrs["long_name"] == "Grid X"
@@ -1203,8 +1204,9 @@ class TestCalcOutputCoords:
         )
 
         assert output_coords["gridX"].name == "gridX"
+        # stop=None in slice() means the length of the array without having to know what that is
         assert numpy.array_equal(
-            output_coords["gridX"].data, source_dataset.x.isel(x=slice(0, 398, 2))
+            output_coords["gridX"].data, source_dataset.x.isel(x=slice(0, None, 2))
         )
         assert output_coords["gridX"].attrs["standard_name"] == "x"
         assert output_coords["gridX"].attrs["long_name"] == "Grid X"
