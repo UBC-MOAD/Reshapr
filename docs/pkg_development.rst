@@ -34,7 +34,7 @@
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
-.. image:: https://readthedocs.org/projects/Reshapr/badge/?version=latest
+.. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest
     :target: https://reshapr.readthedocs.io/en/latest/
     :alt: Documentation Status
 .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/CI/badge.svg
@@ -305,7 +305,7 @@ The output looks something like:
     ( pkg_development: line  145) ok        https://www.python.org/dev/peps/pep-0008/
     ( pkg_development: line   66) ok        https://www.python.org/dev/peps/pep-0636/
     ( pkg_development: line  178) ok        https://www.sphinx-doc.org/en/master/
-    ( pkg_development: line   22) ok        https://readthedocs.org/projects/Reshapr/badge/?version=latest
+    ( pkg_development: line   22) ok        https://readthedocs.org/projects/reshapr/badge/?version=latest
     ( pkg_development: line  178) ok        https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
     (design_notes/motivation: line   53) ok        https://xarray.pydata.org/en/latest/
     (design_notes/motivation: line   65) ok        https://xarray.pydata.org/en/latest/generated/xarray.open_mfdataset.html#xarray.open_mfdataset
