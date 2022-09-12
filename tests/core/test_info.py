@@ -222,6 +222,31 @@ class TestUnrecognizedClusterOrModelProfile:
 class TestVarsList:
     """Unit tests for core.info._vars_list() function."""
 
+    def test_bad_results_archive_path(self, log_output):
+        model_profile = {
+            "results archive": {
+                "path": "/foo/nowcast-green.201905/",
+                "datasets": {
+                    "hour": {
+                        "biology": {
+                            "file pattern": "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
+                        }
+                    }
+                },
+            }
+        }
+        info._vars_list(model_profile, "hour", "biology", Console())
+
+        assert log_output.entries[0]["log_level"] == "error"
+        assert (
+            log_output.entries[0]["results_archive_path"]
+            == "/foo/nowcast-green.201905/"
+        )
+        assert (
+            log_output.entries[0]["event"]
+            == "model profile results archive path not found"
+        )
+
     def test_bad_time_interval(self, log_output):
         model_profile = {
             "results archive": {

@@ -172,7 +172,14 @@ def _vars_list(model_profile, time_interval, vars_group, console):
         nemo_yyyymm="*",
         nemo_yyyymmdd="*",
     )
-    ds_path = next(results_archive_path.glob(nc_files_pattern))
+    try:
+        ds_path = next(results_archive_path.glob(nc_files_pattern))
+    except StopIteration:
+        logger.error(
+            "model profile results archive path not found",
+            results_archive_path=f"{results_archive_path}/",
+        )
+        return
     console.print(
         f"[magenta]{time_interval}[/magenta]-averaged variables in [cyan]{vars_group}[/cyan] group:"
     )
