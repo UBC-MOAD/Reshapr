@@ -355,9 +355,12 @@ def open_dataset(ds_paths, chunk_size, config, model_profile):
         unused_vars = yaml.safe_load(f)
     drop_vars = {var for var in unused_vars}
     extract_vars = {var for var in config["extract variables"]}
-    # Use 1st dataset path to calculate the set of variables to drop
-    with xarray.open_dataset(ds_paths[0], chunks=chunk_size) as ds:
-        drop_vars.update(var for var in ds.data_vars)
+    # Use 1st and last dataset paths to calculate the set of all variables
+    # in the dataset, and from that the set of variables to drop.
+    # We need to use variables lists from 1st and last datasets in order to avoid issue #51.
+    for ds_path in (ds_paths[0], ds_paths[-1]):
+        with xarray.open_dataset(ds_path, chunks=chunk_size) as ds:
+            drop_vars.update(var for var in ds.data_vars)
     drop_vars -= extract_vars
     ds = xarray.open_mfdataset(
         ds_paths,
