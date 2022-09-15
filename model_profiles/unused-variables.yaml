@@ -18,8 +18,10 @@
 - nav_lat
 
 # NEMO generated bounds variables
-- bounds_lat
+- bounds_nav_lon
+- bounds_nav_lat
 - bounds_lon
+- bounds_lat
 - deptht_bounds
 - depthu_bounds
 - depthv_bounds
