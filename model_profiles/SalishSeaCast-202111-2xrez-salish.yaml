@@ -1,0 +1,46 @@
+name: SalishSeaCast.202111-2xrez-salish
+description: Double resolution run of SalishSeaCast version 202111 on storage accessible
+             from salish. Physics only for 2017.
+
+time coord:
+  name: time_counter
+y coord:
+  name: y
+x coord:
+  name: x
+
+# Chunking scheme used for the netCDF4 files
+# Note that coordinate names (keys) are conceptual here.
+# They are replaced with actual coordinate names in files in the code;
+# e.g. time is replaced by time_counter for dataset loading
+chunk size:
+  time: 24
+  depth: 80
+  y: 1796
+  x: 796
+
+geo ref dataset:
+  path: /results2/SalishSea/hindcast-blue.double/01jan17/SalishSea_1h_20170101_20170101_grid_T.nc
+  y coord: y
+  longitude var: nav_lon
+  x coord: x
+  latitude var: nav_lat
+
+extraction time origin: 2017-01-01
+
+results archive:
+  path: /results2/SalishSea/hindcast-blue.double/
+  datasets:
+    hour:
+      physics tracers:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+        depth coord: deptht
+      u velocity:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc"
+        depth coord: depthu
+      v velocity:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
+        depth coord: depthv
+      turbulence:
+        file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+        depth coord: depthw
