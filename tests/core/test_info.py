@@ -58,8 +58,9 @@ class TestBasicInfo:
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = {
-            "SalishSeaCast-201905.yaml",
             "SalishSeaCast-201812.yaml",
+            "SalishSeaCast-201905.yaml",
+            "SalishSeaCast-202111-salish.yaml",
             "HRDPS-2.5km-GEMLAM-22sep11onward.yaml",
             "HRDPS-2.5km-GEMLAM-pre22sep11.yaml",
             "HRDPS-2.5km-operational.yaml",
