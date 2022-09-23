@@ -59,7 +59,7 @@ datasets without loading them into memory.
 
 .. _converged on: https://pangeo.io/packages.html#why-xarray-and-dask
 .. _Pangeo: https://pangeo.io
-.. _Xarray: https://docs.xarray.dev/en/latest/
+.. _Xarray: https://docs.xarray.dev/en/stable/
 .. _Dask: https://docs.dask.org/en/latest/
 
 Sadly,
