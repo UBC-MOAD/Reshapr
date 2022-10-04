@@ -5,3 +5,4 @@ name: unit test dask cluster
 processes: True
 number of workers: 1
 threads per worker: 1
+memory limit: auto
