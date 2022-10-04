@@ -44,6 +44,7 @@ class TestClusterConfigs:
         assert cluster_config["processes"] is not None
         assert cluster_config["number of workers"] is not None
         assert cluster_config["threads per worker"] is not None
+        assert cluster_config["memory limit"] is not None
 
 
 class TestSalishCluster:
@@ -57,6 +58,7 @@ class TestSalishCluster:
         assert cluster_config["processes"] is True
         assert cluster_config["number of workers"] == 4
         assert cluster_config["threads per worker"] == 4
+        assert cluster_config["memory limit"] == "auto"
 
 
 class TestUnitTestCluster:
@@ -70,3 +72,4 @@ class TestUnitTestCluster:
         assert cluster_config["processes"] is True
         assert cluster_config["number of workers"] == 1
         assert cluster_config["threads per worker"] == 1
+        assert cluster_config["memory limit"] == "auto"

@@ -315,11 +315,14 @@ def get_dask_client(dask_config_yaml):
                 raise SystemExit(1)
     log.debug("loaded dask cluster config")
     # Set up cluster described in YAML file
+    config_memory_limit = cluster_config.get("memory limit", "auto")
+    memory_limit = None if config_memory_limit == "None" else config_memory_limit
     cluster = dask.distributed.LocalCluster(
         name=cluster_config["name"],
         n_workers=cluster_config["number of workers"],
         threads_per_worker=cluster_config["threads per worker"],
         processes=cluster_config["processes"],
+        memory_limit=memory_limit,
     )
     client = dask.distributed.Client(cluster)
     log = log.bind(dashboard_link=client.dashboard_link)
