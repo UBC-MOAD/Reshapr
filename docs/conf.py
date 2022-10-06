@@ -54,7 +54,7 @@ intersphinx_mapping = {
     "arrow": ("https://arrow.readthedocs.io/en/latest/", None),
     "dask": ("https://docs.dask.org/en/stable/", None),
     "moaddocs": ("https://ubc-moad-docs.readthedocs.io/en/latest/", None),
-    "xarray": ("https://docs.xarray.dev/en/latest/", None),
+    "xarray": ("https://docs.xarray.dev/en/stable/", None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
