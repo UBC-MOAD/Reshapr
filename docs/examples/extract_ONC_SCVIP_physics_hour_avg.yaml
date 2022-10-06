@@ -1,0 +1,52 @@
+# reshapr extract processing configuration for hour-averaged temperature
+# and salinity fields at ONC SoG cental node (SCVIP) from SalishSeaCast.202111
+# double resolution experiment
+#
+# SCVIP location data from SalishSeaTools/salishsea_tools/places.py:
+#    'Central node': {
+#        # location from Ocean Networks Canada (ONC) website
+#        'lon lat': (-123.425825, 49.040066666),
+#        # depth in metres from ONC website
+#        'depth': 294,
+#        # corresponding python vertical grid index
+#        'NEMO grid k': 34,
+#        # NEMO python grid indices: j in y direction, i in x direction
+#        'NEMO grid ji': (424, 266),
+#        # HRDPS python grid indices: j in y direction, i in x direction
+#        'wind grid ji': (133, 147),
+#        # ONC data web services API station code
+#        'ONC stationCode': 'SCVIP',
+#    }
+
+dataset:
+  model profile: SalishSeaCast-202111-2xrez-salish.yaml
+  time base: hour
+  variables group: physics tracers
+
+dask cluster: salish_cluster.yaml
+
+start date: 2017-01-01
+end date: 2017-12-31
+
+extract variables:
+  - votemper
+  - vosaline
+
+selection:
+  depth:
+    depth min: 66
+    depth max: 71
+  grid y:
+    y min: 846
+    y max: 851
+  grid x:
+    x min: 530
+    x max: 535
+
+include lons lats: True
+
+extracted dataset:
+  name: SalishSeaCast_ONC_SCVIP_hour_TS
+  description: Hour-averaged temperature & salinity around ONC SoG central node (SCVIP)
+               extracted from SalishSeaCast v202111 double resolution run
+  dest dir: /ocean/dlatorne
