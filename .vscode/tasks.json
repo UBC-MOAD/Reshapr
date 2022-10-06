@@ -33,7 +33,7 @@
         {
             "label": "sphinx linkcheck",
             "type": "shell",
-            "command": "source activate  reshapr-dev && make clean linkcheck",
+            "command": "source activate  reshapr-dev && make clean html linkcheck",
             "options": {
                 "cwd": "docs"
             },
