@@ -53,10 +53,10 @@ server :kbd:`salish` with the commands:
 
 .. code-block:: bash
 
-    (reshapr)$ reshapr extract extract_evans_nitrate_day_avg.yaml
-    (reshapr)$ reshapr extract extract_evans_physics_day_avg.yaml
-    (reshapr)$ reshapr extract extract_evans_nitrate_hour_avg.yaml
-    (reshapr)$ reshapr extract extract_evans_physics_hour_avg.yaml
+    (reshapr)$ reshapr extract Reshapr/docs/examples/extract_evans_nitrate_day_avg.yaml
+    (reshapr)$ reshapr extract Reshapr/docs/examples/extract_evans_physics_day_avg.yaml
+    (reshapr)$ reshapr extract Reshapr/docs/examples/extract_evans_nitrate_hour_avg.yaml
+    (reshapr)$ reshapr extract Reshapr/docs/examples/extract_evans_physics_hour_avg.yaml
 
 where the 4 extraction processing configuration YAML files contain:
 

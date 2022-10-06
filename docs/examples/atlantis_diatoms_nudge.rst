@@ -78,10 +78,10 @@ server :kbd:`salish` with the command:
 
 .. code-block:: bash
 
-    (reshapr)$ reshapr extract atlantis_nudge_diatoms.yaml
+    (reshapr)$ reshapr extract Reshapr/docs/examples/extract_atlantis_diatoms.yaml
 
-where :file:`atlantis_nudge_diatoms.yaml` is an extraction processing configuration
-YAML file containing:
+where :file:`Reshapr/docs/examples/extract_atlantis_diatoms.yaml`
+is an extraction processing configuration YAML file containing:
 
 .. literalinclude:: extract_atlantis_diatoms.yaml
    :language: yaml
