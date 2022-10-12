@@ -56,7 +56,7 @@ def extract(config_file, cli_start_date, cli_end_date):
     ds_paths = calc_ds_paths(config, model_profile)
     chunk_size = calc_ds_chunk_size(config, model_profile)
     dask_client = get_dask_client(config["dask cluster"])
-    with open_dataset(ds_paths, chunk_size, config, model_profile) as ds:
+    with open_dataset(ds_paths, chunk_size, config) as ds:
         logger.info("extracting variables")
         output_coords = calc_output_coords(ds, config, model_profile)
         extracted_vars = calc_extracted_vars(ds, output_coords, config, model_profile)
@@ -330,7 +330,7 @@ def get_dask_client(dask_config_yaml):
     return client
 
 
-def open_dataset(ds_paths, chunk_size, config, model_profile):
+def open_dataset(ds_paths, chunk_size, config):
     """Open a list of dataset paths as a single dataset.
 
     This is a wrapper around :py:func:`xarray.open_mfdataset` that ensures that the
@@ -345,8 +345,6 @@ def open_dataset(ds_paths, chunk_size, config, model_profile):
     :param dict chunk_size: Chunks size to use for loading datasets.
 
     :param dict config: Extraction processing configuration dictionary.
-
-    :param dict model_profile: Model profile dictionary.
 
     :return: Multi-file dataset.
     :rtype: :py:class:`xarray.Dataset`
