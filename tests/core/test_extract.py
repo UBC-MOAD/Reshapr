@@ -464,6 +464,95 @@ class TestCreateDataarray:
         assert var.attrs == attrs
 
 
+class TestOpenDataset:
+    """Unit test for open_dataset() function."""
+
+    @pytest.fixture(name="source_dataset", scope="class")
+    def fixture_source_dataset(self):
+        return xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(4),
+                "deptht": numpy.arange(0, 4, 0.5),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "diatoms": xarray.DataArray(
+                    name="diatoms",
+                    data=numpy.ones((4, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "deptht": numpy.arange(0, 4, 0.5),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water",
+                        "long_name": "Diatoms Concentration",
+                        "units": "mmol m-3",
+                    },
+                ),
+            },
+        )
+
+    def test_open_dataset(self, source_dataset, log_output, tmp_path):
+        results_archive = tmp_path / "results_archive"
+        results_archive.mkdir()
+        source_dataset.to_netcdf(results_archive / "test_dataset.nc")
+        ds_paths = [results_archive / "test_dataset.nc"]
+        chunk_size = {
+            "time_counter": 4,
+            "deptht": 8,
+            "y": 9,
+            "x": 4,
+        }
+        extract_config = {
+            "extract variables": [
+                "diatoms",
+            ]
+        }
+        ds = extract.open_dataset(ds_paths, chunk_size, extract_config)
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "opened dataset"
+        assert log_output.entries[0]["ds"] == ds
+
+        xarray.testing.assert_equal(ds, source_dataset)
+
+    def test_exit_when_no_dataset_vars(self, source_dataset, log_output, tmp_path):
+        """re: issue #37
+
+        Confirm that processing ends with SystemExit(2) and appropriate error message in log
+        when that conditions that give rise to issue #37
+        (KeyError for variable not in variables group) occur.
+        """
+        results_archive = tmp_path / "results_archive"
+        results_archive.mkdir()
+        source_dataset.to_netcdf(results_archive / "test_dataset.nc")
+        ds_paths = [results_archive / "test_dataset.nc"]
+        chunk_size = {
+            "time_counter": 4,
+            "deptht": 8,
+            "y": 9,
+            "x": 4,
+        }
+        extract_config = {
+            "extract variables": [
+                "nitrate",
+            ]
+        }
+
+        with pytest.raises(SystemExit) as exc_info:
+            extract.open_dataset(ds_paths, chunk_size, extract_config)
+
+        assert exc_info.value.code == 2
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["event"] == "no variables in source dataset"
+        assert log_output.entries[0]["extract_vars"] == {"nitrate"}
+        expected = "typo in variable name, or incorrect variables group"
+        assert log_output.entries[0]["possible_reasons"] == expected
+
+
 class TestCalcOutputCoords:
     """Unit tests for calc_output_coords() function."""
 

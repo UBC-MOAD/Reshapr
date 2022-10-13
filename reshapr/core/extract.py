@@ -348,6 +348,8 @@ def open_dataset(ds_paths, chunk_size, config):
 
     :return: Multi-file dataset.
     :rtype: :py:class:`xarray.Dataset`
+
+    :raises: :py:exc:`SystemExit` if multi-file dataset contains no variables.
     """
     unused_vars_yaml = (
         Path(__file__).parent.parent.parent / "model_profiles" / "unused-variables.yaml"
@@ -372,6 +374,13 @@ def open_dataset(ds_paths, chunk_size, config):
         drop_variables=drop_vars,
         parallel=True,
     )
+    if not ds.data_vars:
+        logger.error(
+            "no variables in source dataset",
+            extract_vars=extract_vars,
+            possible_reasons="typo in variable name, or incorrect variables group",
+        )
+        raise SystemExit(2)
     logger.debug("opened dataset", ds=ds)
     return ds
 
