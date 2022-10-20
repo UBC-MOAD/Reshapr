@@ -31,7 +31,7 @@ jobs:
         languages: ${{ matrix.language }}
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2
 
     - name: Push job status to SalishSeaCast Slack
       uses: 8398a7/action-slack@v3
