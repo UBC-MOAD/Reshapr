@@ -28,3 +28,12 @@ Data Formatters
 
 .. automodule:: reshapr.utils.date_formatters
     :members:
+
+
+.. _Extraction:
+
+Extraction
+==========
+
+.. automodule:: reshapr.api.v1.extract
+    :members:
