@@ -153,8 +153,8 @@ class TestModelProfileInfo:
     @pytest.mark.parametrize(
         "model_profile, expected",
         (
-            ("SalishSeaCast-201905", "SalishSeaCast-201905.yaml:"),
-            ("SalishSeaCast-201905.yaml", "SalishSeaCast-201905.yaml:"),
+            ("SalishSeaCast-202111-salish", "SalishSeaCast-202111-salish.yaml:"),
+            ("SalishSeaCast-202111-salish.yaml", "SalishSeaCast-202111-salish.yaml:"),
         ),
     )
     def test_model_profile_file_name(self, model_profile, expected, capsys):
@@ -163,29 +163,33 @@ class TestModelProfileInfo:
         stdout_lines = capsys.readouterr().out.splitlines()
         assert stdout_lines[0] == expected
 
+    def test_model_profile_file_description(self, capsys):
+        info.info("SalishSeaCast-202111-salish", time_interval="", vars_group="")
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        assert stdout_lines[1].startswith("  SalishSeaCast version 202111")
+
     def test_time_bases_and_var_groups(self, capsys):
-        info.info("SalishSeaCast-201905", time_interval="", vars_group="")
+        info.info("SalishSeaCast-202111-salish", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = [
             "day",
-            "auxiliary",
-            "biology",
-            "biology and chemistry rates",
-            "chemistry",
-            "grazing and mortality",
-            "physics tracers",
+            "biology growth rates",
+            "grazing",
+            "mortality",
             "hour",
-            "auxiliary",
             "biology",
             "chemistry",
+            "light",
             "physics tracers",
+            "turbulence",
             "u velocity",
             "v velocity",
-            "vertical turbulence",
+            "vvl grid",
             "w velocity",
         ]
-        assert set(line.strip() for line in stdout_lines[2 : len(expected) + 2]) == set(
+        assert set(line.strip() for line in stdout_lines[4 : len(expected) + 4]) == set(
             expected
         )
 
@@ -199,7 +203,7 @@ class TestModelProfileInfo:
     def test_missing_time_interval_or_var_group(
         self, time_interval, vars_group, log_output
     ):
-        info.info("SalishSeaCast-201905", time_interval, vars_group)
+        info.info("SalishSeaCast-202111-salish", time_interval, vars_group)
 
         assert log_output.entries[0]["log_level"] == "error"
         assert log_output.entries[0]["time_interval"] == time_interval
