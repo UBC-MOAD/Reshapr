@@ -51,7 +51,6 @@ class TestModelProfiles:
         with (MODEL_PROFILES_DIR / model_profile_yaml).open("rt") as f:
             model_profile = yaml.safe_load(f)
 
-        assert model_profile["name"] is not None
         assert model_profile["time coord"]["name"] is not None
         assert model_profile["y coord"]["name"] is not None
         assert model_profile["x coord"]["name"] is not None
@@ -383,7 +382,6 @@ class TestSalishSeaCast202111:
         with (MODEL_PROFILES_DIR / "SalishSeaCast-202111-salish.yaml").open("rt") as f:
             model_profile = yaml.safe_load(f)
 
-        assert model_profile["name"] == "SalishSeaCast-202111-salish"
         assert model_profile["description"].startswith(
             "SalishSeaCast version 202111 on storage accessible from salish"
         )
