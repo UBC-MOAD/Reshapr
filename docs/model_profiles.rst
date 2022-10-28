@@ -50,6 +50,40 @@ etc.
 The default values are generally those associated with the SalishSeaCast NEMO model datasets.
 
 
+:py:attr:`description` Item (Required)
+--------------------------------------
+
+The description of the model profile.
+
+Example:
+
+.. code-block:: yaml
+
+   description: SalishSeaCast version 202111 NEMO results on storage accessible from salish.
+                2007-01-01 onward.
+
+Multi-paragraph descriptions are supported.
+Please note that all lines of the description are indented.
+
+.. code-block:: yaml
+
+   description: ECCC HRDPS (High Resolution Deterministic Prediction System)
+                2.5 km resolution GEMLAM pre-operational model product fields processed
+                for use as surface forcing fields for the SalishSeaCast models.
+
+                This model profile is for the SalishSeaCast NEMO forcing files generated
+                from the HRDPS model pre-operational period 2011-09-22 to 2014-11-18 product
+                fields provided from archives maintained by the ECCC Vancouver office.
+
+                For the HRDPS model product fields from the 2007-01-03 to 2011-09-21
+                pre-operational period please use the HRDPS-2.5km-GEMLAM-pre22sep11.yaml
+                profile.
+
+                For the HRDPS operational model product fields downloaded from the
+                ECCC Datamart servers daily from 2014-09-12 to present please use the
+                HRDPS-2.5km-operational.yaml profile.
+
+
 :py:attr:`name` Item (Deprecated)
 ---------------------------------
 
