@@ -189,7 +189,7 @@ class TestModelProfileInfo:
             "vvl grid",
             "w velocity",
         ]
-        assert set(line.strip() for line in stdout_lines[4 : len(expected) + 4]) == set(
+        assert set(line.strip() for line in stdout_lines[5 : len(expected) + 5]) == set(
             expected
         )
 
@@ -201,10 +201,11 @@ class TestModelProfileInfo:
         ),
     )
     def test_missing_time_interval_or_var_group(
-        self, time_interval, vars_group, log_output
+        self, time_interval, vars_group, log_output, capsys
     ):
         info.info("SalishSeaCast-202111-salish", time_interval, vars_group)
 
+        capsys.readouterr()
         assert log_output.entries[0]["log_level"] == "error"
         assert log_output.entries[0]["time_interval"] == time_interval
         assert log_output.entries[0]["vars_group"] == vars_group

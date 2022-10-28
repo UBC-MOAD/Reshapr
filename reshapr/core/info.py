@@ -112,13 +112,14 @@ def _model_profile_info(profile, time_interval, vars_group, console):
     console.print(f"[green]{profile_file}:", highlight=False)
     with (MODEL_PROFILES_PATH / profile_file).open("rt") as f:
         model_profile = yaml.safe_load(f)
-    description = textwrap.wrap(
-        model_profile["description"],
-        initial_indent="  ",
-        subsequent_indent="  ",
-    )
-    for line in description:
-        console.print(f"{line}", highlight=False)
+    description = model_profile["description"].splitlines()
+    for paragraph in description:
+        formatted = textwrap.wrap(
+            paragraph, initial_indent="  ", subsequent_indent="  "
+        )
+        for line in formatted:
+            console.print(f"{line}", highlight=False)
+        console.print()
 
     if time_interval and vars_group:
         _vars_list(model_profile, time_interval, vars_group, console)
