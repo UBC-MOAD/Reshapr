@@ -65,12 +65,12 @@ class TestExtract:
         prevent TypeError from arrow parser.
         """
 
-        def mock_extract(config_file, start_date, end_date):
+        def mock_cli_extract(config_file, start_date, end_date):
             assert start_date == ""
             assert end_date == ""
 
         monkeypatch.setattr(
-            reshapr.cli.extract.reshapr.core.extract, "extract", mock_extract
+            reshapr.cli.extract.reshapr.core.extract, "cli_extract", mock_cli_extract
         )
 
         config_yaml = tmp_path / "foo.yaml"

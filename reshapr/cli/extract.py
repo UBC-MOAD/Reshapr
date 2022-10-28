@@ -58,4 +58,4 @@ def extract(config_file, start_date, end_date):
 
     :param str end_date: End date for extraction. Overrides end date in config file.
     """
-    reshapr.core.extract.extract(config_file, start_date, end_date)
+    reshapr.core.extract.cli_extract(config_file, start_date, end_date)

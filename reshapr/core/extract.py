@@ -34,8 +34,8 @@ from reshapr.utils import date_formatters
 logger = structlog.get_logger()
 
 
-def extract(config_file, cli_start_date, cli_end_date):
-    """Extract model variable time series from model products.
+def cli_extract(config_file, cli_start_date, cli_end_date):
+    """Extract model variable time series from model products via command-line interface.
 
     :param config_file: File path and name of the YAML file to read processing configuration
                         dictionary from.
@@ -987,4 +987,4 @@ if __name__ == "__main__":  # pragma: nocover
     except ValueError:
         # No --end-date in command-line
         cli_end_date = ""
-    extract(config_file, cli_start_date, cli_end_date)
+    cli_extract(config_file, cli_start_date, cli_end_date)
