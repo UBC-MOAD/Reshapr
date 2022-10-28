@@ -51,6 +51,7 @@ class TestModelProfiles:
         with (MODEL_PROFILES_DIR / model_profile_yaml).open("rt") as f:
             model_profile = yaml.safe_load(f)
 
+        assert model_profile["description"] is not None
         assert model_profile["time coord"]["name"] is not None
         assert model_profile["y coord"]["name"] is not None
         assert model_profile["x coord"]["name"] is not None
