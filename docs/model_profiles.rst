@@ -50,8 +50,8 @@ etc.
 The default values are generally those associated with the SalishSeaCast NEMO model datasets.
 
 
-:py:attr:`name` Item (Required)
--------------------------------
+:py:attr:`name` Item (Deprecated)
+---------------------------------
 
 The name of the model profile.
 
