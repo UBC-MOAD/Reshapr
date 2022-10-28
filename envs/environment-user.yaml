@@ -4,7 +4,6 @@
 #
 #   $ conda env create -f Reshapr/envs/environment-user.yaml
 #   $ conda activate reshapr
-#   (reshapr)$ python3 -m pip install --editable Reshapr
 
 name: reshapr
 
