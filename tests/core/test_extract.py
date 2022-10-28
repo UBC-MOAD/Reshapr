@@ -158,7 +158,9 @@ class TestLoadModelProfile:
 
         model_profile = extract._load_model_profile(model_profile_yaml)
 
-        assert model_profile["name"] == "SalishSeaCast.201812"
+        assert model_profile["description"].startswith(
+            "SalishSeaCast version 201812 NEMO results"
+        )
 
         assert log_output.entries[0]["log_level"] == "info"
         model_profiles_path = Path(__file__).parent.parent.parent / "model_profiles"

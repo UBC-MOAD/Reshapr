@@ -1,6 +1,5 @@
-# Reshapr model profile for SalishSeaCast version 201812 NEMO model results
-
-name: SalishSeaCast.201812
+description: SalishSeaCast version 201812 NEMO results on storage accessible from salish.
+             2015-01-01 to 2019-06-30.
 
 time coord:
   name: time_counter

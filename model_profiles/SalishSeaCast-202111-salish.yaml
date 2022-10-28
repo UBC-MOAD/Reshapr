@@ -1,5 +1,5 @@
-name: SalishSeaCast-202111-salish
-description: SalishSeaCast version 202111 on storage accessible from salish
+description: SalishSeaCast version 202111 NEMO results on storage accessible from salish.
+             2007-01-01 onward.
              **Preliminary for use during hindcast spin-up**
 
 time coord:

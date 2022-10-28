@@ -189,7 +189,7 @@ class TestModelProfileInfo:
             "vvl grid",
             "w velocity",
         ]
-        assert set(line.strip() for line in stdout_lines[5 : len(expected) + 5]) == set(
+        assert set(line.strip() for line in stdout_lines[6 : len(expected) + 6]) == set(
             expected
         )
 

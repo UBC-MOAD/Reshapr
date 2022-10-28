@@ -93,7 +93,9 @@ class TestSalishSeaCast201812:
         with (MODEL_PROFILES_DIR / "SalishSeaCast-201812.yaml").open("rt") as f:
             model_profile = yaml.safe_load(f)
 
-        assert model_profile["name"] == "SalishSeaCast.201812"
+        assert model_profile["description"].startswith(
+            "SalishSeaCast version 201812 NEMO results"
+        )
         assert model_profile["time coord"]["name"] == "time_counter"
         assert model_profile["y coord"]["name"] == "y"
         assert "units" not in model_profile["y coord"]
@@ -248,7 +250,10 @@ class TestSalishSeaCast201905:
         with (MODEL_PROFILES_DIR / "SalishSeaCast-201905.yaml").open("rt") as f:
             model_profile = yaml.safe_load(f)
 
-        assert model_profile["name"] == "SalishSeaCast.201905"
+        assert model_profile["description"] == (
+            "SalishSeaCast version 201905 NEMO results on storage accessible from salish. "
+            "2007-01-01 onward."
+        )
         assert model_profile["time coord"]["name"] == "time_counter"
         assert model_profile["y coord"]["name"] == "y"
         assert "units" not in model_profile["y coord"]
@@ -384,7 +389,7 @@ class TestSalishSeaCast202111:
             model_profile = yaml.safe_load(f)
 
         assert model_profile["description"].startswith(
-            "SalishSeaCast version 202111 on storage accessible from salish"
+            "SalishSeaCast version 202111 NEMO results on storage accessible from salish"
         )
         assert model_profile["time coord"]["name"] == "time_counter"
         assert model_profile["y coord"]["name"] == "y"
@@ -512,7 +517,6 @@ class TestSalishSeaCast202111_2xrezSalish:
         ) as f:
             model_profile = yaml.safe_load(f)
 
-        assert model_profile["name"] == "SalishSeaCast.202111-2xrez-salish"
         assert model_profile["description"] == (
             "Double resolution run of SalishSeaCast version 202111 on storage accessible "
             "from salish. Physics only for 2017."
@@ -591,7 +595,11 @@ class TestHRDPS2_5kmOperational:
             model_profile = yaml.safe_load(f)
         dataset_hour = model_profile["results archive"]["datasets"]["hour"]
 
-        assert model_profile["name"] == "HRDPS-2.5km-operational"
+        expected = (
+            "HRDPS model product fields downloaded from the ECCC Datamart servers daily "
+            "from 2014-09-12 to present"
+        )
+        assert expected in model_profile["description"]
         assert model_profile["time coord"]["name"] == "time_counter"
         assert model_profile["y coord"]["name"] == "y"
         assert model_profile["y coord"]["units"] == "metres"
@@ -638,7 +646,10 @@ class TestHRDPS2_5kmGEMLAM_pre22sep11:
             model_profile = yaml.safe_load(f)
         dataset_hour = model_profile["results archive"]["datasets"]["hour"]
 
-        assert model_profile["name"] == "HRDPS-2.5km-GEMLAM-pre22sep11"
+        expected = (
+            "HRDPS model pre-operational period 2007-01-03 to 2011-09-21 product fields"
+        )
+        assert expected in model_profile["description"]
         assert model_profile["time coord"]["name"] == "time_counter"
         assert model_profile["y coord"]["name"] == "y"
         assert "units" not in model_profile["y coord"]
@@ -678,7 +689,8 @@ class TestHRDPS2_5kmGEMLAM_22sep11onward:
             model_profile = yaml.safe_load(f)
         dataset_hour = model_profile["results archive"]["datasets"]["hour"]
 
-        assert model_profile["name"] == "HRDPS-2.5km-GEMLAM-22sep11onward"
+        expected = "HRDPS model pre-operational period 2011-09-22 to 2014-11-18 product"
+        assert expected in model_profile["description"]
         assert model_profile["time coord"]["name"] == "time_counter"
         assert model_profile["y coord"]["name"] == "y"
         assert "units" not in model_profile["y coord"]
