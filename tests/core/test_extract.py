@@ -17,6 +17,7 @@
 
 """Unit tests for core.extract module.
 """
+import datetime
 import os
 import textwrap
 from pathlib import Path
@@ -34,7 +35,18 @@ from reshapr.core import extract
 class TestLoadConfig:
     """Unit tests for core.extract._load_config() function."""
 
-    def test_load_config(self, log_output, tmp_path):
+    @pytest.mark.parametrize(
+        "start_date_override, end_date_override",
+        (
+            ("", ""),
+            (None, ""),
+            ("", None),
+            (None, None),
+        ),
+    )
+    def test_load_config_no_date_overrides(
+        self, start_date_override, end_date_override, log_output, tmp_path
+    ):
         extract_config_yaml = tmp_path / "extract_config.yaml"
         extract_config_yaml.write_text(
             textwrap.dedent(
@@ -47,9 +59,13 @@ class TestLoadConfig:
             )
         )
 
-        config = extract._load_config(extract_config_yaml)
+        config = extract.load_config(
+            extract_config_yaml, start_date_override, end_date_override
+        )
 
         assert config["dask cluster"] == "docs/subcommands/salish_cluster.yaml"
+        assert config["start date"] == datetime.date(2007, 1, 1)
+        assert config["end date"] == datetime.date(2007, 1, 10)
 
         assert log_output.entries[0]["log_level"] == "info"
         assert log_output.entries[0]["config_file"] == os.fspath(extract_config_yaml)
@@ -59,7 +75,7 @@ class TestLoadConfig:
         nonexistent_config_yaml = tmp_path / "nonexistent.yaml"
 
         with pytest.raises(SystemExit) as exc_info:
-            extract._load_config(nonexistent_config_yaml)
+            extract.load_config(nonexistent_config_yaml, None, None)
 
         assert exc_info.value.code == 2
         assert log_output.entries[0]["log_level"] == "error"
@@ -67,6 +83,66 @@ class TestLoadConfig:
             nonexistent_config_yaml
         )
         assert log_output.entries[0]["event"] == "config file not found"
+
+    @pytest.mark.parametrize(
+        "start_date_override, end_date_override, expected_start_date, expected_end_date",
+        (
+            ("2022-11-01", "", datetime.date(2022, 11, 1), datetime.date(2007, 1, 10)),
+            (
+                "2022-11-01",
+                None,
+                datetime.date(2022, 11, 1),
+                datetime.date(2007, 1, 10),
+            ),
+            ("", "2022-11-02", datetime.date(2007, 1, 1), datetime.date(2022, 11, 2)),
+            (None, "2022-11-02", datetime.date(2007, 1, 1), datetime.date(2022, 11, 2)),
+            (
+                "2022-11-01",
+                "2022-11-02",
+                datetime.date(2022, 11, 1),
+                datetime.date(2022, 11, 2),
+            ),
+            (
+                arrow.get("2022-11-01"),
+                arrow.get("2022-11-02"),
+                datetime.date(2022, 11, 1),
+                datetime.date(2022, 11, 2),
+            ),
+            (
+                datetime.date(2022, 11, 1),
+                datetime.date(2022, 11, 2),
+                datetime.date(2022, 11, 1),
+                datetime.date(2022, 11, 2),
+            ),
+        ),
+    )
+    def test_load_config_date_overrides(
+        self,
+        start_date_override,
+        end_date_override,
+        expected_start_date,
+        expected_end_date,
+        log_output,
+        tmp_path,
+    ):
+        extract_config_yaml = tmp_path / "extract_config.yaml"
+        extract_config_yaml.write_text(
+            textwrap.dedent(
+                """\
+                dask cluster: docs/subcommands/salish_cluster.yaml
+
+                start date: 2007-01-01
+                end date: 2007-01-10
+                """
+            )
+        )
+
+        config = extract.load_config(
+            extract_config_yaml, start_date_override, end_date_override
+        )
+
+        assert config["start date"] == expected_start_date
+        assert config["end date"] == expected_end_date
 
 
 class TestNormalizeEndDate:
@@ -83,9 +159,9 @@ class TestNormalizeEndDate:
         ),
     )
     def test_normalize_end_date(self, cli_end_date, expected):
-        adjusted_end_date = extract._normalize_end_date(cli_end_date)
+        normalized_end_date = extract._normalize_end_date(cli_end_date)
 
-        assert adjusted_end_date == expected
+        assert normalized_end_date == expected
 
 
 class TestOverrideStartEndDate:
@@ -93,31 +169,31 @@ class TestOverrideStartEndDate:
 
     def test_no_override(self):
         config = {
-            "start date": "2007-01-01",
-            "end date": "2007-12-31",
+            "start date": datetime.date(2007, 1, 1),
+            "end date": datetime.date(2007, 12, 31),
         }
         cli_start_date, cli_end_date = "", ""
 
-        config["start date"], config["end date"] = extract._override_start_end_date(
+        start_date, end_date = extract._override_start_end_date(
             config, cli_start_date, cli_end_date
         )
 
-        assert config["start date"] == "2007-01-01"
-        assert config["end date"] == "2007-12-31"
+        assert start_date == datetime.date(2007, 1, 1)
+        assert end_date == datetime.date(2007, 12, 31)
 
     def test_override(self):
         config = {
-            "start date": "2007-01-01",
-            "end date": "2007-12-31",
+            "start date": datetime.date(2007, 1, 1),
+            "end date": datetime.date(2007, 12, 31),
         }
         cli_start_date, cli_end_date = "2022-06-15", "2022-06-16"
 
-        config["start date"], config["end date"] = extract._override_start_end_date(
+        start_date, end_date = extract._override_start_end_date(
             config, cli_start_date, cli_end_date
         )
 
-        assert config["start date"] == "2022-06-15"
-        assert config["end date"] == "2022-06-16"
+        assert start_date == datetime.date(2022, 6, 15)
+        assert end_date == datetime.date(2022, 6, 16)
 
 
 class TestReconstructCmdLine:
@@ -285,8 +361,8 @@ class TestCalcDsPaths:
                 "time base": "day",
                 "variables group": "biology",
             },
-            "start date": "2015-01-01",
-            "end date": "2015-01-02",
+            "start date": datetime.date(2015, 1, 1),
+            "end date": datetime.date(2015, 1, 2),
         }
         model_profile = {
             "results archive": {
@@ -333,8 +409,8 @@ class TestCalcDsPaths:
                 "time base": "hour",
                 "variables group": "surface fields",
             },
-            "start date": "2015-01-01",
-            "end date": "2015-01-02",
+            "start date": datetime.date(2015, 1, 1),
+            "end date": datetime.date(2015, 1, 2),
         }
         model_profile = {
             "results archive": {
@@ -376,8 +452,8 @@ class TestCalcDsChunks:
                 "time base": "day",
                 "variables group": "biology",
             },
-            "start date": "2015-01-01",
-            "end date": "2015-01-02",
+            "start date": datetime.date(2015, 1, 1),
+            "end date": datetime.date(2015, 1, 2),
         }
         model_profile = {
             "time coord": {
@@ -418,8 +494,8 @@ class TestCalcDsChunks:
                 "time base": "hour",
                 "variables group": "surface fields",
             },
-            "start date": "2015-01-01",
-            "end date": "2015-01-02",
+            "start date": datetime.date(2015, 1, 1),
+            "end date": datetime.date(2015, 1, 2),
         }
         model_profile = {
             "time coord": {
@@ -454,8 +530,8 @@ class TestCalcDsChunks:
                 "time base": "day",
                 "variables group": "biology",
             },
-            "start date": "2015-01-01",
-            "end date": "2015-01-02",
+            "start date": datetime.date(2015, 1, 1),
+            "end date": datetime.date(2015, 1, 2),
         }
         model_profile = {
             "time coord": {
@@ -1784,8 +1860,8 @@ class TestCalcExtractedDataset:
             "gridX": numpy.arange(4),
         }
         config = {
-            "start date": "2015-01-01",
-            "end date": "2015-01-10",
+            "start date": datetime.date(2015, 1, 1),
+            "end date": datetime.date(2015, 1, 10),
             "extracted dataset": {
                 "name": "test",
                 "description": "Day-averaged diatoms biomass extracted from SalishSeaCast v201812 hindcast",
@@ -1853,8 +1929,8 @@ class TestResample:
         )
 
         config = {
-            "start date": "2015-04-01",
-            "end date": "2015-04-30",
+            "start date": datetime.date(2015, 4, 1),
+            "end date": datetime.date(2015, 4, 30),
             "resample": {
                 "time interval": "1M",
             },

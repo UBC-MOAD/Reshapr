@@ -48,11 +48,7 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
     :param str cli_end_date: End date for extraction. Overrides end date in config file.
     """
     t_start = time.time()
-    config = _load_config(config_yaml)
-    cli_end_date = _normalize_end_date(cli_end_date)
-    config["start date"], config["end date"] = _override_start_end_date(
-        config, cli_start_date, cli_end_date
-    )
+    config = load_config(config_yaml, cli_start_date, cli_end_date)
     model_profile = _load_model_profile(Path(config["dataset"]["model profile"]))
     ds_paths = calc_ds_paths(config, model_profile)
     chunk_size = calc_ds_chunk_size(config, model_profile)
@@ -80,12 +76,23 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
     dask_client.close()
 
 
-def _load_config(config_yaml):
-    """
-    :param config_yaml: File path and name of the YAML file to read processing configuration
-                        dictionary from.
+def load_config(config_yaml, start_date, end_date):
+    """Read an extraction processing configuration YAML file and return a config dict.
+
+    If start/end date strings ("YYYY-MM-DD") or :py:class:`arrow.arrow.Arrow` instances
+    are provided, use them to override the values from the YAML file.
+    An empty string or :py:obj:`None` means do not override.
+
+    :param config_yaml: File path and name of the YAML file to read extraction processing
+                        configuration dictionary from.
                         Please see :ref:`ReshaprExtractYAMLFile` for details.
     :type config_yaml: :py:class:`pathlib.Path`
+
+    :param start_date: Start date for extraction. Overrides start date in config file.
+    :type start_date: str or :py:obj:`None` or :py:class:`arrow.arrow.Arrow`
+
+    :param end_date: End date for extraction. Overrides end date in config file.
+    :type end_date: str or :py:obj:`None` or :py:class:`arrow.arrow.Arrow`
 
     :return: Extraction processing configuration dictionary.
     :rtype: dict
@@ -99,6 +106,10 @@ def _load_config(config_yaml):
     except FileNotFoundError:
         log.error("config file not found")
         raise SystemExit(2)
+    normalized_end_date = _normalize_end_date(end_date)
+    config["start date"], config["end date"] = _override_start_end_date(
+        config, start_date, normalized_end_date
+    )
     log.info("loaded config")
     return config
 
@@ -108,9 +119,9 @@ def _normalize_end_date(cli_end_date):
     :param str cli_end_date: End date for extraction from command-line.
 
     :return: Normalized end date.
-    :rtype: str
+    :rtype: str or :py:obj:`None`
     """
-    if cli_end_date == "":
+    if cli_end_date in {"", None}:
         return cli_end_date
     try:
         # Is end_date a valid date?
@@ -138,10 +149,20 @@ def _override_start_end_date(config, cli_start_date, cli_end_date):
 
     :param str cli_end_date: End date for extraction. Overrides end date in config file.
 
-    :return: Possibly updated Extraction processing configuration dictionary.
-    :rtype: dict
+    :return: Possibly updated start/end dates.
+    :rtype: 2-tuple
     """
-    return cli_start_date or config["start date"], cli_end_date or config["end date"]
+    start_date = (
+        config["start date"]
+        if cli_start_date in {"", None}
+        else arrow.get(cli_start_date).datetime.date()
+    )
+    end_date = (
+        config["end date"]
+        if cli_end_date in {"", None}
+        else arrow.get(cli_end_date).datetime.date()
+    )
+    return start_date, end_date
 
 
 def _reconstruct_cmd_line(config_yaml, cli_start_date, cli_end_date):
