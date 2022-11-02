@@ -21,9 +21,13 @@
 API Reference
 *************
 
+* :ref:`DateFormatters`
+* :ref:`Extraction`
+
+
 .. _DateFormatters:
 
-Data Formatters
+Date Formatters
 ===============
 
 .. automodule:: reshapr.utils.date_formatters
