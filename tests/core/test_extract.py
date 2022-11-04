@@ -32,6 +32,23 @@ import xarray
 from reshapr.core import extract
 
 
+class TestCliExtract:
+    """Unit test for core.extract.cli_extract() function."""
+
+    def test_no_config_file(self, log_output, tmp_path):
+        nonexistent_config_yaml = tmp_path / "nonexistent.yaml"
+
+        with pytest.raises(SystemExit) as exc_info:
+            extract.cli_extract(nonexistent_config_yaml, "", "")
+
+        assert exc_info.value.code == 2
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["config_file"] == os.fspath(
+            nonexistent_config_yaml
+        )
+        assert log_output.entries[0]["event"] == "config file not found"
+
+
 class TestLoadConfig:
     """Unit tests for core.extract._load_config() function."""
 
@@ -74,15 +91,8 @@ class TestLoadConfig:
     def test_no_config_file(self, log_output, tmp_path):
         nonexistent_config_yaml = tmp_path / "nonexistent.yaml"
 
-        with pytest.raises(SystemExit) as exc_info:
+        with pytest.raises(FileNotFoundError):
             extract.load_config(nonexistent_config_yaml, None, None)
-
-        assert exc_info.value.code == 2
-        assert log_output.entries[0]["log_level"] == "error"
-        assert log_output.entries[0]["config_file"] == os.fspath(
-            nonexistent_config_yaml
-        )
-        assert log_output.entries[0]["event"] == "config file not found"
 
     @pytest.mark.parametrize(
         "start_date_override, end_date_override, expected_start_date, expected_end_date",
