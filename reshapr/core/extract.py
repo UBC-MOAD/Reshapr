@@ -48,7 +48,11 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
     :param str cli_end_date: End date for extraction. Overrides end date in config file.
     """
     t_start = time.time()
-    config = load_config(config_yaml, cli_start_date, cli_end_date)
+    try:
+        config = load_config(config_yaml, cli_start_date, cli_end_date)
+    except FileNotFoundError:
+        logger.error("config file not found", config_file=os.fspath(config_yaml))
+        raise SystemExit(2)
     model_profile = _load_model_profile(Path(config["dataset"]["model profile"]))
     ds_paths = calc_ds_paths(config, model_profile)
     chunk_size = calc_ds_chunk_size(config, model_profile)
@@ -100,12 +104,8 @@ def load_config(config_yaml, start_date, end_date):
     :raises: :py:exc:`SystemExit` if processing configuration YAML file cannot be opened.
     """
     log = logger.bind(config_file=os.fspath(config_yaml))
-    try:
-        with config_yaml.open("rt") as f:
-            config = yaml.safe_load(f)
-    except FileNotFoundError:
-        log.error("config file not found")
-        raise SystemExit(2)
+    with config_yaml.open("rt") as f:
+        config = yaml.safe_load(f)
     normalized_end_date = _normalize_end_date(end_date)
     config["start date"], config["end date"] = _override_start_end_date(
         config, start_date, normalized_end_date
