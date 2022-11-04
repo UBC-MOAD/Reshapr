@@ -17,12 +17,13 @@
 
 """v1 extraction API.
 """
+from reshapr.core import extract
 
 
 def extract_dataset():
     """Not implemented.
 
-    :return:
+    :return: TBD
     """
     raise NotImplementedError
 
@@ -30,6 +31,30 @@ def extract_dataset():
 def extract_netcdf():
     """Not implemented.
 
-    :return:
+    :return: TBD
     """
     raise NotImplementedError
+
+
+def load_extraction_config(config_yaml, start_date=None, end_date=None):
+    """Not implemented.
+
+    :param config_yaml: File path and name of the YAML file to read the extraction processing
+                        configuration dictionary from.
+                        Please see :ref:`ReshaprExtractYAMLFile` for details.
+    :type config_yaml: :py:class:`pathlib.Path`
+
+    :param start_date: Start date for extraction. When provided,
+                       this date overrides the start date in config file.
+    :type start_date:  :py:class:`arrow.arrow.Arrow` or :py:obj:`None`
+
+    :param end_date: End date for extraction. When provided,
+                     this date overrides the end date in config file.
+    :type end_date:  :py:class:`arrow.arrow.Arrow` or :py:obj:`None`
+
+    :return: Extraction processing configuration dictionary.
+    :rtype: dict
+
+    :raises: :py:exc:`ValueError` if processing configuration YAML file cannot be opened.
+    """
+    return extract.load_config(config_yaml, start_date, end_date)
