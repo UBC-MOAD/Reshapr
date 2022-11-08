@@ -37,7 +37,10 @@ def extract_netcdf():
 
 
 def load_extraction_config(config_yaml, start_date=None, end_date=None):
-    """Not implemented.
+    """Read an extraction processing configuration YAML file and return a config dict.
+
+    If start/end dates are provided, use them to override the values from the YAML file.
+    :py:obj:`None` means do not override.
 
     :param config_yaml: File path and name of the YAML file to read the extraction processing
                         configuration dictionary from.

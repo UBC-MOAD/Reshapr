@@ -46,6 +46,8 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
     :param str cli_start_date: Start date for extraction. Overrides start date in config file.
 
     :param str cli_end_date: End date for extraction. Overrides end date in config file.
+
+    :raises: :py:exc:`SystemExit` if processing configuration YAML file cannot be found.
     """
     t_start = time.time()
     try:
@@ -100,8 +102,6 @@ def load_config(config_yaml, start_date, end_date):
 
     :return: Extraction processing configuration dictionary.
     :rtype: dict
-
-    :raises: :py:exc:`SystemExit` if processing configuration YAML file cannot be opened.
     """
     log = logger.bind(config_file=os.fspath(config_yaml))
     with config_yaml.open("rt") as f:
