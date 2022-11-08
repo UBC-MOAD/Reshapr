@@ -32,7 +32,7 @@ def fixture_log_output():
 
 @pytest.fixture(autouse=True)
 def fixture_configure_structlog(log_output):
-    """Configure structlog log captutre fixture.
+    """Configure structlog log capture fixture.
 
     Reference: https://www.structlog.org/en/stable/testing.html
     """
