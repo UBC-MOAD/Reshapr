@@ -34,6 +34,49 @@ from reshapr.utils import date_formatters
 logger = structlog.get_logger()
 
 
+def api_extract_netcdf(extract_config, extract_config_yaml):
+    """Extract model variable(s) time series from model product to a netCDF file
+     via API.
+
+    :param dict extract_config: Extraction processing configuration dictionary.
+
+    :param extract_config_yaml: File path and name of the YAML file that the extraction processing
+                                configuration dictionary was read from.
+                                Used in netCDF4 file history metadata.
+    :type extract_config_yaml: :py:class:`pathlib.Path`
+
+    :return: File path and name that netCDF4 file was written to.
+    :rtype: :py:class:`pathlib.Path`
+    """
+    model_profile = _load_model_profile(
+        Path(extract_config["dataset"]["model profile"])
+    )
+    ds_paths = calc_ds_paths(extract_config, model_profile)
+    chunk_size = calc_ds_chunk_size(extract_config, model_profile)
+    dask_client = get_dask_client(extract_config["dask cluster"])
+    with open_dataset(ds_paths, chunk_size, extract_config) as ds:
+        logger.info("extracting variables")
+        output_coords = calc_output_coords(ds, extract_config, model_profile)
+        extracted_vars = calc_extracted_vars(
+            ds, output_coords, extract_config, model_profile
+        )
+        generated_by = f"reshapr.api.v1.extract.extract_netcdf({extract_config_yaml})"
+        extracted_ds = calc_extracted_dataset(
+            extracted_vars,
+            output_coords,
+            extract_config,
+            generated_by,
+        )
+        if "resample" in extract_config:
+            extracted_ds = _resample(extracted_ds, extract_config, model_profile)
+        nc_path, encoding, nc_format = prep_netcdf_write(
+            extracted_ds, output_coords, extract_config, model_profile
+        )
+        write_netcdf(extracted_ds, nc_path, encoding, nc_format)
+    dask_client.close()
+    return nc_path
+
+
 def cli_extract(config_yaml, cli_start_date, cli_end_date):
     """Extract model variable time series from model product to netCDF file
     via command-line interface.
