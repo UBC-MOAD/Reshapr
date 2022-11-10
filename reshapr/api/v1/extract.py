@@ -28,12 +28,25 @@ def extract_dataset():
     raise NotImplementedError
 
 
-def extract_netcdf():
-    """Not implemented.
+def extract_netcdf(config, config_yaml):
+    """Extract model variable(s) time series from model product to a netCDF file.
 
-    :return: TBD
+    Recommended use is to load the config dict from a YAML file
+    (optionally overriding extraction state/end dates) with
+    :py:func:`~reshapr.api.v1.extract.load_extraction_config`,
+    then call this function.
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param config_yaml: File path and name of the YAML file that the extraction processing
+                        configuration dictionary was read from.
+                        Used in netCDF4 file history metadata.
+    :type config_yaml: :py:class:`pathlib.Path`
+
+    :return: File path and name that netCDF4 file was written to.
+    :rtype: :py:class:`pathlib.Path`
     """
-    raise NotImplementedError
+    return extract.api_extract_netcdf(config, config_yaml)
 
 
 def load_extraction_config(config_yaml, start_date=None, end_date=None):
