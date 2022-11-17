@@ -23,7 +23,7 @@ Reshapr
 .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     :alt: Sphinx linkcheck
-.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/CI/badge.svg
+.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/pytest-with-coverage/badge.svg
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage
     :alt: Pytest with Coverage Status
 .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
