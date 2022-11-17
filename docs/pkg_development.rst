@@ -37,6 +37,9 @@
 .. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest
     :target: https://reshapr.readthedocs.io/en/latest/
     :alt: Documentation Status
+.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg
+    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3Asphinx-linkcheck
+    :alt: Sphinx linkcheck
 .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/CI/badge.svg
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3ACI
     :alt: pytest and test coverage analysis
@@ -249,6 +252,10 @@ and rendered at https://reshapr.readthedocs.io/en/latest/.
 
 Link Checking the Documentation
 -------------------------------
+
+.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg
+    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3Asphinx-linkcheck
+    :alt: Sphinx linkcheck
 
 Sphinx also provides a link checker utility which can be run to find
 broken or redirected links in the docs.
