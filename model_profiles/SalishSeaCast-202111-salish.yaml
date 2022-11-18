@@ -1,6 +1,5 @@
 description: SalishSeaCast version 202111 NEMO results on storage accessible from salish.
              2007-01-01 onward.
-             **Preliminary for use during hindcast spin-up**
 
 time coord:
   name: time_counter
@@ -25,8 +24,7 @@ geo ref dataset:
   y coord: gridY
   x coord: gridX
 
-# TODO: update to 2007-01-01 after spin-up is finished
-extraction time origin: 2002-01-01
+extraction time origin: 2007-01-01
 
 results archive:
   path: /results2/SalishSea/nowcast-green.202111/
