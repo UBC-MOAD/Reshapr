@@ -13,7 +13,7 @@ x coord:
 # They are replaced with actual coordinate names in files in the code;
 # e.g. time is replaced by time_counter for dataset loading
 chunk size:
-  time: 1
+  time: 24
   depth: 40
   y: 898
   x: 398
