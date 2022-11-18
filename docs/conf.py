@@ -56,7 +56,7 @@ intersphinx_mapping = {
 
 autodoc_mock_imports = [
     "arrow",
-    "dask.distributed",
+    "dask",
     "numpy",
     "structlog",
     "xarray",
