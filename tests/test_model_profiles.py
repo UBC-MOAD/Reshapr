@@ -399,7 +399,7 @@ class TestSalishSeaCast202111:
         assert "units" not in model_profile["x coord"]
         assert "comment" not in model_profile["x coord"]
         expected_chunk_size = {
-            "time": 1,
+            "time": 24,
             "depth": 40,
             "y": 898,
             "x": 398,
