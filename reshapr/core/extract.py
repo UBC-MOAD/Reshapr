@@ -904,14 +904,18 @@ def _resample(extracted_ds, config, model_profile):
         skipna=False,
     )
     resampled_ds = getattr(resampler, aggregation)("time", keep_attrs=True)
-    if freq.endswith("M"):
-        time_base = "month"
-    else:
-        time_base = "unexpected"
-        logger.warning(
-            "unexpected resampling time interval; time coordinate metadata will be generic",
-            resample_time_interval=freq,
-        )
+    resample_quantum = freq[-1]
+    match resample_quantum:
+        case "D":
+            time_base = "day"
+        case "M":
+            time_base = "month"
+        case _:
+            time_base = "unexpected"
+            logger.warning(
+                "unexpected resampling time interval; time coordinate metadata will be generic",
+                resample_time_interval=freq,
+            )
     resampled_ds.time.attrs.update(calc_time_coord_attrs(time_base, model_profile))
     logger.debug("resampled dataset metadata", resampled_ds=resampled_ds)
     return resampled_ds
