@@ -56,6 +56,11 @@ intersphinx_mapping = {
 
 autodoc_mock_imports = [
     "arrow",
+    "dask.distributed",
+    "numpy",
+    "structlog",
+    "xarray",
+    "yaml",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
