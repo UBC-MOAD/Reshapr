@@ -411,7 +411,7 @@ class TestSalishSeaCast202111:
         )
         assert model_profile["geo ref dataset"]["y coord"] == "gridY"
         assert model_profile["geo ref dataset"]["x coord"] == "gridX"
-        assert model_profile["extraction time origin"] == arrow.get("2002-01-01").date()
+        assert model_profile["extraction time origin"] == arrow.get("2007-01-01").date()
         assert (
             model_profile["results archive"]["path"]
             == "/results2/SalishSea/nowcast-green.202111/"
