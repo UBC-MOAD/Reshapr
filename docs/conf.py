@@ -25,12 +25,8 @@ setup_cfg.read(os.path.abspath("../setup.cfg"))
 project = setup_cfg["metadata"]["name"]
 
 pkg_creation_year = 2022
-copyright_years = "{pkg_creation_year} – present".format(
-    pkg_creation_year=pkg_creation_year
-)
-copyright = "{copyright_years} by the UBC EOAS MOAD Group and The University of British Columbia".format(
-    copyright_years=copyright_years
-)
+copyright_years = f"{pkg_creation_year} – present"
+copyright = f"{copyright_years} by the UBC EOAS MOAD Group and The University of British Columbia"
 
 # The full version, including alpha/beta/rc tags
 import reshapr
