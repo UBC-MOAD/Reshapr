@@ -23,10 +23,10 @@ commonmark==0.9.1
 coverage==6.5.0
 cryptography==38.0.2
 cytoolz==0.12.0
-dask==2022.10.0
+dask==2022.11.1
 dataclasses==0.8
 distlib==0.3.5
-distributed==2022.10.0
+distributed==2022.11.1
 docutils==0.17.1
 exceptiongroup==1.0.0
 filelock==3.8.0
@@ -45,7 +45,7 @@ lz4==4.0.2
 MarkupSafe==2.1.1
 msgpack==1.0.4
 mypy-extensions==0.4.3
-netCDF4==1.6.1
+netCDF4==1.6.2
 nodeenv==1.7.0
 numpy==1.23.4
 numpy-groupies==0.9.20
@@ -54,7 +54,7 @@ pandas==1.5.1
 partd==1.3.0
 pathspec==0.10.1
 Pillow==9.2.0
-pip==22.3
+pip==22.3.1
 platformdirs==2.5.2
 pluggy==1.0.0
 pre-commit==2.20.0
@@ -78,7 +78,7 @@ snowballstemmer==2.2.0
 sortedcontainers==2.4.0
 Sphinx==5.3.0
 sphinx-notfound-page==0.8.3
-sphinx-rtd-theme==1.0.0
+sphinx-rtd-theme==1.1.1
 sphinxcontrib-applehelp==1.0.2
 sphinxcontrib-devhelp==1.0.2
 sphinxcontrib-htmlhelp==2.0.0
@@ -96,6 +96,6 @@ ukkonen==1.0.1
 urllib3==1.26.11
 virtualenv==20.16.5
 wheel==0.37.1
-xarray==2022.10.0
+xarray==2022.11.0
 zict==2.2.0
 zipp==3.10.0
