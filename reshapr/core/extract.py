@@ -486,7 +486,10 @@ def calc_output_coords(source_dataset, config, model_profile):
     * :kbd:`time`: :kbd:`time`
     * :kbd:`depth`: :kbd:`depth`
     * :kbd:`y_index`: :kbd:`gridY`
-    * :kbd:`x_index`: :kbd:`gridx`
+    * :kbd:`x_index`: :kbd:`gridX`
+
+    except if :kbd:`output model coords: True` is set in the extraction configuration,
+    in which case the output coordinates will be the same as the model coordinates.
 
     :param source_dataset: Dataset from which variables are being extracted.
     :type source_dataset: :py:class:`xarray.Dataset`
@@ -498,11 +501,15 @@ def calc_output_coords(source_dataset, config, model_profile):
     :return: Mapping of coordinate names to their data arrays.
     :rtype: dict
     """
+    output_model_coords = config.get("output model coords", False)
     time_interval = config.get("selection", {}).get("time interval", 1)
     # stop=None in slice() means the length of the array without having to know what that is
     time_selector = {model_profile["time coord"]["name"]: slice(0, None, time_interval)}
+    output_time_coord_name = (
+        "time" if not output_model_coords else model_profile["time coord"]["name"]
+    )
     times = create_dataarray(
-        "time",
+        output_time_coord_name,
         source_dataset[model_profile["time coord"]["name"]].isel(time_selector),
         attrs=calc_time_coord_attrs(config["dataset"]["time base"], model_profile),
     )
@@ -515,6 +522,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     if "depth" not in model_profile["chunk size"]:
         # Dataset does not have a depth coordinate; e.g. HRDPS surface forcing fields
         include_depth_coord = False
+        output_depth_coord_name = None
         depths = None
     else:
         datasets = model_profile["results archive"]["datasets"]
@@ -527,6 +535,7 @@ def calc_output_coords(source_dataset, config, model_profile):
         if not include_depth_coord:
             # Variable does not have a depth coordinate; e.g. sea surface height in SalishSeaCast
             # grid_T dataset
+            output_depth_coord_name = None
             depths = None
         else:
             # At least 1 variable has a depth coordinate, so include depth in output dataset
@@ -539,8 +548,11 @@ def calc_output_coords(source_dataset, config, model_profile):
                 config.get("selection", {}).get("depth", {}).get("depth interval", 1)
             )
             depth_selector = slice(depth_min, depth_max, depth_interval)
+            output_depth_coord_name = (
+                "depth" if not output_model_coords else depth_coord
+            )
             depths = create_dataarray(
-                "depth",
+                output_depth_coord_name,
                 source_dataset[depth_coord].isel({depth_coord: depth_selector}),
                 attrs={
                     "standard_name": "sea_floor_depth",
@@ -556,15 +568,19 @@ def calc_output_coords(source_dataset, config, model_profile):
     y_interval = config.get("selection", {}).get("grid y", {}).get("y interval", 1)
     y_selector = slice(y_min, y_max, y_interval)
     y_coord = model_profile["y coord"]["name"]
+    output_y_coord_name = (
+        "gridY" if not output_model_coords else model_profile["y coord"]["name"]
+    )
     y_indices = create_dataarray(
-        "gridY",
+        output_y_coord_name,
         source_dataset[y_coord].isel({y_coord: y_selector}).astype(int),
         attrs={
             "standard_name": "y",
             "long_name": "Grid Y",
             "units": model_profile["y coord"].get("units", "count"),
             "comment": model_profile["y coord"].get(
-                "comment", "gridY values are grid indices in the model y-direction"
+                "comment",
+                f"{output_y_coord_name} values are grid indices in the model y-direction",
             ),
         },
     )
@@ -575,24 +591,37 @@ def calc_output_coords(source_dataset, config, model_profile):
     x_interval = config.get("selection", {}).get("grid x", {}).get("x interval", 1)
     x_selector = slice(x_min, x_max, x_interval)
     x_coord = model_profile["x coord"]["name"]
+    output_x_coord_name = (
+        "gridX" if not output_model_coords else model_profile["x coord"]["name"]
+    )
     x_indices = create_dataarray(
-        "gridX",
+        output_x_coord_name,
         source_dataset[x_coord].isel({x_coord: x_selector}).astype(int),
         attrs={
             "standard_name": "x",
             "long_name": "Grid X",
             "units": model_profile["x coord"].get("units", "count"),
             "comment": model_profile["x coord"].get(
-                "comment", "gridX values are grid indices in the model x-direction"
+                "comment",
+                f"{output_x_coord_name} values are grid indices in the model x-direction",
             ),
         },
     )
     logger.debug("extraction x coordinate", x_index=x_indices)
 
     return (
-        {"time": times, "depth": depths, "gridY": y_indices, "gridX": x_indices}
+        {
+            output_time_coord_name: times,
+            output_depth_coord_name: depths,
+            output_y_coord_name: y_indices,
+            output_x_coord_name: x_indices,
+        }
         if include_depth_coord
-        else {"time": times, "gridY": y_indices, "gridX": x_indices}
+        else {
+            output_time_coord_name: times,
+            output_y_coord_name: y_indices,
+            output_x_coord_name: x_indices,
+        }
     )
 
 
