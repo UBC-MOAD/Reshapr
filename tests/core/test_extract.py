@@ -758,7 +758,7 @@ class TestCalcOutputCoords:
         )
 
     @pytest.mark.parametrize(
-        "output_model_coords, coord_name, time_base, example",
+        "use_model_coords, coord_name, time_base, example",
         (
             (
                 True,
@@ -788,7 +788,7 @@ class TestCalcOutputCoords:
     )
     def test_time_coord(
         self,
-        output_model_coords,
+        use_model_coords,
         coord_name,
         time_base,
         example,
@@ -801,7 +801,9 @@ class TestCalcOutputCoords:
                 "time base": time_base,
                 "variables group": "biology",
             },
-            "output model coords": output_model_coords,
+            "extracted dataset": {
+                "use model coords": use_model_coords,
+            },
         }
 
         output_coords = extract.calc_output_coords(
@@ -850,6 +852,7 @@ class TestCalcOutputCoords:
             "selection": {
                 "time interval": 3,
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -875,14 +878,14 @@ class TestCalcOutputCoords:
         assert log_output.entries[0]["event"] == "extraction time coordinate"
 
     @pytest.mark.parametrize(
-        "output_model_coords, time_coord_name, y_coord_name, x_coord_name",
+        "use_model_coords, time_coord_name, y_coord_name, x_coord_name",
         (
             (True, "time_counter", "y", "x"),
             (False, "time", "gridY", "gridX"),
         ),
     )
     def test_no_depth_coord(
-        self, output_model_coords, time_coord_name, y_coord_name, x_coord_name
+        self, use_model_coords, time_coord_name, y_coord_name, x_coord_name
     ):
         model_profile = {
             "time coord": {
@@ -936,7 +939,9 @@ class TestCalcOutputCoords:
                 "time base": "hour",
                 "variables group": "surface fields",
             },
-            "output model coords": output_model_coords,
+            "extracted dataset": {
+                "use model coords": use_model_coords,
+            },
         }
 
         output_coords = extract.calc_output_coords(
@@ -978,7 +983,8 @@ class TestCalcOutputCoords:
             "dataset": {
                 "time base": "day",
                 "variables group": "biology",
-            }
+            },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -988,21 +994,23 @@ class TestCalcOutputCoords:
         assert "depth" not in output_coords
 
     @pytest.mark.parametrize(
-        "output_model_coords, coord_name",
+        "use_model_coords, coord_name",
         (
             (True, "deptht"),
             (False, "depth"),
         ),
     )
     def test_depth_coord(
-        self, output_model_coords, coord_name, source_dataset, model_profile, log_output
+        self, use_model_coords, coord_name, source_dataset, model_profile, log_output
     ):
         extract_config = {
             "dataset": {
                 "time base": "day",
                 "variables group": "biology",
             },
-            "output model coords": output_model_coords,
+            "extracted dataset": {
+                "use model coords": use_model_coords,
+            },
         }
 
         output_coords = extract.calc_output_coords(
@@ -1032,6 +1040,7 @@ class TestCalcOutputCoords:
                     "depth min": 5,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1056,6 +1065,7 @@ class TestCalcOutputCoords:
                     "depth max": 5,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1078,6 +1088,7 @@ class TestCalcOutputCoords:
                     "depth interval": 2,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1092,21 +1103,23 @@ class TestCalcOutputCoords:
         )
 
     @pytest.mark.parametrize(
-        "output_model_coords, coord_name",
+        "use_model_coords, coord_name",
         (
             (True, "y"),
             (False, "gridY"),
         ),
     )
     def test_y_index_coord(
-        self, output_model_coords, coord_name, source_dataset, model_profile, log_output
+        self, use_model_coords, coord_name, source_dataset, model_profile, log_output
     ):
         extract_config = {
             "dataset": {
                 "time base": "day",
                 "variables group": "biology",
             },
-            "output model coords": output_model_coords,
+            "extracted dataset": {
+                "use model coords": use_model_coords,
+            },
         }
 
         output_coords = extract.calc_output_coords(
@@ -1182,7 +1195,8 @@ class TestCalcOutputCoords:
             "dataset": {
                 "time base": "day",
                 "variables group": "biology",
-            }
+            },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1216,6 +1230,7 @@ class TestCalcOutputCoords:
                     "y min": 6,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1250,6 +1265,7 @@ class TestCalcOutputCoords:
                     "y max": 3,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1284,6 +1300,7 @@ class TestCalcOutputCoords:
                     "y interval": 2,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1306,21 +1323,23 @@ class TestCalcOutputCoords:
         assert log_output.entries[2]["event"] == "extraction y coordinate"
 
     @pytest.mark.parametrize(
-        "output_model_coords, coord_name",
+        "use_model_coords, coord_name",
         (
             (True, "x"),
             (False, "gridX"),
         ),
     )
     def test_x_index_coord(
-        self, output_model_coords, coord_name, source_dataset, model_profile, log_output
+        self, use_model_coords, coord_name, source_dataset, model_profile, log_output
     ):
         extract_config = {
             "dataset": {
                 "time base": "day",
                 "variables group": "biology",
             },
-            "output model coords": output_model_coords,
+            "extracted dataset": {
+                "use model coords": use_model_coords,
+            },
         }
 
         output_coords = extract.calc_output_coords(
@@ -1368,7 +1387,8 @@ class TestCalcOutputCoords:
             "dataset": {
                 "time base": "day",
                 "variables group": "biology",
-            }
+            },
+            "extracted dataset": {},
         }
         model_profile = {
             "time coord": {
@@ -1430,6 +1450,7 @@ class TestCalcOutputCoords:
                     "x min": 1,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1465,6 +1486,7 @@ class TestCalcOutputCoords:
                     "x max": 3,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
@@ -1499,6 +1521,7 @@ class TestCalcOutputCoords:
                     "x interval": 2,
                 },
             },
+            "extracted dataset": {},
         }
 
         output_coords = extract.calc_output_coords(
