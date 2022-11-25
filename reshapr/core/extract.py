@@ -488,8 +488,9 @@ def calc_output_coords(source_dataset, config, model_profile):
     * :kbd:`y_index`: :kbd:`gridY`
     * :kbd:`x_index`: :kbd:`gridX`
 
-    except if :kbd:`output model coords: True` is set in the extraction configuration,
-    in which case the output coordinates will be the same as the model coordinates.
+    except if :kbd:`extracted dataset: use model coords: True` is set in the
+    extraction configuration, in which case the output coordinates will be the same as the
+    model coordinates.
 
     :param source_dataset: Dataset from which variables are being extracted.
     :type source_dataset: :py:class:`xarray.Dataset`
@@ -501,12 +502,12 @@ def calc_output_coords(source_dataset, config, model_profile):
     :return: Mapping of coordinate names to their data arrays.
     :rtype: dict
     """
-    output_model_coords = config.get("output model coords", False)
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
     time_interval = config.get("selection", {}).get("time interval", 1)
     # stop=None in slice() means the length of the array without having to know what that is
     time_selector = {model_profile["time coord"]["name"]: slice(0, None, time_interval)}
     output_time_coord_name = (
-        "time" if not output_model_coords else model_profile["time coord"]["name"]
+        "time" if not use_model_coords else model_profile["time coord"]["name"]
     )
     times = create_dataarray(
         output_time_coord_name,
@@ -548,9 +549,7 @@ def calc_output_coords(source_dataset, config, model_profile):
                 config.get("selection", {}).get("depth", {}).get("depth interval", 1)
             )
             depth_selector = slice(depth_min, depth_max, depth_interval)
-            output_depth_coord_name = (
-                "depth" if not output_model_coords else depth_coord
-            )
+            output_depth_coord_name = "depth" if not use_model_coords else depth_coord
             depths = create_dataarray(
                 output_depth_coord_name,
                 source_dataset[depth_coord].isel({depth_coord: depth_selector}),
@@ -569,7 +568,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     y_selector = slice(y_min, y_max, y_interval)
     y_coord = model_profile["y coord"]["name"]
     output_y_coord_name = (
-        "gridY" if not output_model_coords else model_profile["y coord"]["name"]
+        "gridY" if not use_model_coords else model_profile["y coord"]["name"]
     )
     y_indices = create_dataarray(
         output_y_coord_name,
@@ -592,7 +591,7 @@ def calc_output_coords(source_dataset, config, model_profile):
     x_selector = slice(x_min, x_max, x_interval)
     x_coord = model_profile["x coord"]["name"]
     output_x_coord_name = (
-        "gridX" if not output_model_coords else model_profile["x coord"]["name"]
+        "gridX" if not use_model_coords else model_profile["x coord"]["name"]
     )
     x_indices = create_dataarray(
         output_x_coord_name,
