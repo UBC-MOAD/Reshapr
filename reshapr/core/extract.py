@@ -69,10 +69,10 @@ def api_extract_netcdf(extract_config, extract_config_yaml):
         )
         if "resample" in extract_config:
             extracted_ds = _resample(extracted_ds, extract_config, model_profile)
-        nc_path, encoding, nc_format = prep_netcdf_write(
+        nc_path, encoding, nc_format, unlimited_dim = prep_netcdf_write(
             extracted_ds, output_coords, extract_config, model_profile
         )
-        write_netcdf(extracted_ds, nc_path, encoding, nc_format)
+        write_netcdf(extracted_ds, nc_path, encoding, nc_format, unlimited_dim)
     dask_client.close()
     return nc_path
 
@@ -117,10 +117,10 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
         )
         if "resample" in config:
             extracted_ds = _resample(extracted_ds, config, model_profile)
-        nc_path, encoding, nc_format = prep_netcdf_write(
+        nc_path, encoding, nc_format, unlimited_dim = prep_netcdf_write(
             extracted_ds, output_coords, config, model_profile
         )
-        write_netcdf(extracted_ds, nc_path, encoding, nc_format)
+        write_netcdf(extracted_ds, nc_path, encoding, nc_format, unlimited_dim)
     logger.info("total time", t_total=time.time() - t_start)
     dask_client.close()
 
@@ -1052,7 +1052,9 @@ def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
              :kbd:`encoding`: Encoding dict to use for netCDF4 file write,
              :kbd:`nc_format`: Format to use for netCDF4 file write.
                                Defaults to kbd:`NETCDF4`.
-    :rtype: 3-tuple
+             :kbd:`unlimited_dim`: Name of the time coordinate to set as the
+                                    unlimited dimension for netCDF4 file write.
+    :rtype: 4-tuple
     """
     encoding = {}
     for coord in extracted_ds.coords:
@@ -1063,16 +1065,21 @@ def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
         encoding[v_name] = calc_var_encoding(v_array, output_coords, config)
     nc_path = Path(config["extracted dataset"]["dest dir"]) / f"{extracted_ds.name}.nc"
     nc_format = config["extracted dataset"].get("format", "NETCDF4")
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
+    unlimited_dim = (
+        "time" if not use_model_coords else model_profile["time coord"]["name"]
+    )
     logger.debug(
         "prepared netCDF4 write params",
         nc_path=nc_path,
         encoding=encoding,
         nc_format=nc_format,
+        unlimited_dim=unlimited_dim,
     )
-    return nc_path, encoding, nc_format
+    return nc_path, encoding, nc_format, unlimited_dim
 
 
-def write_netcdf(extracted_ds, nc_path, encoding, nc_format):
+def write_netcdf(extracted_ds, nc_path, encoding, nc_format, unlimited_dim):
     """WRite the extracted variable(s) dataset to disk.
 
     This function triggers the main dask task graph execution of the extraction process.
@@ -1089,12 +1096,15 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format):
 
     :param nc_format: Format to use for netCDF4 file write.
     :type nc_format: Literal["NETCDF4", "NETCDF4_CLASSIC", "NETCDF3_64BIT", "NETCDF3_CLASSIC"]
+
+    :param str unlimited_dim: Name of the time coordinate to set as the unlimited dimension for
+                              netCDF4 file write.
     """
     extracted_ds.to_netcdf(
         nc_path,
         format=nc_format,
         encoding=encoding,
-        unlimited_dims="time",
+        unlimited_dims=unlimited_dim,
     )
     logger.info("wrote netCDF4 file", nc_path=os.fspath(nc_path))
 
