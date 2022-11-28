@@ -2642,7 +2642,7 @@ class TestPrepNetcdfWrite:
         }
         model_profile = {}
 
-        nc_path, _, _ = extract.prep_netcdf_write(
+        nc_path, _, _, _ = extract.prep_netcdf_write(
             extracted_ds, output_coords, config, model_profile
         )
 
@@ -2693,7 +2693,7 @@ class TestPrepNetcdfWrite:
         }
         model_profile = {"extraction time origin": "2015-01-01"}
 
-        _, encoding, _ = extract.prep_netcdf_write(
+        _, encoding, _, _ = extract.prep_netcdf_write(
             extracted_ds, output_coords, config, model_profile
         )
 
@@ -2762,7 +2762,7 @@ class TestPrepNetcdfWrite:
         }
         model_profile = {}
 
-        _, _, nc_format = extract.prep_netcdf_write(
+        _, _, nc_format, _ = extract.prep_netcdf_write(
             extracted_ds, output_coords, config, model_profile
         )
 
@@ -2792,11 +2792,76 @@ class TestPrepNetcdfWrite:
         }
         model_profile = {}
 
-        _, _, nc_format = extract.prep_netcdf_write(
+        _, _, nc_format, _ = extract.prep_netcdf_write(
             extracted_ds, output_coords, config, model_profile
         )
 
         assert nc_format == "NETCDF4"
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
+        assert log_output.entries[0]["nc_format"] == "NETCDF4"
+
+    def test_unlimited_dim_time(self, log_output, tmp_path):
+        extracted_ds = xarray.Dataset(
+            attrs={"name": "test"},
+        )
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        dest_dir = tmp_path / "dest_dir"
+        dest_dir.mkdir()
+        config = {
+            "extracted dataset": {
+                "dest dir": os.fspath(dest_dir),
+                "name": f"{extracted_ds.name}.nc",
+            }
+        }
+        model_profile = {}
+
+        _, _, _, unlimited_dim = extract.prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+
+        assert unlimited_dim == "time"
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
+        assert log_output.entries[0]["nc_format"] == "NETCDF4"
+
+    def test_unlimited_dim_model_coord(self, log_output, tmp_path):
+        extracted_ds = xarray.Dataset(
+            attrs={"name": "test"},
+        )
+        output_coords = {
+            "time_counter": numpy.arange(2),
+            "deptht": numpy.arange(0, 4, 0.5),
+            "y": numpy.arange(9),
+            "x": numpy.arange(4),
+        }
+        dest_dir = tmp_path / "dest_dir"
+        dest_dir.mkdir()
+        config = {
+            "extracted dataset": {
+                "use model coords": True,
+                "dest dir": os.fspath(dest_dir),
+                "name": f"{extracted_ds.name}.nc",
+            }
+        }
+        model_profile = {
+            "time coord": {
+                "name": "time_counter",
+            },
+        }
+
+        _, _, _, unlimited_dim = extract.prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+
+        assert unlimited_dim == "time_counter"
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
