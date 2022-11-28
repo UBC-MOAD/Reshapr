@@ -2401,14 +2401,22 @@ class TestCalcCoordEncoding:
     """Unit tests for calc_coord_encoding() function."""
 
     @pytest.mark.parametrize(
-        "time_base, quanta, time_offset",
+        "coord_name, time_base, quanta, time_offset",
         (
-            ("day", "days", "12:00:00"),
-            ("hour", "hours", "00:30:00"),
-            ("fortnight", "seconds", "00:30:00"),  # wildcard pattern test
+            ("time", "day", "days", "12:00:00"),
+            ("time", "hour", "hours", "00:30:00"),
+            ("time", "fortnight", "seconds", "00:30:00"),  # wildcard pattern test
+            ("time_counter", "day", "days", "12:00:00"),
+            ("time_counter", "hour", "hours", "00:30:00"),
+            (
+                "time_counter",
+                "fortnight",
+                "seconds",
+                "00:30:00",
+            ),  # wildcard pattern test
         ),
     )
-    def test_time_coord(self, time_base, quanta, time_offset):
+    def test_time_coord(self, coord_name, time_base, quanta, time_offset):
         dataset = xarray.Dataset()
         config = {
             "dataset": {
@@ -2418,7 +2426,9 @@ class TestCalcCoordEncoding:
         }
         model_profile = {"extraction time origin": "2015-01-01"}
 
-        encoding = extract.calc_coord_encoding(dataset, "time", config, model_profile)
+        encoding = extract.calc_coord_encoding(
+            dataset, coord_name, config, model_profile
+        )
 
         expected = {
             "dtype": numpy.single,
@@ -2450,17 +2460,33 @@ class TestCalcCoordEncoding:
         }
         assert encoding == expected
 
-    @pytest.mark.parametrize("deflate", (True, False))
-    def test_depth_coord(self, deflate):
+    @pytest.mark.parametrize(
+        "coord_name, deflate",
+        (
+            ("depth", True),
+            ("depth", False),
+            ("deptht", True),
+            ("deptht", False),
+            ("depthu", True),
+            ("depthu", False),
+            ("depthv", True),
+            ("depthv", False),
+            ("depthw", True),
+            ("depthw", False),
+        ),
+    )
+    def test_depth_coord(self, coord_name, deflate):
         dataset = xarray.Dataset(
             coords={
-                "depth": numpy.arange(0, 4, 0.5),
+                coord_name: numpy.arange(0, 4, 0.5),
             }
         )
         config = {"extracted dataset": {"deflate": deflate}}
         model_profile = {}
 
-        encoding = extract.calc_coord_encoding(dataset, "depth", config, model_profile)
+        encoding = extract.calc_coord_encoding(
+            dataset, coord_name, config, model_profile
+        )
 
         expected = {
             "dtype": numpy.single,
@@ -2476,6 +2502,10 @@ class TestCalcCoordEncoding:
             ("gridY", False),
             ("gridX", True),
             ("gridX", False),
+            ("y", True),
+            ("y", False),
+            ("x", True),
+            ("x", False),
         ),
     )
     def test_grid_index_coord(self, grid_index, deflate):
