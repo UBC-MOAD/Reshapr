@@ -2571,6 +2571,11 @@ class TestCalcVarEncoding:
             "gridX": numpy.arange(4),
         }
         config = {"extracted dataset": {"deflate": deflate}}
+        model_profile = {
+            "time coord": {
+                "name": "time",
+            },
+        }
         var = xarray.DataArray(
             name="diatoms",
             data=numpy.empty((2, 8, 9, 4), dtype=numpy.single),
@@ -2582,12 +2587,45 @@ class TestCalcVarEncoding:
             },
         )
 
-        encoding = extract.calc_var_encoding(var, output_coords, config)
+        encoding = extract.calc_var_encoding(var, output_coords, config, model_profile)
 
         expected = {
             "dtype": numpy.single,
             "chunksizes": (1, 8, 9, 4),
             "zlib": deflate,
+        }
+        assert encoding == expected
+
+    def test_4d_var_model_coords(self):
+        output_coords = {
+            "time_counter": numpy.arange(2),
+            "deptht": numpy.arange(0, 4, 0.5),
+            "y": numpy.arange(9),
+            "x": numpy.arange(4),
+        }
+        config = {"extracted dataset": {"use model coords": True}}
+        model_profile = {
+            "time coord": {
+                "name": "time_counter",
+            },
+        }
+        var = xarray.DataArray(
+            name="diatoms",
+            data=numpy.empty((2, 8, 9, 4), dtype=numpy.single),
+            coords={
+                "time_counter": numpy.arange(2),
+                "deptht": numpy.arange(0, 4, 0.5),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+        )
+
+        encoding = extract.calc_var_encoding(var, output_coords, config, model_profile)
+
+        expected = {
+            "dtype": numpy.single,
+            "chunksizes": (1, 8, 9, 4),
+            "zlib": True,
         }
         assert encoding == expected
 
@@ -2600,6 +2638,11 @@ class TestCalcVarEncoding:
             "gridX": numpy.arange(4),
         }
         config = {"extracted dataset": {"deflate": deflate}}
+        model_profile = {
+            "time coord": {
+                "name": "time",
+            },
+        }
         var = xarray.DataArray(
             name="longitude",
             data=numpy.empty((9, 4), dtype=numpy.single),
@@ -2609,7 +2652,7 @@ class TestCalcVarEncoding:
             },
         )
 
-        encoding = extract.calc_var_encoding(var, output_coords, config)
+        encoding = extract.calc_var_encoding(var, output_coords, config, model_profile)
 
         expected = {
             "dtype": numpy.single,
