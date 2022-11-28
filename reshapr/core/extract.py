@@ -922,8 +922,10 @@ def _resample(extracted_ds, config, model_profile):
     )
     start_date = arrow.get(config["start date"])
     end_date = arrow.get(config["end date"])
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
+    time_coord = "time" if not use_model_coords else model_profile["time coord"]["name"]
     resampler = extracted_ds.resample(
-        time=freq,
+        {time_coord: freq},
         label="left",
         loffset=(end_date.shift(days=+1) - start_date) / 2,
         # There shouldn't be missing values, so don't skip them in down-sampling
@@ -931,7 +933,7 @@ def _resample(extracted_ds, config, model_profile):
         # dataset rather than hard to find erroneous values.
         skipna=False,
     )
-    resampled_ds = getattr(resampler, aggregation)("time", keep_attrs=True)
+    resampled_ds = getattr(resampler, aggregation)(time_coord, keep_attrs=True)
     resample_quantum = freq[-1]
     match resample_quantum:
         case "D":
@@ -944,7 +946,8 @@ def _resample(extracted_ds, config, model_profile):
                 "unexpected resampling time interval; time coordinate metadata will be generic",
                 resample_time_interval=freq,
             )
-    resampled_ds.time.attrs.update(calc_time_coord_attrs(time_base, model_profile))
+    time_attrs = getattr(resampled_ds, time_coord).attrs
+    time_attrs.update(calc_time_coord_attrs(time_base, model_profile))
     logger.debug("resampled dataset metadata", resampled_ds=resampled_ds)
     return resampled_ds
 
