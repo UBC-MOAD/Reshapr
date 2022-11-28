@@ -1001,7 +1001,7 @@ def calc_coord_encoding(ds, coord, config, model_profile):
             }
 
 
-def calc_var_encoding(var, output_coords, config):
+def calc_var_encoding(var, output_coords, config, model_profile):
     """Construct the netCDF4 encoding dictionary for a variable.
 
     :param var: Variable data array.
@@ -1011,6 +1011,8 @@ def calc_var_encoding(var, output_coords, config):
                                variable(s).
 
     :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
 
     :return: netCDF4 encoding for coordinate
     :rtype: dict
@@ -1023,7 +1025,9 @@ def calc_var_encoding(var, output_coords, config):
             # Handle variables that have fewer than the full set of output coordinates;
             # e.g. lons and lats that only have gridY and gridX coordinates
             pass
-    if "time" in var.coords:
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
+    time_coord = "time" if not use_model_coords else model_profile["time coord"]["name"]
+    if time_coord in var.coords:
         chunksizes[0] = 1
     return {
         "dtype": numpy.single,
@@ -1062,7 +1066,9 @@ def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
             extracted_ds, coord, config, model_profile
         )
     for v_name, v_array in extracted_ds.data_vars.items():
-        encoding[v_name] = calc_var_encoding(v_array, output_coords, config)
+        encoding[v_name] = calc_var_encoding(
+            v_array, output_coords, config, model_profile
+        )
     nc_path = Path(config["extracted dataset"]["dest dir"]) / f"{extracted_ds.name}.nc"
     nc_format = config["extracted dataset"].get("format", "NETCDF4")
     use_model_coords = config["extracted dataset"].get("use model coords", False)
