@@ -728,6 +728,8 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
             model_profile["x coord"]["name"]: x_selector,
         }
     extracted_vars = []
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
+    output_depth_coord = "depth" if not use_model_coords else depth_coord
     for name, var in source_dataset.data_vars.items():
         var_selector = (
             selector
@@ -744,7 +746,7 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
             else {
                 c_name: c_selector
                 for c_name, c_selector in output_coords.items()
-                if c_name != "depth"
+                if c_name != output_depth_coord
             }
         )
         try:

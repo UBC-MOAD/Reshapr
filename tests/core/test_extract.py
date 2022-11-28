@@ -1617,6 +1617,7 @@ class TestCalcExtractedVars:
                 "time base": "hour",
                 "variables group": "biology",
             },
+            "extracted dataset": {},
         }
 
         extracted_vars = extract.calc_extracted_vars(
@@ -1640,6 +1641,93 @@ class TestCalcExtractedVars:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extracted diatoms"
+
+    def test_extract_var_model_coords(self, log_output):
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(4),
+                "depthu": numpy.arange(0, 4, 0.5),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "vozocrtx": xarray.DataArray(
+                    name="vozocrtx",
+                    data=numpy.ones((4, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "depthu": numpy.arange(0, 4, 0.5),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "sea_water_x_velocity",
+                        "long_name": "Ocean Current Along x-Axis",
+                        "units": "m s-1",
+                    },
+                ),
+            },
+        )
+        model_profile = {
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
+            "chunk size": {
+                "time": 4,
+                "depth": 8,
+                "y": 9,
+                "x": 4,
+            },
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "u velocity": {
+                            "depth coord": "depthu",
+                        }
+                    }
+                }
+            },
+        }
+        output_coords = {
+            "time_counter": numpy.arange(4),
+            "depthu": numpy.arange(0, 4, 0.5),
+            "y": numpy.arange(9),
+            "x": numpy.arange(4),
+        }
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "u velocity",
+            },
+            "extracted dataset": {
+                "use model coords": True,
+            },
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "vozocrtx"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((4, 8, 9, 4), dtype=numpy.single)
+        )
+        assert extracted_vars[0].attrs["standard_name"] == "sea_water_x_velocity"
+        assert extracted_vars[0].attrs["long_name"] == "Ocean Current Along x-Axis"
+        assert extracted_vars[0].attrs["units"] == "m s-1"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted vozocrtx"
 
     def test_extract_var_no_depth_coord(self, log_output):
         source_dataset = xarray.Dataset(
@@ -1675,6 +1763,7 @@ class TestCalcExtractedVars:
                 "time base": "hour",
                 "variables group": "surface fields",
             },
+            "extracted dataset": {},
         }
         model_profile = {
             "time coord": {
@@ -1736,6 +1825,7 @@ class TestCalcExtractedVars:
             "selection": {
                 "time interval": 2,
             },
+            "extracted dataset": {},
         }
 
         extracted_vars = extract.calc_extracted_vars(
@@ -1781,6 +1871,7 @@ class TestCalcExtractedVars:
                     "depth interval": 2,
                 }
             },
+            "extracted dataset": {},
         }
 
         extracted_vars = extract.calc_extracted_vars(
@@ -1823,6 +1914,7 @@ class TestCalcExtractedVars:
                     "y max": 7,
                 }
             },
+            "extracted dataset": {},
         }
 
         extracted_vars = extract.calc_extracted_vars(
@@ -1864,6 +1956,7 @@ class TestCalcExtractedVars:
                     "x min": 2,
                 }
             },
+            "extracted dataset": {},
         }
 
         extracted_vars = extract.calc_extracted_vars(
@@ -1922,6 +2015,68 @@ class TestCalcExtractedVars:
             "dataset": {
                 "time base": "hour",
                 "variables group": "biology",
+            },
+            "extracted dataset": {},
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "sossheig"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((4, 9, 4), dtype=numpy.single)
+        )
+        assert (
+            extracted_vars[0].attrs["standard_name"] == "sea_surface_height_above_geoid"
+        )
+        assert extracted_vars[0].attrs["long_name"] == "Sea Surface Height"
+        assert extracted_vars[0].attrs["units"] == "m"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted sossheig"
+
+    def test_extract_surface_var_model_coords(self, model_profile, log_output):
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(4),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "sossheig": xarray.DataArray(
+                    name="sossheig",
+                    data=numpy.ones((4, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(4),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "sea_surface_height_above_geoid",
+                        "long_name": "Sea Surface Height",
+                        "units": "m",
+                    },
+                )
+            },
+        )
+
+        output_coords = {
+            "time_counter": numpy.arange(4),
+            "y": numpy.arange(9),
+            "x": numpy.arange(4),
+        }
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "biology",
+            },
+            "extracted dataset": {
+                "use model coords": True,
             },
         }
 
