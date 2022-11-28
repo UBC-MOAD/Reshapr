@@ -968,7 +968,7 @@ def calc_coord_encoding(ds, coord, config, model_profile):
     :rtype: dict
     """
     match coord:
-        case "time":
+        case "time" | "time_counter":
             extract_time_origin = model_profile["extraction time origin"]
             match config["dataset"]["time base"]:
                 case "day":
@@ -987,7 +987,7 @@ def calc_coord_encoding(ds, coord, config, model_profile):
                 "zlib": config["extracted dataset"].get("deflate", True),
                 "_FillValue": None,
             }
-        case "depth":
+        case "depth" | "deptht" | "depthu" | "depthv" | "depthw":
             return {
                 "dtype": numpy.single,
                 "chunksizes": (ds.coords[coord].size,),
