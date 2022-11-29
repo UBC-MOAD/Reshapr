@@ -421,8 +421,18 @@ class TestSalishSeaCast202111:
         "var_group, file_pattern, depth_coord",
         (
             (
+                "biology",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_biol_T.nc",
+                "deptht",
+            ),
+            (
                 "biology growth rates",
                 "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_prod_T.nc",
+                "deptht",
+            ),
+            (
+                "chemistry",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_chem_T.nc",
                 "deptht",
             ),
             (
@@ -431,8 +441,23 @@ class TestSalishSeaCast202111:
                 "deptht",
             ),
             (
+                "light",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_chem_T.nc",
+                "deptht",
+            ),
+            (
                 "mortality",
                 "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_graz_T.nc",
+                "deptht",
+            ),
+            (
+                "physics tracers",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
+                "deptht",
+            ),
+            (
+                "vvl grid",
+                "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc",
                 "deptht",
             ),
         ),
