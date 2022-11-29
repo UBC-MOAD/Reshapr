@@ -30,22 +30,30 @@ results archive:
   path: /results2/SalishSea/nowcast-green.202111/
   datasets:
     day:
+      biology:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_biol_T.nc"
+        depth coord: deptht
+      chemistry:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_chem_T.nc"
+        depth coord: deptht
       biology growth rates:
         file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_prod_T.nc"
         depth coord: deptht
       grazing:
         file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_graz_T.nc"
         depth coord: deptht
+      light:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_chem_T.nc"
+        depth coord: deptht
       mortality:
         file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_graz_T.nc"
         depth coord: deptht
-      # TODO: add other groups from files produced by day averaging of hour-avg files
-      #       by post-download worker
-      # biology:
-      # chemistry:
-      # light:
-      # physics tracers:
-      # vvl grid:
+      physics tracers:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+        depth coord: deptht
+      vvl grid:
+        file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+        depth coord: deptht
     hour:
       biology:
         file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_biol_T.nc"

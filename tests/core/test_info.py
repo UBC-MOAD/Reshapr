@@ -175,9 +175,14 @@ class TestModelProfileInfo:
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = [
             "day",
+            "biology",
             "biology growth rates",
+            "chemistry",
             "grazing",
+            "light",
             "mortality",
+            "physics tracers",
+            "vvl grid",
             "hour",
             "biology",
             "chemistry",
