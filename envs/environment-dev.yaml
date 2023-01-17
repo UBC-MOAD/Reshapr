@@ -38,6 +38,7 @@ dependencies:
   # For unit tests
   - coverage
   - pytest-cov
+  - pytest-randomly
   - tomli
 
   # For documentation
@@ -46,8 +47,5 @@ dependencies:
   - sphinx-notfound-page
 
   - pip:
-    # For unit tests
-    - pytest-randomly
-
-    # editable install of Reshapr package
+    # install of Reshapr package in editable mode
     - --editable ../
