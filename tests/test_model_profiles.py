@@ -407,7 +407,7 @@ class TestSalishSeaCast202111:
         assert model_profile["chunk size"] == expected_chunk_size
         assert (
             model_profile["geo ref dataset"]["path"]
-            == "/results2/SalishSea/nowcast-green.202111/01jan02/SalishSea_1h_20020101_20020101_grid_T.nc"
+            == "/results2/SalishSea/nowcast-green.202111/01jan07/SalishSea_1h_20070101_20070101_grid_T.nc"
         )
         assert model_profile["geo ref dataset"]["y coord"] == "gridY"
         assert model_profile["geo ref dataset"]["x coord"] == "gridX"
