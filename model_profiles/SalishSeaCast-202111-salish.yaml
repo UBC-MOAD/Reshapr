@@ -20,7 +20,7 @@ chunk size:
 
 geo ref dataset:
   # TODO: update to ERDDAP URL when bathymetry dataset is published there
-  path: /results2/SalishSea/nowcast-green.202111/01jan02/SalishSea_1h_20020101_20020101_grid_T.nc
+  path: /results2/SalishSea/nowcast-green.202111/01jan07/SalishSea_1h_20070101_20070101_grid_T.nc
   y coord: gridY
   x coord: gridX
 
