@@ -26,5 +26,5 @@ dependencies:
   - xarray
 
   - pip:
-    # editable install of Reshapr package
+    # install of Reshapr package in editable mode
     - --editable ../
