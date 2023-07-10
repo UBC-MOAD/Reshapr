@@ -25,8 +25,8 @@
 .. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
     :target: https://www.apache.org/licenses/LICENSE-2.0
     :alt: Licensed under the Apache License, Version 2.0
-.. image:: https://img.shields.io/badge/python-3.10+-blue.svg
-    :target: https://docs.python.org/3.10/
+.. image:: https://img.shields.io/badge/Python-3.11-blue?logo=python&label=Python&logoColor=gold
+    :target: https://docs.python.org/3.11/
     :alt: Python Version
 .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
     :target: https://github.com/UBC-MOAD/Reshapr
@@ -63,11 +63,11 @@ SalishSeaCast, HRDPS & CANESM2/CGCM4.
 Python Versions
 ===============
 
-.. image:: https://img.shields.io/badge/python-3.10+-blue.svg
-    :target: https://docs.python.org/3.10/
+.. image:: https://img.shields.io/badge/Python-3.11-blue?logo=python&label=Python&logoColor=gold
+    :target: https://docs.python.org/3.11/
     :alt: Python Version
 
-The :py:obj:`Reshapr` package is developed and tested using `Python`_ 3.10.
+The :py:obj:`Reshapr` package is developed and tested using `Python`_ 3.11.
 The package uses some Python language features that are not available in various earlier versions,
 in particular:
 
@@ -288,14 +288,14 @@ The output looks something like:
     ( pkg_development: line  286) ok        https://coverage.readthedocs.io/en/latest/
     ( pkg_development: line  266) ok        https://docs.pytest.org/en/latest/
     (design_notes/motivation: line   53) ok        https://docs.dask.org/en/latest/
-    ( pkg_development: line   22) ok        https://docs.python.org/3.10/
+    ( pkg_development: line   22) ok        https://docs.python.org/3.11/
     ( pkg_development: line   62) ok        https://docs.python.org/3/reference/lexical_analysis.html#f-strings
     ( pkg_development: line  322) ok        https://git-scm.com/
     ( pkg_development: line  108) ok        https://docs.conda.io/en/latest/miniconda.html
     ( pkg_development: line  108) ok        https://conda.io/en/latest/
     ( pkg_development: line   22) ok        https://img.shields.io/badge/code%20style-black-000000.svg
     (           index: line   40) ok        https://img.shields.io/badge/license-Apache%202-cb2533.svg
-    ( pkg_development: line   22) ok        https://img.shields.io/badge/python-3.10+-blue.svg
+    ( pkg_development: line   22) ok        https://img.shields.io/badge/Python-3.11-blue?logo=python&label=Python&logoColor=gold
     ( pkg_development: line   22) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
     ( pkg_development: line   95) ok        https://docs.github.com/en/authentication/connecting-to-github-with-ssh
     ( pkg_development: line   22) ok        https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
@@ -347,13 +347,22 @@ The output looks something like:
 .. code-block:: text
 
     ================================ test session starts =================================
-    platform linux -- Python 3.10.2, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
-    Using --randomly-seed=2578159981
+    platform linux -- Python 3.11.4, pytest-7.4.0, pluggy-1.2.0
+    Using --randomly-seed=2364217076
     rootdir: /media/doug/warehouse/MOAD/Reshapr
-    plugins: randomly-3.11.0, cov-3.0.0
-    collected 7 items
+    plugins: randomly-3.13.0, cov-4.1.0
+    collected 246 items
 
-    tests/core/test_dask_cluster.py .......                                         [100%]
+    tests/core/test_dask_cluster.py .........                                       [  3%]
+    tests/core/test_extract.py ...........................................................
+    ...............................................................                 [ 53%]
+    tests/test_model_profiles.py .........................................................
+    .............                                                                   [ 81%]
+    tests/core/test_info.py ..........................                              [ 92%]
+    tests/api/v1/test_extract_api_v1.py .......                                     [ 95%]
+    tests/test_cluster_configs.py .....                                             [ 97%]
+    tests/cli/test_cli.py ..                                                        [ 97%]
+    tests/utils/test_date_formatters.py .....                                       [100%]
 
     ================================== 7 passed in 1.60s =================================
 
