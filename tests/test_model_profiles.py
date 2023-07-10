@@ -405,12 +405,17 @@ class TestSalishSeaCast202111:
             "x": 398,
         }
         assert model_profile["chunk size"] == expected_chunk_size
+        # TODO: update to ERDDAP URL when bathymetry dataset is published there
         assert (
             model_profile["geo ref dataset"]["path"]
             == "/results2/SalishSea/nowcast-green.202111/01jan07/SalishSea_1h_20070101_20070101_grid_T.nc"
         )
-        assert model_profile["geo ref dataset"]["y coord"] == "gridY"
-        assert model_profile["geo ref dataset"]["x coord"] == "gridX"
+        # TODO: Update coordinate names when bathymetry dataset is published on ERDDAP
+        assert model_profile["geo ref dataset"]["y coord"] == "y"
+        assert model_profile["geo ref dataset"]["x coord"] == "x"
+        # TODO: Drop unnecessary lon/lat var names when bathymetry dataset is published on ERDDAP
+        assert model_profile["geo ref dataset"]["longitude var"] == "nav_lon"
+        assert model_profile["geo ref dataset"]["latitude var"] == "nav_lat"
         assert model_profile["extraction time origin"] == arrow.get("2007-01-01").date()
         assert (
             model_profile["results archive"]["path"]
