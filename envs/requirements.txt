@@ -91,7 +91,7 @@ tornado==6.3.3
 typing_extensions==4.7.1
 tzdata==2023.3
 ukkonen==1.0.1
-urllib3==2.0.3
+urllib3==2.0.6
 virtualenv==20.23.1
 wheel==0.40.0
 xarray==2023.6.0
