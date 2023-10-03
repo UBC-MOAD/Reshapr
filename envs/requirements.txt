@@ -50,7 +50,7 @@ packaging==23.1
 pandas==2.0.3
 partd==1.4.0
 pathspec==0.11.1
-Pillow==10.0.0
+Pillow==10.0.1
 pip==23.1.2
 platformdirs==3.8.1
 pluggy==1.2.0
