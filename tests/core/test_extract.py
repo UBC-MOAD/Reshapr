@@ -2274,7 +2274,7 @@ class TestResample:
                 ),
             },
         )
-        assert resampled_ds.time == expected
+        xarray.testing.assert_equal(resampled_ds.time, expected)
         assert resampled_ds.time.attrs == expected.attrs
 
         assert log_output.entries[1]["log_level"] == "debug"
@@ -2362,7 +2362,7 @@ class TestResample:
                 ),
             },
         )
-        assert resampled_ds.time_counter == expected
+        xarray.testing.assert_equal(resampled_ds.time_counter, expected)
         assert resampled_ds.time_counter.attrs == expected.attrs
 
         assert log_output.entries[1]["log_level"] == "debug"
@@ -2450,7 +2450,7 @@ class TestResample:
                 ),
             },
         )
-        assert resampled_ds.time == expected
+        xarray.testing.assert_equal(resampled_ds.time, expected)
         assert resampled_ds.time.attrs == expected.attrs
 
         assert log_output.entries[1]["log_level"] == "debug"
@@ -2471,7 +2471,7 @@ class TestResample:
             data_vars={
                 "diatoms": xarray.DataArray(
                     name="diatoms",
-                    data=numpy.empty((30, 8, 9, 4), dtype=numpy.single),
+                    data=numpy.ones((30, 8, 9, 4), dtype=numpy.single),
                     coords={
                         "time_counter": pandas.date_range(
                             "2015-04-01",
@@ -2545,7 +2545,7 @@ class TestResample:
                 ),
             },
         )
-        assert resampled_ds.time_counter == expected
+        xarray.testing.assert_equal(resampled_ds.time_counter, expected)
         assert resampled_ds.time_counter.attrs == expected.attrs
 
         assert log_output.entries[1]["log_level"] == "debug"

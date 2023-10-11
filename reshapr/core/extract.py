@@ -25,6 +25,7 @@ from pathlib import Path
 import arrow
 import dask.distributed
 import numpy
+import pandas.tseries.frequencies
 import structlog
 import xarray
 import yaml
@@ -929,13 +930,16 @@ def _resample(extracted_ds, config, model_profile):
     resampler = extracted_ds.resample(
         {time_coord: freq},
         label="left",
-        loffset=(end_date.shift(days=+1) - start_date) / 2,
         # There shouldn't be missing values, so don't skip them in down-sampling
         # (e.g. month-average) aggregations to force there to be missing values in result
         # dataset rather than hard to find erroneous values.
         skipna=False,
     )
     resampled_ds = getattr(resampler, aggregation)(time_coord, keep_attrs=True)
+    time_offset = pandas.tseries.frequencies.to_offset(
+        (end_date.shift(days=+1) - start_date) / 2
+    )
+    resampled_ds[time_coord] = resampled_ds.get_index(time_coord) + time_offset
     resample_quantum = freq[-1]
     match resample_quantum:
         case "D":
