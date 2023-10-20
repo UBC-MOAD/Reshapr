@@ -37,7 +37,12 @@ logger = structlog.get_logger()
 
 
 def info(cluster_or_model, time_interval, vars_group):
-    """Provide information about reshapr, dask clusters, and model profiles."""
+    """Provide information about reshapr, dask clusters, and model profiles.
+
+    :param str cluster_or_model:
+    :param str time_interval:
+    :param str vars_group:
+    """
     console = Console()
 
     if cluster_or_model == "":
@@ -56,7 +61,10 @@ def info(cluster_or_model, time_interval, vars_group):
 
 
 def _basic_info(console):
-    """Show info when no cluster or model profile is specified."""
+    """Show info when no cluster or model profile is specified.
+
+    :param :py:class:`rich.console.Console` console:
+    """
     versions = {
         pkg: metadata.version(pkg) for pkg in ("reshapr", "xarray", "dask", "netcdf4")
     }
@@ -80,6 +88,11 @@ def _basic_info(console):
 
 
 def _is_cluster(cluster_or_model):
+    """
+    :param str cluster_or_model:
+
+    :rtype: bool
+    """
     cluster_configs = _get_cluster_configs()
     return (
         cluster_or_model in cluster_configs
@@ -88,6 +101,10 @@ def _is_cluster(cluster_or_model):
 
 
 def _cluster_info(cluster, console):
+    """
+    :param str cluster:
+    :param :py:class:`rich.console.Console` console:
+    """
     cluster = cluster if cluster.endswith(".yaml") else f"{cluster}.yaml"
     console.print(f"[green]{cluster}:")
     syntax = Syntax.from_path(CLUSTER_CONFIGS_PATH / cluster)
@@ -100,6 +117,11 @@ def _cluster_info(cluster, console):
 
 
 def _is_model_profile(cluster_or_model):
+    """
+    :param str cluster_or_model:
+
+    :rtype: bool
+    """
     model_profiles = _get_model_profiles()
     return (
         cluster_or_model in model_profiles
@@ -108,6 +130,12 @@ def _is_model_profile(cluster_or_model):
 
 
 def _model_profile_info(profile, time_interval, vars_group, console):
+    """
+    :param str profile:
+    :param str time_interval:
+    :param str vars_group:
+    :param :py:class:`rich.console.Console` console:
+    """
     profile_file = profile if profile.endswith(".yaml") else f"{profile}.yaml"
     console.print(f"[green]{profile_file}:", highlight=False)
     with (MODEL_PROFILES_PATH / profile_file).open("rt") as f:
@@ -154,6 +182,12 @@ def _model_profile_info(profile, time_interval, vars_group, console):
 
 
 def _vars_list(model_profile, time_interval, vars_group, console):
+    """
+    :param str model_profile:
+    :param str time_interval:
+    :param str vars_group:
+    :param :py:class:`rich.console.Console` console:
+    """
     unused_vars_yaml = (
         Path(__file__).parent.parent.parent / "model_profiles" / "unused-variables.yaml"
     )
@@ -207,6 +241,9 @@ def _vars_list(model_profile, time_interval, vars_group, console):
 
 
 def _get_cluster_configs():
+    """
+    :rtype: list
+    """
     cluster_configs = [
         config.name
         for config in CLUSTER_CONFIGS_PATH.glob("*.yaml")
@@ -216,6 +253,9 @@ def _get_cluster_configs():
 
 
 def _get_model_profiles():
+    """
+    :rtype: list
+    """
     model_profiles = [
         profile.name
         for profile in MODEL_PROFILES_PATH.glob("*.yaml")
