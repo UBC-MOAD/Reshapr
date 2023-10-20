@@ -88,6 +88,14 @@ class TestIsCluster:
 
         assert is_cluster is expected
 
+    def test_user_supplied_cluster(self, tmp_path):
+        user_provided_cluster = tmp_path / "some_cluster.yaml"
+        user_provided_cluster.write_text("")
+
+        is_cluster = info._is_cluster(os.fspath(user_provided_cluster))
+
+        assert is_cluster
+
 
 class TestClusterInfo:
     """Unit tests for core.info.info() function with cluster as argument.

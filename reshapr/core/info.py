@@ -95,7 +95,8 @@ def _is_cluster(cluster_or_model):
     """
     cluster_configs = _get_cluster_configs()
     return (
-        cluster_or_model in cluster_configs
+        Path(cluster_or_model).exists()
+        or cluster_or_model in cluster_configs
         or f"{cluster_or_model}.yaml" in cluster_configs
     )
 
