@@ -124,7 +124,8 @@ def _is_model_profile(cluster_or_model):
     """
     model_profiles = _get_model_profiles()
     return (
-        cluster_or_model in model_profiles
+        Path(cluster_or_model).exists()
+        or cluster_or_model in model_profiles
         or f"{cluster_or_model}.yaml" in model_profiles
     )
 
