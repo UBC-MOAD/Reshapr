@@ -88,6 +88,14 @@ class TestIsCluster:
 
         assert is_cluster is expected
 
+    def test_user_supplied_cluster(self, tmp_path):
+        user_provided_cluster = tmp_path / "some_cluster.yaml"
+        user_provided_cluster.write_text("")
+
+        is_cluster = info._is_cluster(os.fspath(user_provided_cluster))
+
+        assert is_cluster
+
 
 class TestClusterInfo:
     """Unit tests for core.info.info() function with cluster as argument.
@@ -141,6 +149,14 @@ class TestIsModelProfile:
         is_profile = info._is_model_profile(model_profile)
 
         assert is_profile is expected
+
+    def test_user_supplied_profile(self, tmp_path):
+        user_provided_profile = tmp_path / "some_profile.yaml"
+        user_provided_profile.write_text("")
+
+        is_profile = info._is_model_profile(os.fspath(user_provided_profile))
+
+        assert is_profile
 
 
 class TestModelProfileInfo:
