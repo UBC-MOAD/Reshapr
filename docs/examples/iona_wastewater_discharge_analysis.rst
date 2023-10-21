@@ -182,43 +182,43 @@ Use :command:`reshapr extract --help` to see the details of how to do that.
 You can change the variables that you extract by changing the ``variable group:`` name in line 5,
 and the list of variables names in the lines following the ``extract variables:`` key at line 13.
 To learn the names of the available variable groups and the variables in them,
-use the :command:`reshapr info` command with the ``SalishSeaCast-202111-salish.yaml`` model profile.
+use the :command:`reshapr info` command with the path and file name of your model profile.
 For example:
 
 .. code-block:: text
 
-    reshapr info SalishSeaCast-202111-salish.yaml
-    SalishSeaCast-202111-salish.yaml:
-      SalishSeaCast version 202111 NEMO results on storage accessible from
-      salish. 2007-01-01 onward.
+   reshapr info /ocean/dlatorne/MEOPAR/analysis-doug/notebooks/wastewater/model_profiles/SalishSeaCast-202111-wastewater-salish.yaml
+   /ocean/dlatorne/MEOPAR/analysis-doug/notebooks/wastewater/model_profiles/SalishSeaCast-202111-wastewater-salish.yaml:
+     SalishSeaCast version 202111 NEMO with wastewater outfalls results
+     on storage accessible from salish.
 
-    variable groups from time intervals in this model:
-      day
-        biology
-        chemistry
-        biology growth rates
-        grazing
-        light
-        mortality
-        physics tracers
-        vvl grid
-      hour
-        biology
-        chemistry
-        light
-        physics tracers
-        turbulence
-        u velocity
-        v velocity
-        vvl grid
-        w velocity
+   variable groups from time intervals in this model:
+     day
+       biology
+       chemistry
+       biology growth rates
+       grazing
+       light
+       mortality
+       physics tracers
+       vvl grid
+     hour
+       biology
+       chemistry
+       light
+       physics tracers
+       turbulence
+       u velocity
+       v velocity
+       vvl grid
+       w velocity
 
-    Please use reshapr info model-profile time-interval variable-group
-    (e.g. reshapr info SalishSeaCast-201905 hour biology)
-    to get the list of variables in a variable group.
+   Please use reshapr info model-profile time-interval variable-group
+   (e.g. reshapr info SalishSeaCast-201905 hour biology)
+   to get the list of variables in a variable group.
 
-    Please use reshapr info --help to learn how to get other information,
-    or reshapr --help to learn about other sub-commands.
+   Please use reshapr info --help to learn how to get other information,
+   or reshapr --help to learn about other sub-commands.
 
 shows the lists of variable groups,
 divided into day-averaged and hour-averaged collections.
