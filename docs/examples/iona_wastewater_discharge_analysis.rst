@@ -174,6 +174,14 @@ Here is the contents of the example :file:`extract_biology.yaml` file:
       dest dir: /ocean/dlatorne/MOAD/extractions/
 
 
+Version Control Your Extraction YAML Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+As you build your collection of extraction YAML files remember to give them descriptive names
+and to commit them with messages that explain what they are for.
+That ensures that your analysis progress will be well documented and reproducible.
+
+
 Start and/or End Dates
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -287,17 +295,123 @@ As noted in :ref:`FileOrganizationAndExecutingExtractions`,
 to GitHub - they are too large.
 
 
-Version Control Your Extraction YAML Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-As you build your collection of extraction YAML files remember to give them descriptive names
-and to commit them with messages that explain what they are for.
-That ensures that your analysis progress will be well documented and reproducible.
-
-
 .. _IonaWastewaterModelProfile:
 
 Iona Wastewater Model Profile
 -----------------------------
 
-Coming soon.
+
+Here is the contents of the :file:`SalishSeaCast-202111-wastewater-salish.yaml` file:
+
+.. code-block:: yaml
+   :linenos:
+
+    description: SalishSeaCast version 202111 NEMO with wastewater outfalls results
+                 on storage accessible from salish.
+
+    time coord:
+      name: time_counter
+    y coord:
+      name: y
+    x coord:
+      name: x
+
+    # Chunking scheme used for the netCDF4 files
+    # Note that coordinate names (keys) are conceptual here.
+    # They are replaced with actual coordinate names in files in the code;
+    # e.g. time is replaced by time_counter for dataset loading
+    chunk size:
+      time: 24
+      depth: 40
+      y: 898
+      x: 398
+
+    geo ref dataset:
+      path: /results2/SalishSea/nowcast-green.202111/01jan07/SalishSea_1h_20070101_20070101_grid_T.nc
+      y coord: y
+      x coord: x
+      longitude var: nav_lon
+      latitude var: nav_lat
+
+    extraction time origin: 2007-01-01
+
+    results archive:
+      path: /data/sallen/results/MEOPAR/wastewater/long_run/
+      datasets:
+        day:
+          biology:
+            file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_biol_T.nc"
+            depth coord: deptht
+          chemistry:
+            file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_chem_T.nc"
+            depth coord: deptht
+          biology growth rates:
+            file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_prod_T.nc"
+            depth coord: deptht
+          grazing:
+            file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_graz_T.nc"
+            depth coord: deptht
+          light:
+            file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_chem_T.nc"
+            depth coord: deptht
+          mortality:
+            file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_graz_T.nc"
+            depth coord: deptht
+          physics tracers:
+            file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+            depth coord: deptht
+          vvl grid:
+            file pattern: "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+            depth coord: deptht
+        hour:
+          biology:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_biol_T.nc"
+            depth coord: deptht
+          chemistry:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_chem_T.nc"
+            depth coord: deptht
+          light:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_chem_T.nc"
+            depth coord: deptht
+          physics tracers:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+            depth coord: deptht
+          turbulence:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+            depth coord: depthw
+          u velocity:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_U.nc"
+            depth coord: depthu
+          v velocity:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_V.nc"
+            depth coord: depthv
+          vvl grid:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_T.nc"
+            depth coord: deptht
+          w velocity:
+            file pattern: "{ddmmmyy}/SalishSea_1h_{yyyymmdd}_{yyyymmdd}_grid_W.nc"
+            depth coord: depthw
+
+
+Version Control Your Model Profile Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When you create new model profile YAML files remember to give them descriptive names
+and to commit them with messages that explain what they are for.
+That ensures that your analysis progress will be well documented and reproducible.
+
+
+Change the Model Results Path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To work with model results in a different directory tree,
+change the value of ``path:`` in the ``results archive:`` section on line 31.
+For example,
+if Susan does model runs with alkalinity added to the Iona wastewater discharge,
+she might store the run results in
+:file:`/data/sallen/results/MEOPAR/wastewater/alkalinity_added/`.
+
+If you are changing the model results path in a model profile,
+you should seriously consider storing the profile in a new file with a different name,
+updating the ``description:`` at the top of the file,
+and committing it to version control.
