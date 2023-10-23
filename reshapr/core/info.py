@@ -95,8 +95,7 @@ def _is_cluster(cluster_or_model):
     """
     cluster_configs = _get_cluster_configs()
     return (
-        Path(cluster_or_model).exists()
-        or cluster_or_model in cluster_configs
+        cluster_or_model in cluster_configs
         or f"{cluster_or_model}.yaml" in cluster_configs
     )
 
@@ -142,7 +141,13 @@ def _model_profile_info(profile, time_interval, vars_group, console):
     console.print(f"[green]{profile_file}:", highlight=False)
     with (MODEL_PROFILES_PATH / profile_file).open("rt") as f:
         model_profile = yaml.safe_load(f)
-    description = model_profile["description"].splitlines()
+    try:
+        description = model_profile["description"].splitlines()
+    except KeyError:
+        logger.error(
+            "no description key found in model profile", model_profile=model_profile
+        )
+        return
     for paragraph in description:
         formatted = textwrap.wrap(
             paragraph, initial_indent="  ", subsequent_indent="  "

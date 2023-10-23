@@ -88,14 +88,6 @@ class TestIsCluster:
 
         assert is_cluster is expected
 
-    def test_user_supplied_cluster(self, tmp_path):
-        user_provided_cluster = tmp_path / "some_cluster.yaml"
-        user_provided_cluster.write_text("")
-
-        is_cluster = info._is_cluster(os.fspath(user_provided_cluster))
-
-        assert is_cluster
-
 
 class TestClusterInfo:
     """Unit tests for core.info.info() function with cluster as argument.
@@ -178,6 +170,21 @@ class TestModelProfileInfo:
 
         stdout_lines = capsys.readouterr().out.splitlines()
         assert stdout_lines[0] == expected
+
+    def test_missing_description(self, log_output, capsys, tmp_path):
+        """This tests for a malformed model profile as well as an attempt to use
+        `reshapr info` with a user-provided cluster description.
+        """
+        cluster_config = tmp_path / "user_cluster.yaml"
+        cluster_config.write_text("name: user cluster")
+
+        info.info(os.fspath(cluster_config), "time_interval", "vars_group")
+
+        capsys.readouterr()
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["model_profile"] == {"name": "user cluster"}
+        expected = "no description key found in model profile"
+        assert log_output.entries[0]["event"] == expected
 
     def test_model_profile_file_description(self, capsys):
         info.info("SalishSeaCast-202111-salish", time_interval="", vars_group="")
