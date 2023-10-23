@@ -59,6 +59,8 @@ Notable differences include:
   Please see the :ref:`IonaWastewaterModelProfile` section below for details.
 
 
+.. _FileOrganizationAndExecutingExtractions:
+
 File Organization and Executing Extractions
 -------------------------------------------
 
@@ -130,7 +132,7 @@ Be sure to use the path
 
 
 Changing the Extraction Parameters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 Here is the contents of the example :file:`extract_biology.yaml` file:
 
@@ -172,12 +174,19 @@ Here is the contents of the example :file:`extract_biology.yaml` file:
       dest dir: /ocean/dlatorne/MOAD/extractions/
 
 
+Start and/or End Dates
+^^^^^^^^^^^^^^^^^^^^^^
+
 You can change the start and/or end dates for the extraction by editing the ``start date:``
 and/or ``end date:`` lines in the YAML file.
 Alternatively,
 you can use the ``--start-date`` and/or ``--end-date`` command-line options in the
 :command:`reshapr extract` command to override the start and/or end dates in the YAML file.
 Use :command:`reshapr extract --help` to see the details of how to do that.
+
+
+Variables
+^^^^^^^^^
 
 You can change the variables that you extract by changing the ``variable group:`` name in line 5,
 and the list of variables names in the lines following the ``extract variables:`` key at line 13.
@@ -257,12 +266,26 @@ to get the the y grid point from 430 to 470 you need to use:
         y min: 430
         y max: 471
 
-You can change the beginning of the file name that your extracted netCDF dataset will be written to
-and the description in its metadata by editing the ``name:`` and ``description:`` values in lines
-30 and 31.
+
+Extraction File Name and Path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can change the beginning of the file name that your extracted netCDF dataset file will be
+written to and the description in its metadata by editing the ``name:`` and ``description:`` values
+in lines 30 and 31.
 With ``SalishSeaCast_wastewater_day_avg_biology`` as the value of ``name:``,
 and extraction for 2018-01-01 to 2018-01-31 will produce a netCDF file called
 :file:`SalishSeaCast_wastewater_day_avg_biology_20180101_20180131.nc`.
+
+You can change the directory where your extracted netCDF dataset files will be written to
+by editing the ``dest dir:`` value in line 33.
+As noted in :ref:`FileOrganizationAndExecutingExtractions`,
+*do not* store extracted netCDF dataset files in a Git repository or try to commit and push them
+to GitHub - they are too large.
+
+
+Version Control Your Extraction YAML Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As you build your collection of extraction YAML files remember to give them descriptive names
 and to commit them with messages that explain what they are for.
