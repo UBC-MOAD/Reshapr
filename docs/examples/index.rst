@@ -27,3 +27,4 @@ Examples of Use
    atlantis_diatoms_nudge
    prodigy_model_obs_assignment
    2xrez_physics_ONC_SCVIP
+   iona_wastewater_discharge_analysis

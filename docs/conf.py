@@ -51,6 +51,7 @@ intersphinx_mapping = {
     "dask": ("https://docs.dask.org/en/stable/", None),
     "moaddocs": ("https://ubc-moad-docs.readthedocs.io/en/latest/", None),
     "python": ("https://docs.python.org/", None),
+    "salishseanowcast": ("https://salishsea-nowcast.readthedocs.io/en/latest/", None),
     "xarray": ("https://docs.xarray.dev/en/stable/", None),
 }
 
