@@ -236,11 +236,10 @@ with:
 
 .. code-block:: text
 
-    reshapr info SalishSeaCast-202111-salish.yaml day physics tracers
-    SalishSeaCast-202111-salish.yaml:
-      SalishSeaCast version 202111 NEMO results on storage accessible from
-      salish. 2007-01-01 onward.
-
+    reshapr info /ocean/dlatorne/MEOPAR/analysis-doug/notebooks/wastewater/model_profiles/SalishSeaCast-202111-wastewater-salish.yaml day physics tracers
+    /ocean/dlatorne/MEOPAR/analysis-doug/notebooks/wastewater/model_profiles/SalishSeaCast-202111-wastewater-salish.yaml:
+      SalishSeaCast version 202111 NEMO with wastewater outfalls results
+      on storage accessible from salish.
     day-averaged variables in physics tracers group:
       - sossheig : Sea Surface Height [m]
       - votemper : Conservative Temperature [degree_C]
@@ -250,6 +249,10 @@ with:
 
     Please use reshapr info --help to learn how to get other information,
     or reshapr --help to learn about other sub-commands.
+
+
+Depth-y-x Slab Selection
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can change the depth,
 y direction,
