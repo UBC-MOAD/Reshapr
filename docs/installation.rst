@@ -80,13 +80,13 @@ and other important information with:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ reshapr info
+    (reshapr)$ reshapr info
 
 To deactivate the environment use:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ conda deactivate
+    (reshapr)$ conda deactivate
 
 .. note::
     If you want to make code changes in the :py:obj:`Reshapr` package,
