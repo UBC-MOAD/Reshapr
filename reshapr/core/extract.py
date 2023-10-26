@@ -754,7 +754,12 @@ def calc_extracted_vars(source_dataset, output_coords, config, model_profile):
             std_name = var.attrs["standard_name"]
         except KeyError:
             # HRDPS lacks standard_name for many vars, but has short_name
-            std_name = var.attrs["short_name"]
+            try:
+                std_name = var.attrs["short_name"]
+            except KeyError:
+                # Fall back to variable name as standard_name as implied by
+                # https://cfconventions.org/Data/cf-conventions/cf-conventions-1.10/cf-conventions.html#long-name
+                std_name = name
         extracted_var = create_dataarray(
             name,
             var.isel(var_selector),
