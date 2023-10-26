@@ -1642,6 +1642,175 @@ class TestCalcExtractedVars:
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "extracted diatoms"
 
+    def test_short_name_as_standard_name(self, log_output):
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(24),
+                "y": numpy.arange(5),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "atmpres": xarray.DataArray(
+                    name="atmpres",
+                    data=numpy.ones((24, 5, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(24),
+                        "y": numpy.arange(5),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "short_name": "PRMSL_meansealevel",
+                        "long_name": "Pressure Reduced to MSL",
+                        "units": "Pa",
+                    },
+                ),
+            },
+        )
+        output_coords = {
+            "time": numpy.arange(24),
+            "gridY": numpy.arange(5),
+            "gridX": numpy.arange(4),
+        }
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "surface fields",
+            },
+            "extracted dataset": {},
+        }
+        model_profile = {
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
+            "chunk size": {
+                "time": 24,
+                "y": 5,
+                "x": 4,
+            },
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "surface fields": {},
+                    }
+                }
+            },
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "atmpres"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((24, 5, 4), dtype=numpy.single)
+        )
+        assert extracted_vars[0].attrs["standard_name"] == "PRMSL_meansealevel"
+        assert extracted_vars[0].attrs["long_name"] == "Pressure Reduced to MSL"
+        assert extracted_vars[0].attrs["units"] == "Pa"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted atmpres"
+
+    def test_variable_name_as_standard_name(self, log_output):
+        """Fall back to use variable name as standard_name if neither standard_name nor short_name
+        attributes are present in the source dataset.
+
+        This is in line with the implications of
+        https://cfconventions.org/Data/cf-conventions/cf-conventions-1.10/cf-conventions.html#long-name
+        """
+        source_dataset = xarray.Dataset(
+            coords={
+                "time_counter": numpy.arange(24),
+                "deptht": numpy.arange(0, 4, 0.5),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "outfall": xarray.DataArray(
+                    name="outfall",
+                    data=numpy.ones((24, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": numpy.arange(24),
+                        "deptht": numpy.arange(0, 4, 0.5),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "long_name": "Iona Outfall Water Tracer",
+                        "units": "m3 m-3",
+                    },
+                ),
+            },
+        )
+        output_coords = {
+            "time": numpy.arange(24),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {
+            "dataset": {
+                "time base": "hour",
+                "variables group": "physics tracers",
+            },
+            "extracted dataset": {},
+        }
+        model_profile = {
+            "time coord": {
+                "name": "time_counter",
+            },
+            "y coord": {
+                "name": "y",
+            },
+            "x coord": {
+                "name": "x",
+            },
+            "chunk size": {
+                "time": 1,
+                "depth": 8,
+                "y": 9,
+                "x": 4,
+            },
+            "results archive": {
+                "datasets": {
+                    "hour": {
+                        "physics tracers": {
+                            "depth coord": "deptht",
+                        }
+                    }
+                }
+            },
+        }
+
+        extracted_vars = extract.calc_extracted_vars(
+            source_dataset, output_coords, config, model_profile
+        )
+
+        assert extracted_vars[0].name == "outfall"
+        assert numpy.array_equal(
+            extracted_vars[0].data, numpy.ones((24, 8, 9, 4), dtype=numpy.single)
+        )
+        assert extracted_vars[0].attrs["standard_name"] == "outfall"
+        assert extracted_vars[0].attrs["long_name"] == "Iona Outfall Water Tracer"
+        assert extracted_vars[0].attrs["units"] == "m3 m-3"
+        for coord in output_coords:
+            assert numpy.array_equal(
+                extracted_vars[0].coords[coord], output_coords[coord]
+            )
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "extracted outfall"
+
     def test_extract_var_model_coords(self, log_output):
         source_dataset = xarray.Dataset(
             coords={
