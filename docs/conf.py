@@ -59,6 +59,7 @@ autodoc_mock_imports = [
     "arrow",
     "dask",
     "numpy",
+    "pandas",
     "structlog",
     "xarray",
     "yaml",
