@@ -50,7 +50,7 @@ intersphinx_mapping = {
     "arrow": ("https://arrow.readthedocs.io/en/latest/", None),
     "dask": ("https://docs.dask.org/en/stable/", None),
     "moaddocs": ("https://ubc-moad-docs.readthedocs.io/en/latest/", None),
-    "python": ("https://docs.python.org/", None),
+    "python": ("https://docs.python.org/3/", None),
     "salishseanowcast": ("https://salishsea-nowcast.readthedocs.io/en/latest/", None),
     "xarray": ("https://docs.xarray.dev/en/stable/", None),
 }
