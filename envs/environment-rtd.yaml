@@ -19,6 +19,9 @@ dependencies:
   - mock
   - pillow
   - pip:
-      - commonmark
-      - recommonmark
-      - readthedocs-sphinx-ext
+    - commonmark
+    - recommonmark
+    - readthedocs-sphinx-ext
+
+    # Install Reshapr packages in editable mode
+    - --editable ../
