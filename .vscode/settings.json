@@ -3,5 +3,6 @@
         "gemlam",
         "NEMO",
         "Reshapr"
-    ]
+    ],
+    "esbonio.sphinx.confDir": ""
 }
