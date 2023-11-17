@@ -62,8 +62,8 @@
 |                              |      :target: https://black.readthedocs.io/en/stable/                                                           |
 |                              |      :alt: The uncompromising Python code formatter                                                             |
 |                              |  .. image:: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg                                          |
-|                              |      :alt: Hatch project                                                                                        |
 |                              |      :target: https://github.com/pypa/hatch                                                                     |
+|                              |      :alt: Hatch project                                                                                        |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
 
 The Reshapr package (:py:obj:`Reshapr`) is Command-line tool based on Xarray and Dask
@@ -537,6 +537,7 @@ Release Process
     :target: https://github.com/UBC-MOAD/Reshapr/releases
     :alt: Releases
 .. image:: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
+    :target: https://github.com/pypa/hatch
     :alt: Hatch project
 
 
