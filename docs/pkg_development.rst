@@ -22,7 +22,7 @@
 *************************************
 
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
-|  **Continuous Integration**  |  .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/pytest-with-coverage/badge.svg                        |
+|  **Continuous Integration**  |  .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg           |
 |                              |       :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage                  |
 |                              |       :alt: Pytest with Coverage Status                                                                         |
 |                              |  .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg                                  |
@@ -35,7 +35,7 @@
 |  **Documentation**           |  .. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest                                      |
 |                              |      :target: https://reshapr.readthedocs.io/en/latest/                                                         |
 |                              |      :alt: Documentation Status                                                                                 |
-|                              |  .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg                            |
+|                              |  .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg               |
 |                              |      :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck                       |
 |                              |      :alt: Sphinx linkcheck                                                                                     |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
@@ -55,14 +55,16 @@
 |                              |  .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github                             |
 |                              |      :target: https://github.com/UBC-MOAD/Reshapr                                                               |
 |                              |      :alt: Git on GitHub                                                                                        |
+|                              |  .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white        |
+|                              |      :target: https://pre-commit.com                                                                            |
+|                              |      :alt: pre-commit                                                                                           |
 |                              |  .. image:: https://img.shields.io/badge/code%20style-black-000000.svg                                          |
 |                              |      :target: https://black.readthedocs.io/en/stable/                                                           |
 |                              |      :alt: The uncompromising Python code formatter                                                             |
 |                              |  .. image:: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg                                          |
-|                              |      :alt: Hatch project                                                                                        |
 |                              |      :target: https://github.com/pypa/hatch                                                                     |
+|                              |      :alt: Hatch project                                                                                        |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
-
 
 The Reshapr package (:py:obj:`Reshapr`) is Command-line tool based on Xarray and Dask
 for extraction of model variable time series from model products like
@@ -91,6 +93,7 @@ in particular:
 .. _Python: https://www.python.org/
 .. _formatted string literals: https://docs.python.org/3/reference/lexical_analysis.html#f-strings
 .. _structural pattern matching: https://peps.python.org/pep-0636/
+
 
 .. _ReshaprGettingTheCode:
 
@@ -142,7 +145,7 @@ and building the documentation with the commands below.
 
     $ cd Reshapr
     $ conda env create -f envs/environment-dev.yaml
-    $ conda activate reshapr
+    $ conda activate reshapr-dev
 
 :py:obj:`Reshapr` is installed in `editable install mode`_ as part of the conda environment
 creation process.
@@ -163,32 +166,35 @@ To deactivate the environment use:
 Coding Style
 ============
 
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+   :target: https://pre-commit.com
+   :alt: pre-commit
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
 
-The :py:obj:`Reshapr` package uses the `black`_ code formatting tool to maintain a
-coding style that is very close to `PEP 8`_.
+The :py:obj:`Reshapr` package uses Git pre-commit hooks managed by `pre-commit`_
+to maintain consistent code style and and other aspects of code,
+docs,
+and repo QA.
 
-.. _black: https://black.readthedocs.io/en/stable/
-.. _PEP 8: https://peps.python.org/pep-0008/
+.. _pre-commit: https://pre-commit.com/
 
-:command:`black` is installed as part of the :ref:`ReshaprDevelopmentEnvironment` setup.
-
-To run :command:`black` on the entire code-base use:
+To install the `pre-commit` hooks in a newly cloned repo,
+activate the conda development environment,
+and run :command:`pre-commit install`:
 
 .. code-block:: bash
 
     $ cd Reshapr
-    $ conda activate reshapr
-    (reshapr-dev)$ black ./
+    $ conda activate reshapr-dev
+    (reshapr-dev)$ pre-commit install
 
-in the repository root directory.
-The output looks something like:
+.. note::
+    You only need to install the hooks once immediately after you make a new clone of the
+    `Reshapr repository`_ and build your :ref:`ReshaprDevelopmentEnvironment`.
 
-.. code-block:: text
-
-    **add example black output**
+.. _Reshapr repository: https://github.com/UBC-MOAD/Reshapr
 
 
 .. _ReshaprBuildingTheDocumentation:
@@ -267,8 +273,8 @@ and rendered at https://reshapr.readthedocs.io/en/latest/.
 Link Checking the Documentation
 -------------------------------
 
-.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg
-    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3Asphinx-linkcheck
+.. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg
+    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     :alt: Sphinx linkcheck
 
 Sphinx also provides a link checker utility which can be run to find
@@ -335,14 +341,14 @@ The output looks something like:
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
     (design_notes/motivation: line  129) ok        https://github.com/UBC-MOAD/Reshapr
     ( pkg_development: line  453) ok        https://github.com/UBC-MOAD/Reshapr/actions
-    ( pkg_development: line  268) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3Asphinx-linkcheck
+    ( pkg_development: line  268) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage
     ( pkg_development: line  453) ok        https://github.com/UBC-MOAD/Reshapr/commits/main
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/issues
-    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/workflows/pytest-with-coverage/badge.svg
-    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg
     ( pkg_development: line   22) ok        https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/releases
     ( pkg_development: line   22) ok        https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue?logo=python&label=Python&logoColor=gold
@@ -453,7 +459,7 @@ to produce an HTML report that you can view in your browser by opening
 Continuous Integration
 ----------------------
 
-.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/pytest-with-coverage/badge.svg
+.. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage
     :alt: Pytest with Coverage Status
 .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
@@ -531,6 +537,7 @@ Release Process
     :target: https://github.com/UBC-MOAD/Reshapr/releases
     :alt: Releases
 .. image:: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
+    :target: https://github.com/pypa/hatch
     :alt: Hatch project
 
 

@@ -3,7 +3,7 @@ Reshapr
 *******
 
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
-|  **Continuous Integration**  |  .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/pytest-with-coverage/badge.svg                        |
+|  **Continuous Integration**  |  .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg           |
 |                              |       :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage                  |
 |                              |       :alt: Pytest with Coverage Status                                                                         |
 |                              |  .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg                                  |
@@ -16,7 +16,7 @@ Reshapr
 |  **Documentation**           |  .. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest                                      |
 |                              |      :target: https://reshapr.readthedocs.io/en/latest/                                                         |
 |                              |      :alt: Documentation Status                                                                                 |
-|                              |  .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg                            |
+|                              |  .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg               |
 |                              |      :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck                       |
 |                              |      :alt: Sphinx linkcheck                                                                                     |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
@@ -36,6 +36,9 @@ Reshapr
 |                              |  .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github                             |
 |                              |      :target: https://github.com/UBC-MOAD/Reshapr                                                               |
 |                              |      :alt: Git on GitHub                                                                                        |
+|                              |  .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white        |
+|                              |      :target: https://github.com/pre-commit/pre-commit                                                          |
+|                              |      :alt: pre-commit                                                                                           |
 |                              |  .. image:: https://img.shields.io/badge/code%20style-black-000000.svg                                          |
 |                              |      :target: https://black.readthedocs.io/en/stable/                                                           |
 |                              |      :alt: The uncompromising Python code formatter                                                             |
