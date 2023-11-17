@@ -35,7 +35,7 @@
 |  **Documentation**           |  .. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest                                      |
 |                              |      :target: https://reshapr.readthedocs.io/en/latest/                                                         |
 |                              |      :alt: Documentation Status                                                                                 |
-|                              |  .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck/badge.svg                    |
+|                              |  .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg               |
 |                              |      :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck                       |
 |                              |      :alt: Sphinx linkcheck                                                                                     |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
@@ -273,7 +273,7 @@ and rendered at https://reshapr.readthedocs.io/en/latest/.
 Link Checking the Documentation
 -------------------------------
 
-.. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck/badge.svg
+.. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     :alt: Sphinx linkcheck
 
@@ -341,7 +341,7 @@ The output looks something like:
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
     (design_notes/motivation: line  129) ok        https://github.com/UBC-MOAD/Reshapr
     ( pkg_development: line  453) ok        https://github.com/UBC-MOAD/Reshapr/actions
-    ( pkg_development: line  268) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3Asphinx-linkcheck
+    ( pkg_development: line  268) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage
     ( pkg_development: line  453) ok        https://github.com/UBC-MOAD/Reshapr/commits/main
