@@ -55,6 +55,9 @@
 |                              |  .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github                             |
 |                              |      :target: https://github.com/UBC-MOAD/Reshapr                                                               |
 |                              |      :alt: Git on GitHub                                                                                        |
+|                              |  .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white        |
+|                              |      :target: https://pre-commit.com                                                                            |
+|                              |      :alt: pre-commit                                                                                           |
 |                              |  .. image:: https://img.shields.io/badge/code%20style-black-000000.svg                                          |
 |                              |      :target: https://black.readthedocs.io/en/stable/                                                           |
 |                              |      :alt: The uncompromising Python code formatter                                                             |
@@ -142,7 +145,7 @@ and building the documentation with the commands below.
 
     $ cd Reshapr
     $ conda env create -f envs/environment-dev.yaml
-    $ conda activate reshapr
+    $ conda activate reshapr-dev
 
 :py:obj:`Reshapr` is installed in `editable install mode`_ as part of the conda environment
 creation process.
@@ -163,32 +166,35 @@ To deactivate the environment use:
 Coding Style
 ============
 
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+   :target: https://pre-commit.com
+   :alt: pre-commit
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
 
-The :py:obj:`Reshapr` package uses the `black`_ code formatting tool to maintain a
-coding style that is very close to `PEP 8`_.
+The :py:obj:`Reshapr` package uses Git pre-commit hooks managed by `pre-commit`_
+to maintain consistent code style and and other aspects of code,
+docs,
+and repo QA.
 
-.. _black: https://black.readthedocs.io/en/stable/
-.. _PEP 8: https://peps.python.org/pep-0008/
+.. _pre-commit: https://pre-commit.com/
 
-:command:`black` is installed as part of the :ref:`ReshaprDevelopmentEnvironment` setup.
-
-To run :command:`black` on the entire code-base use:
+To install the `pre-commit` hooks in a newly cloned repo,
+activate the conda development environment,
+and run :command:`pre-commit install`:
 
 .. code-block:: bash
 
     $ cd Reshapr
-    $ conda activate reshapr
-    (reshapr-dev)$ black ./
+    $ conda activate reshapr-dev
+    (reshapr-dev)$ pre-commit install
 
-in the repository root directory.
-The output looks something like:
+.. note::
+    You only need to install the hooks once immediately after you make a new clone of the
+    `Reshapr repository`_ and build your :ref:`ReshaprDevelopmentEnvironment`.
 
-.. code-block:: text
-
-    **add example black output**
+.. _Reshapr repository: https://github.com/UBC-MOAD/Reshapr
 
 
 .. _ReshaprBuildingTheDocumentation:
