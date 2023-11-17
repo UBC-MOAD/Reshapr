@@ -22,7 +22,7 @@
 *************************************
 
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
-|  **Continuous Integration**  |  .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/pytest-with-coverage/badge.svg                        |
+|  **Continuous Integration**  |  .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg           |
 |                              |       :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage                  |
 |                              |       :alt: Pytest with Coverage Status                                                                         |
 |                              |  .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg                                  |
@@ -35,7 +35,7 @@
 |  **Documentation**           |  .. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest                                      |
 |                              |      :target: https://reshapr.readthedocs.io/en/latest/                                                         |
 |                              |      :alt: Documentation Status                                                                                 |
-|                              |  .. image:: https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg                            |
+|                              |  .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck/badge.svg                    |
 |                              |      :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck                       |
 |                              |      :alt: Sphinx linkcheck                                                                                     |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
@@ -62,7 +62,6 @@
 |                              |      :alt: Hatch project                                                                                        |
 |                              |      :target: https://github.com/pypa/hatch                                                                     |
 +------------------------------+-----------------------------------------------------------------------------------------------------------------+
-
 
 The Reshapr package (:py:obj:`Reshapr`) is Command-line tool based on Xarray and Dask
 for extraction of model variable time series from model products like
@@ -91,6 +90,7 @@ in particular:
 .. _Python: https://www.python.org/
 .. _formatted string literals: https://docs.python.org/3/reference/lexical_analysis.html#f-strings
 .. _structural pattern matching: https://peps.python.org/pep-0636/
+
 
 .. _ReshaprGettingTheCode:
 
@@ -267,8 +267,8 @@ and rendered at https://reshapr.readthedocs.io/en/latest/.
 Link Checking the Documentation
 -------------------------------
 
-.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg
-    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow%3Asphinx-linkcheck
+.. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck/badge.svg
+    :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     :alt: Sphinx linkcheck
 
 Sphinx also provides a link checker utility which can be run to find
@@ -341,8 +341,8 @@ The output looks something like:
     ( pkg_development: line  453) ok        https://github.com/UBC-MOAD/Reshapr/commits/main
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/issues
-    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/workflows/pytest-with-coverage/badge.svg
-    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/workflows/sphinx-linkcheck/badge.svg
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg
     ( pkg_development: line   22) ok        https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/releases
     ( pkg_development: line   22) ok        https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue?logo=python&label=Python&logoColor=gold
@@ -453,7 +453,7 @@ to produce an HTML report that you can view in your browser by opening
 Continuous Integration
 ----------------------
 
-.. image:: https://github.com/UBC-MOAD/Reshapr/workflows/pytest-with-coverage/badge.svg
+.. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg
     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage
     :alt: Pytest with Coverage Status
 .. image:: https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
