@@ -944,7 +944,7 @@ def _resample(extracted_ds, config, model_profile):
     )
     resampled_ds = getattr(resampler, aggregation)(time_coord, keep_attrs=True)
     resampled_ds[time_coord] = _calc_resampled_time_coord(
-        resampled_ds.indexes[time_coord], freq
+        resampled_ds.get_index(time_coord), freq
     )
     resample_quantum = freq[-1]
     match resample_quantum:
