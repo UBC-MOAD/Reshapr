@@ -932,8 +932,12 @@ def _resample(extracted_ds, config, model_profile):
     end_date = arrow.get(config["end date"])
     use_model_coords = config["extracted dataset"].get("use model coords", False)
     time_coord = "time" if not use_model_coords else model_profile["time coord"]["name"]
+    # Use calendar month begin ("MS") frequency for monthly resampling so that time coordinate
+    # values are the 1st days of the months.
+    # They will be shifted to the middle of the months after the resampling.
+    resample_freq = freq if not freq.endswith("M") else freq.replace("M", "MS")
     resampler = extracted_ds.resample(
-        {time_coord: freq},
+        {time_coord: resample_freq},
         label="left",
         # There shouldn't be missing values, so don't skip them in down-sampling
         # (e.g. month-average) aggregations to force there to be missing values in result
