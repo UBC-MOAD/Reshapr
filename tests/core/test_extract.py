@@ -2721,6 +2721,72 @@ class TestResample:
         assert log_output.entries[1]["event"] == "resampled dataset metadata"
 
 
+class TestCalcResampledTimeCoord:
+    """Unit tests for _calc_resampled_time_coord() function."""
+
+    @pytest.mark.parametrize(
+        "resampled_time_index, freq, expected",
+        (
+            (
+                pandas.DatetimeIndex(["2023-11-01"]),
+                "1D",
+                pandas.DatetimeIndex(["2023-11-01 12:00:00"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2023-11-01", "2023-11-02"]),
+                "1D",
+                pandas.DatetimeIndex(["2023-11-01 12:00:00", "2023-11-02 12:00:00"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2023-11-01"]),
+                "5D",
+                pandas.DatetimeIndex(["2023-11-03 12:00:00"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2023-11-01", "2023-11-06"]),
+                "5D",
+                pandas.DatetimeIndex(["2023-11-03 12:00:00", "2023-11-08 12:00:00"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2023-11-01"]),
+                "1M",
+                pandas.DatetimeIndex(["2023-11-15"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2023-11-01"]),
+                "1MS",
+                pandas.DatetimeIndex(["2023-11-15"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2023-11-01", "2023-12-01"]),
+                "1M",
+                pandas.DatetimeIndex(["2023-11-15", "2023-12-15 12:00:00"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2023-11-01", "2023-12-01"]),
+                "1MS",
+                pandas.DatetimeIndex(["2023-11-15", "2023-12-15 12:00:00"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2023-02-01"]),
+                "1M",
+                pandas.DatetimeIndex(["2023-02-14"]),
+            ),
+            (
+                pandas.DatetimeIndex(["2024-02-01"]),
+                "1M",
+                pandas.DatetimeIndex(["2024-02-14 12:00:00"]),
+            ),
+        ),
+    )
+    def test_calc_resampled_time_coord(self, resampled_time_index, freq, expected):
+        resampled_time_coord = extract._calc_resampled_time_coord(
+            resampled_time_index, freq
+        )
+
+        pandas.testing.assert_index_equal(resampled_time_coord, expected)
+
+
 class TestCalcCoordEncoding:
     """Unit tests for calc_coord_encoding() function."""
 

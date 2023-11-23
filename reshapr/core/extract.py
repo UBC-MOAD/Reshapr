@@ -928,8 +928,6 @@ def _resample(extracted_ds, config, model_profile):
     logger.info(
         "resampling dataset", resampling_time_interval=freq, aggregation=aggregation
     )
-    start_date = arrow.get(config["start date"])
-    end_date = arrow.get(config["end date"])
     use_model_coords = config["extracted dataset"].get("use model coords", False)
     time_coord = "time" if not use_model_coords else model_profile["time coord"]["name"]
     # Use calendar month begin ("MS") frequency for monthly resampling so that time coordinate
@@ -945,10 +943,9 @@ def _resample(extracted_ds, config, model_profile):
         skipna=False,
     )
     resampled_ds = getattr(resampler, aggregation)(time_coord, keep_attrs=True)
-    time_offset = pandas.tseries.frequencies.to_offset(
-        (end_date.shift(days=+1) - start_date) / 2
+    resampled_ds[time_coord] = _calc_resampled_time_coord(
+        resampled_ds.indexes[time_coord], freq
     )
-    resampled_ds[time_coord] = resampled_ds.get_index(time_coord) + time_offset
     resample_quantum = freq[-1]
     match resample_quantum:
         case "D":
@@ -965,6 +962,27 @@ def _resample(extracted_ds, config, model_profile):
     time_attrs.update(calc_time_coord_attrs(time_base, model_profile))
     logger.debug("resampled dataset metadata", resampled_ds=resampled_ds)
     return resampled_ds
+
+
+def _calc_resampled_time_coord(resampled_time_index, freq):
+    """
+    :param :py:class:`pandas.DatetimeIndex` resampled_time_index:
+    :param str freq:
+
+    :rtype:  :py:class:`pandas.DatetimeIndex`
+    """
+    if not freq.endswith(("M", "MS")):
+        offsets = pandas.tseries.frequencies.to_offset(freq) / 2
+        return resampled_time_index + offsets
+    offsets = [
+        pandas.tseries.frequencies.to_offset(
+            pandas.Timedelta(days=(timestamp.days_in_month / 2 - 1))
+        )
+        for timestamp in resampled_time_index
+    ]
+    return pandas.DatetimeIndex(
+        [timestamp + offsets[i] for i, timestamp in enumerate(resampled_time_index)]
+    )
 
 
 def calc_coord_encoding(ds, coord, config, model_profile):
