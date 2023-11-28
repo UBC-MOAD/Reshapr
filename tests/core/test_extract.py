@@ -661,6 +661,31 @@ class TestOpenDataset:
 
         xarray.testing.assert_equal(ds, source_dataset)
 
+    def test_open_dataset_parallel_read(self, source_dataset, log_output, tmp_path):
+        results_archive = tmp_path / "results_archive"
+        results_archive.mkdir()
+        source_dataset.to_netcdf(results_archive / "test_dataset.nc")
+        ds_paths = [results_archive / "test_dataset.nc"]
+        chunk_size = {
+            "time_counter": 4,
+            "deptht": 8,
+            "y": 9,
+            "x": 4,
+        }
+        extract_config = {
+            "parallel read": True,
+            "extract variables": [
+                "diatoms",
+            ],
+        }
+        ds = extract.open_dataset(ds_paths, chunk_size, extract_config)
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "opened dataset"
+        assert log_output.entries[0]["ds"] == ds
+
+        xarray.testing.assert_equal(ds, source_dataset)
+
     def test_exit_when_no_dataset_vars(self, source_dataset, log_output, tmp_path):
         """re: issue #37
 

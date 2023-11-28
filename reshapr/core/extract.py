@@ -458,6 +458,7 @@ def open_dataset(ds_paths, chunk_size, config):
         with xarray.open_dataset(ds_path, chunks=chunk_size) as ds:
             drop_vars.update(var for var in ds.data_vars)
     drop_vars -= extract_vars
+    parallel_read = config.get("parallel read", False)
     ds = xarray.open_mfdataset(
         ds_paths,
         chunks=chunk_size,
@@ -465,7 +466,7 @@ def open_dataset(ds_paths, chunk_size, config):
         coords="minimal",
         data_vars="minimal",
         drop_variables=drop_vars,
-        parallel=True,
+        parallel=parallel_read,
     )
     if not ds.data_vars:
         logger.error(
