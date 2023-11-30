@@ -56,6 +56,19 @@ def yyyymm01(arrow_date):
     return arrow_date.format("YYYYMM01")
 
 
+def yyyymm_end(arrow_date):
+    """Return the last day of the month for an Arrow date as a string of digits
+    formatted as `yyyymmdd`; e.g. 20220228.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as `yyyymmdd` digits.
+    :rtype: str
+    """
+    return arrow_date.shift(months=+1).replace(day=1).shift(days=-1).format("YYYYMMDD")
+
+
 def yyyy(arrow_date):
     """Return an Arrow date as a string of digits formatted as `yyyy`; e.g. 2022.
 
