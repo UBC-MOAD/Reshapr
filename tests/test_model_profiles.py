@@ -27,6 +27,7 @@ MODEL_PROFILES_DIR = Path(__file__).parent.parent / "model_profiles"
 MODEL_PROFILES = (
     Path("SalishSeaCast-201812.yaml"),
     Path("SalishSeaCast-201905.yaml"),
+    Path("SalishSeaCast-201905-month-avg-salish.yaml"),
     Path("SalishSeaCast-202111-salish.yaml"),
     Path("SalishSeaCast-202111-2xrez-salish.yaml"),
     Path("HRDPS-2.5km-operational.yaml"),
@@ -379,6 +380,87 @@ class TestSalishSeaCast201905:
 
         assert hour_datasets[var_group]["file pattern"] == file_pattern
         assert hour_datasets[var_group]["depth coord"] == depth_coord
+
+
+class TestSalishSeaCast201905MonthAvg:
+    """Tests of contents of SalishSeaCast-201905-month-avg-salish model profile YAML."""
+
+    def test_SalishSeaCast_201905_month_avg(self):
+        with (MODEL_PROFILES_DIR / "SalishSeaCast-201905-month-avg-salish.yaml").open(
+            "rt"
+        ) as f:
+            model_profile = yaml.safe_load(f)
+
+        assert model_profile["description"] == (
+            "SalishSeaCast version 201905 month-averaged NEMO model results "
+            "on storage accessible from salish. "
+            "2007-01-01 onward."
+        )
+        assert model_profile["time coord"]["name"] == "time"
+        assert model_profile["y coord"]["name"] == "gridY"
+        assert "units" not in model_profile["y coord"]
+        assert "comment" not in model_profile["y coord"]
+        assert model_profile["x coord"]["name"] == "gridX"
+        assert "units" not in model_profile["x coord"]
+        assert "comment" not in model_profile["x coord"]
+        expected_chunk_size = {
+            "time": 1,
+            "depth": 40,
+            "y": 898,
+            "x": 398,
+        }
+        assert model_profile["chunk size"] == expected_chunk_size
+        assert (
+            model_profile["geo ref dataset"]["path"]
+            == "https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetryV17-02"
+        )
+        assert model_profile["geo ref dataset"]["y coord"] == "gridY"
+        assert model_profile["geo ref dataset"]["x coord"] == "gridX"
+        assert model_profile["extraction time origin"] == arrow.get("2007-01-01").date()
+        assert (
+            model_profile["results archive"]["path"]
+            == "/results2/SalishSea/month-avg.201905/"
+        )
+
+    @pytest.mark.parametrize(
+        "var_group, file_pattern",
+        (
+            (
+                "auxiliary",
+                "SalishSeaCast_1m_carp_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
+                "biology",
+                "SalishSeaCast_1m_ptrc_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
+                "biology and chemistry rates",
+                "SalishSeaCast_1m_prod_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
+                "chemistry",
+                "SalishSeaCast_1m_carp_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
+                "grazing and mortality",
+                "SalishSeaCast_1m_dia2_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
+                "physics tracers",
+                "SalishSeaCast_1m_grid_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+        ),
+    )
+    def test_SalishSeaCast_201905_month_avg_datasets(self, var_group, file_pattern):
+        with (MODEL_PROFILES_DIR / "SalishSeaCast-201905-month-avg-salish.yaml").open(
+            "rt"
+        ) as f:
+            model_profile = yaml.safe_load(f)
+        month_datasets = model_profile["results archive"]["datasets"]["month"]
+
+        assert month_datasets["days per file"] == "month"
+        assert month_datasets[var_group]["file pattern"] == file_pattern
+        assert month_datasets[var_group]["depth coord"] == "depth"
 
 
 class TestSalishSeaCast202111:

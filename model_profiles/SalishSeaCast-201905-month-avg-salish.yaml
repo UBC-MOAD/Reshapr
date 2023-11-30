@@ -1,0 +1,51 @@
+description: SalishSeaCast version 201905 month-averaged NEMO model results
+             on storage accessible from salish.
+             2007-01-01 onward.
+
+time coord:
+  name: time
+y coord:
+  name: gridY
+x coord:
+  name: gridX
+
+# Chunking scheme used for the netCDF4 files
+# Note that coordinate names (keys) are conceptual here.
+# They are replaced with actual coordinate names in files in the code;
+# e.g. time is replaced by time_counter for dataset loading
+chunk size:
+  time: 1
+  depth: 40
+  y: 898
+  x: 398
+
+geo ref dataset:
+  path: https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetryV17-02
+  y coord: gridY
+  x coord: gridX
+
+extraction time origin: 2007-01-01
+
+results archive:
+  path: /results2/SalishSea/month-avg.201905/
+  datasets:
+    month:
+      days per file: "month"
+      auxiliary:
+        file pattern: "SalishSeaCast_1m_carp_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      biology:
+        file pattern: "SalishSeaCast_1m_ptrc_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      biology and chemistry rates:
+        file pattern: "SalishSeaCast_1m_prod_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      chemistry:
+        file pattern: "SalishSeaCast_1m_carp_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      grazing and mortality:
+        file pattern: "SalishSeaCast_1m_dia2_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      physics tracers:
+        file pattern: "SalishSeaCast_1m_grid_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth

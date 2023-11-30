@@ -60,6 +60,7 @@ class TestBasicInfo:
         expected = {
             "SalishSeaCast-201812.yaml",
             "SalishSeaCast-201905.yaml",
+            "SalishSeaCast-201905-month-avg-salish.yaml",
             "SalishSeaCast-202111-salish.yaml",
             "SalishSeaCast-202111-2xrez-salish.yaml",
             "HRDPS-2.5km-GEMLAM-22sep11onward.yaml",
