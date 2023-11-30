@@ -43,6 +43,19 @@ def yyyymmdd(arrow_date):
     return arrow_date.format("YYYYMMDD")
 
 
+def yyyymm01(arrow_date):
+    """Return the first day of the month for an Arrow date as a string of digits
+    formatted as `yyyymm01`; e.g. 20220201.
+
+    :param arrow_date: Date/time to format.
+    :type arrow_date: :py:class:`arrow.arrow.Arrow`
+
+    :return: Date formatted as `yyyymm01` digits.
+    :rtype: str
+    """
+    return arrow_date.format("YYYYMM01")
+
+
 def yyyy(arrow_date):
     """Return an Arrow date as a string of digits formatted as `yyyy`; e.g. 2022.
 

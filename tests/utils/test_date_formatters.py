@@ -40,6 +40,15 @@ class Test_yyyymmdd:
         assert yyyymmdd == "20220207"
 
 
+class Test_yyyymm01:
+    """Unit test for yyyymm01() function."""
+
+    def test_yyyymm01(self):
+        yyyymm01 = date_formatters.yyyymm01(arrow.get("2023-11-29"))
+
+        assert yyyymm01 == "20231101"
+
+
 class Test_yyyy:
     """Unit test for yyyy() function."""
 

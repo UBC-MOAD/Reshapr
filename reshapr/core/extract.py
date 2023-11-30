@@ -309,6 +309,7 @@ def calc_ds_paths(config, model_profile):
             nc_files_pattern.format(
                 ddmmmyy=date_formatters.ddmmmyy(day),
                 yyyymmdd=date_formatters.yyyymmdd(day),
+                yyyymm01=date_formatters.yyyymm01(day),
                 yyyy=date_formatters.yyyy(day),
                 nemo_yyyymm=date_formatters.nemo_yyyymm(day),
                 nemo_yyyymmdd=date_formatters.nemo_yyyymmdd(day),
