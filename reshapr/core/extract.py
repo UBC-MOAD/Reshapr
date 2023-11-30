@@ -290,12 +290,14 @@ def calc_ds_paths(config, model_profile):
     time_base = config["dataset"]["time base"]
     vars_group = config["dataset"]["variables group"]
     datasets = model_profile["results archive"]["datasets"]
+    days_per_file = datasets[time_base].get("days per file", 1)
     nc_files_pattern = datasets[time_base][vars_group]["file pattern"]
     log = logger.bind(
         results_archive_path=os.fspath(results_archive_path),
         time_base=time_base,
         vars_group=vars_group,
         nc_files_pattern=os.fspath(nc_files_pattern),
+        days_per_file=days_per_file,
     )
     start_date = arrow.get(config["start date"])
     end_date = arrow.get(config["end date"])
@@ -303,7 +305,11 @@ def calc_ds_paths(config, model_profile):
         start_date=start_date.format("YYYY-MM-DD"),
         end_date=end_date.format("YYYY-MM-DD"),
     )
-    date_range = arrow.Arrow.range("days", start_date, end_date)
+    date_range = arrow.Arrow.range(
+        frame=("months" if days_per_file == "month" else "days"),
+        start=start_date,
+        end=end_date,
+    )
     ds_paths = [
         results_archive_path.joinpath(
             nc_files_pattern.format(

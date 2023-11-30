@@ -222,6 +222,20 @@ class TestModelProfileInfo:
         )
 
     @pytest.mark.parametrize(
+        "model_profile",
+        (
+            "SalishSeaCast-202111-salish",
+            "SalishSeaCast-201905-month-avg-salish.yaml",
+        ),
+    )
+    def test_days_per_file_excluded(self, model_profile, capsys):
+        info.info(model_profile, time_interval="", vars_group="")
+
+        stdout_lines = capsys.readouterr().out.splitlines()
+        stripped_stdout_lines = set(line.strip() for line in stdout_lines)
+        assert "days per file" not in stripped_stdout_lines
+
+    @pytest.mark.parametrize(
         "time_interval, vars_group",
         (
             ("hour", ""),

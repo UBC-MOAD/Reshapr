@@ -365,7 +365,7 @@ class TestLoadModelProfile:
 class TestCalcDsPaths:
     """Unit tests for calc_ds_paths() function."""
 
-    def test_SalishSeaCast_ds_paths(self, log_output):
+    def test_SalishSeaCast_ds_paths_day_per_file(self, log_output):
         extract_config = {
             "dataset": {
                 "time base": "day",
@@ -408,8 +408,59 @@ class TestCalcDsPaths:
             log_output.entries[0]["nc_files_pattern"]
             == "{ddmmmyy}/SalishSea_1d_{yyyymmdd}_{yyyymmdd}_ptrc_T.nc"
         )
+        assert log_output.entries[0]["days_per_file"] == 1
         assert log_output.entries[0]["start_date"] == "2015-01-01"
         assert log_output.entries[0]["end_date"] == "2015-01-02"
+        assert log_output.entries[0]["n_datasets"] == 2
+        assert log_output.entries[0]["event"] == "collected dataset paths"
+
+    def test_SalishSeaCast_ds_paths_month_per_file(self, log_output):
+        extract_config = {
+            "dataset": {
+                "time base": "month",
+                "variables group": "biology",
+            },
+            "start date": datetime.date(2023, 11, 1),
+            "end date": datetime.date(2023, 12, 31),
+        }
+        model_profile = {
+            "results archive": {
+                "path": "/results2/SalishSea/month-avg.202111/",
+                "datasets": {
+                    "month": {
+                        "days per file": "month",
+                        "biology": {
+                            "file pattern": "SalishSeaCast_1m_biol_T_{yyyymm01}_{yyyymm_end}.nc"
+                        },
+                    },
+                },
+            },
+        }
+
+        ds_paths = extract.calc_ds_paths(extract_config, model_profile)
+
+        expected_paths = [
+            Path(
+                "/results2/SalishSea/month-avg.202111/SalishSeaCast_1m_biol_T_20231101_20231130.nc"
+            ),
+            Path(
+                "/results2/SalishSea/month-avg.202111/SalishSeaCast_1m_biol_T_20231201_20231231.nc"
+            ),
+        ]
+        assert ds_paths == expected_paths
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        expected = os.fspath(Path(model_profile["results archive"]["path"]))
+        assert log_output.entries[0]["results_archive_path"] == expected
+        assert log_output.entries[0]["time_base"] == "month"
+        assert log_output.entries[0]["vars_group"] == "biology"
+        assert (
+            log_output.entries[0]["nc_files_pattern"]
+            == "SalishSeaCast_1m_biol_T_{yyyymm01}_{yyyymm_end}.nc"
+        )
+        assert log_output.entries[0]["days_per_file"] == "month"
+        assert log_output.entries[0]["start_date"] == "2023-11-01"
+        assert log_output.entries[0]["end_date"] == "2023-12-31"
         assert log_output.entries[0]["n_datasets"] == 2
         assert log_output.entries[0]["event"] == "collected dataset paths"
 
@@ -447,6 +498,7 @@ class TestCalcDsPaths:
         assert log_output.entries[0]["time_base"] == "hour"
         assert log_output.entries[0]["vars_group"] == "surface fields"
         assert log_output.entries[0]["nc_files_pattern"] == "ops_{nemo_yyyymmdd}.nc"
+        assert log_output.entries[0]["days_per_file"] == 1
         assert log_output.entries[0]["start_date"] == "2015-01-01"
         assert log_output.entries[0]["end_date"] == "2015-01-02"
         assert log_output.entries[0]["n_datasets"] == 2

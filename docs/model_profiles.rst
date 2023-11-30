@@ -400,10 +400,30 @@ Stanza items:
 
 :py:attr:`<time base>` (Required)
    The sub-stanza key for the time base groups of model dataset variable groups.
-   *Must be either* ``day`` *or* ``hour``.
+   *Must be one of* ``day`` *or* ``hour`` *or* ``month``.
    The time base keys are used as the value for the ``time base`` item
-   in the :ref:`ReshaprExtractYAMLFile` as part of the specifation of which dataset
+   in the :ref:`ReshaprExtractYAMLFile` as part of the specification of which dataset
    to extract variables from.
+
+:py:attr:`days per file` (Optional)
+   An integer or string that specifies the number of days of model results that are stored
+   in each file of the dataset.
+   At present the only accepted values are ``1`` and ``month``.
+   Example:
+
+   .. code-block:: yaml
+
+      results archive:
+        path: /results2/SalishSea/month-avg.202111/
+        datasets:
+          month:
+            days per file: month
+            biology:
+              file pattern: "SalishSeaCast_1m_biol_T_{yyyymm01}_{yyyymm_end}.nc"
+              depth coord: depth
+
+   If ``days per file`` is not provided,
+   its value defaults to ``1``.
 
 :py:attr:`<variables group>` (Required)
    The sub-stanza key(s) for the collections of model variables in particular
