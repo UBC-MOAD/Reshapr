@@ -1,0 +1,47 @@
+description: SalishSeaCast version 202111 month-averaged NEMO model results
+             on storage accessible from salish.
+             2007-01-01 onward.
+
+time coord:
+  name: time
+y coord:
+  name: gridY
+x coord:
+  name: gridX
+
+# Chunking scheme used for the netCDF4 files
+# Note that coordinate names (keys) are conceptual here.
+# They are replaced with actual coordinate names in files in the code;
+# e.g. time is replaced by time_counter for dataset loading
+chunk size:
+  time: 1
+  depth: 40
+  y: 898
+  x: 398
+
+geo ref dataset:
+  # TODO: update to ERDDAP URL when bathymetry dataset is published there
+  path: /results2/SalishSea/nowcast-green.202111/01jan07/SalishSea_1h_20070101_20070101_grid_T.nc
+  # TODO: Update coordinate names when bathymetry dataset is published on ERDDAP
+  y coord: y
+  x coord: x
+  # TODO: Drop unnecessary lon/lat var names when bathymetry dataset is published on ERDDAP
+  longitude var: nav_lon
+  latitude var: nav_lat
+
+extraction time origin: 2007-01-01
+
+results archive:
+  path: /results2/SalishSea/month-avg.202111/
+  datasets:
+    month:
+      days per file: "month"
+      biology:
+        file pattern: "SalishSeaCast_1m_biol_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      chemistry:
+        file pattern: "SalishSeaCast_1m_chem_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      physics tracers:
+        file pattern: "SalishSeaCast_1m_grid_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth

@@ -174,7 +174,8 @@ def _model_profile_info(profile, time_interval, vars_group, console):
     for time_base in datasets:
         console.print(f"  [magenta]{time_base}")
         for vars_group in datasets[time_base]:
-            console.print(f"    [cyan]{vars_group}")
+            if vars_group != "days per file":
+                console.print(f"    [cyan]{vars_group}")
 
     console.print(
         "\nPlease use [blue]reshapr info model-profile time-interval variable-group[/blue]\n"

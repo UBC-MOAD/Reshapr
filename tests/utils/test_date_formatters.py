@@ -18,6 +18,7 @@
 """Tests for date formatter functions.
 """
 import arrow
+import pytest
 
 from reshapr.utils import date_formatters
 
@@ -38,6 +39,34 @@ class Test_yyyymmdd:
         yyyymmdd = date_formatters.yyyymmdd(arrow.get("2022-02-07"))
 
         assert yyyymmdd == "20220207"
+
+
+class Test_yyyymm01:
+    """Unit test for yyyymm01() function."""
+
+    def test_yyyymm01(self):
+        yyyymm01 = date_formatters.yyyymm01(arrow.get("2023-11-29"))
+
+        assert yyyymm01 == "20231101"
+
+
+@pytest.mark.parametrize(
+    "day, expected",
+    (
+        ("2023-11-29", "20231130"),
+        ("2023-11-01", "20231130"),
+        ("2023-11-30", "20231130"),
+        ("2023-02-15", "20230228"),
+        ("2024-02-15", "20240229"),
+    ),
+)
+class Test_yyyymm_end:
+    """Unit test for yyyymm_end() function."""
+
+    def test_yyyymm_end(self, day, expected):
+        yyyymm_end = date_formatters.yyyymm_end(arrow.get(day))
+
+        assert yyyymm_end == expected
 
 
 class Test_yyyy:
