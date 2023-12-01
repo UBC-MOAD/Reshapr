@@ -126,7 +126,7 @@ class TestCliExtract:
         model_profile_yaml.write_text(
             textwrap.dedent(
                 f"""\
-                description: test model profile
+                description: model profile for test
 
                 time coord:
                   name: time_counter
@@ -182,6 +182,145 @@ class TestCliExtract:
         extract.cli_extract(config_yaml, "", "")
 
         assert (tmp_path / "SalishSeaCast_1h_diatoms_20150401_20150401.nc").exists()
+
+    def test_cli_extract_with_resampling(self, tmp_path):
+        test_ds = xarray.Dataset(
+            coords={
+                "time_counter": pandas.date_range(
+                    "2015-04-01",
+                    periods=24,
+                    freq=pandas.tseries.offsets.DateOffset(hours=1),
+                ),
+                "deptht": numpy.arange(0, 4, 0.5),
+                "y": numpy.arange(9),
+                "x": numpy.arange(4),
+            },
+            data_vars={
+                "diatoms": xarray.DataArray(
+                    name="diatoms",
+                    data=numpy.ones((24, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time_counter": pandas.date_range(
+                            "2015-04-01",
+                            periods=24,
+                            freq=pandas.tseries.offsets.DateOffset(hours=1),
+                        ),
+                        "deptht": numpy.arange(0, 4, 0.5),
+                        "y": numpy.arange(9),
+                        "x": numpy.arange(4),
+                    },
+                    attrs={
+                        "standard_name": "mole_concentration_of_diatoms_expressed_as_nitrogen_in_sea_water",
+                        "long_name": "Diatoms Concentration",
+                        "units": "mmol m-3",
+                    },
+                ),
+            },
+            attrs={
+                "name": "SalishSea_1h_20150401_20150401",
+                "description": "biology",
+            },
+        )
+        encoding = {
+            "time_counter": {
+                "dtype": numpy.single,
+                "units": "days since 2007-01-01 12:00:00",
+                "chunksizes": (24,),
+                "zlib": True,
+                "_FillValue": None,
+            },
+            "deptht": {
+                "dtype": numpy.single,
+                "chunksizes": (numpy.arange(0, 4, 0.5).size,),
+                "zlib": True,
+            },
+            "y": {
+                "dtype": int,
+                "chunksizes": (numpy.arange(9).size,),
+                "zlib": True,
+            },
+            "x": {
+                "dtype": int,
+                "chunksizes": (numpy.arange(4).size,),
+                "zlib": True,
+            },
+            "diatoms": {
+                "dtype": numpy.single,
+                "chunksizes": (24, 8, 9, 4),
+                "zlib": True,
+            },
+        }
+        test_ds.to_netcdf(
+            tmp_path / "SalishSea_1h_20150401_20150401_biol_T.nc",
+            format="NETCDF4",
+            encoding=encoding,
+            unlimited_dims="time_counter",
+        )
+
+        model_profile_yaml = tmp_path / "test_profile.yaml"
+        model_profile_yaml.write_text(
+            textwrap.dedent(
+                f"""\
+                description: model profile for test
+
+                time coord:
+                  name: time_counter
+                y coord:
+                  name: y
+                x coord:
+                  name: x
+
+                chunk size:
+                  time: 24
+                  depth: 8
+                  y: 9
+                  x: 4
+
+                extraction time origin: 2007-01-01
+
+                results archive:
+                  path: {tmp_path}
+                  datasets:
+                    hour:
+                      biology:
+                        file pattern: "SalishSea_1h_{{yyyymmdd}}_{{yyyymmdd}}_biol_T.nc"
+                        depth coord: deptht
+                """
+            )
+        )
+
+        config_yaml = tmp_path / "test_extract_config.yaml"
+        config_yaml.write_text(
+            textwrap.dedent(
+                f"""\
+                dataset:
+                  model profile: {tmp_path / "test_profile.yaml"}
+                  time base: hour
+                  variables group: biology
+
+                dask cluster: unit_test_cluster.yaml
+
+                start date: 2015-04-01
+                end date: 2015-04-01
+
+                extract variables:
+                  - diatoms
+
+                resample:
+                  time interval: 1D
+                  aggregation: mean
+
+                extracted dataset:
+                  name: SalishSeaCast_1d_diatoms
+                  description: Day-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
+                  dest dir: {tmp_path}
+                """
+            )
+        )
+
+        extract.cli_extract(config_yaml, "", "")
+
+        assert (tmp_path / "SalishSeaCast_1d_diatoms_20150401_20150401.nc").exists()
 
 
 class TestLoadConfig:
