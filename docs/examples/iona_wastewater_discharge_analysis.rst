@@ -327,11 +327,9 @@ Here is the contents of the :file:`SalishSeaCast-202111-wastewater-salish.yaml` 
       x: 398
 
     geo ref dataset:
-      path: /results2/SalishSea/nowcast-green.202111/01jan07/SalishSea_1h_20070101_20070101_grid_T.nc
-      y coord: y
-      x coord: x
-      longitude var: nav_lon
-      latitude var: nav_lat
+      path: https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetryV21-08
+      y coord: gridY
+      x coord: gridX
 
     extraction time origin: 2007-01-01
 
