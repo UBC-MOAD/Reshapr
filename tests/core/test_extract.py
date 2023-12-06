@@ -48,6 +48,49 @@ class TestCliExtract:
         )
         assert log_output.entries[0]["event"] == "config file not found"
 
+    def test_climatology_resample_conflict(self, log_output, tmp_path):
+        config_yaml = tmp_path / "test_extract_config.yaml"
+        config_yaml.write_text(
+            textwrap.dedent(
+                f"""\
+                dataset:
+                  model profile: {tmp_path / "test_profile.yaml"}
+                  time base: hour
+                  variables group: biology
+
+                dask cluster: unit_test_cluster.yaml
+
+                start date: 2015-04-01
+                end date: 2015-04-01
+
+                extract variables:
+                  - diatoms
+
+                resample:
+                  time interval: 1D
+
+                climatology:
+                  group by: 1D
+
+                extracted dataset:
+                  name: SalishSeaCast_1d_diatoms
+                  description: Day-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
+                  dest dir: {tmp_path}
+                """
+            )
+        )
+
+        with pytest.raises(SystemExit) as exc_info:
+            extract.cli_extract(config_yaml, "", "")
+
+        assert exc_info.value.code == 2
+        assert log_output.entries[1]["log_level"] == "error"
+        assert log_output.entries[1]["config_file"] == os.fspath(config_yaml)
+        expected = (
+            "`resample` and `climatology` in the same extraction is not supported"
+        )
+        assert log_output.entries[1]["event"] == expected
+
     def test_cli_extract(self, tmp_path):
         test_ds = xarray.Dataset(
             coords={

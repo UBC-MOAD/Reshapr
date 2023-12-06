@@ -49,6 +49,10 @@ def api_extract_netcdf(extract_config, extract_config_yaml):
     :return: File path and name that netCDF4 file was written to.
     :rtype: :py:class:`pathlib.Path`
     """
+    if "climatology" in extract_config and "resample" in extract_config:
+        msg = "`resample` and `climatology` in the same extraction is not supported"
+        logger.error(msg, config_file=os.fspath(extract_config_yaml))
+        raise ValueError(msg)
     model_profile = _load_model_profile(
         Path(extract_config["dataset"]["model profile"])
     )
@@ -98,6 +102,12 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
         config = load_config(config_yaml, cli_start_date, cli_end_date)
     except FileNotFoundError:
         logger.error("config file not found", config_file=os.fspath(config_yaml))
+        raise SystemExit(2)
+    if "climatology" in config and "resample" in config:
+        logger.error(
+            "`resample` and `climatology` in the same extraction is not supported",
+            config_file=os.fspath(config_yaml),
+        )
         raise SystemExit(2)
     model_profile = _load_model_profile(Path(config["dataset"]["model profile"]))
     ds_paths = calc_ds_paths(config, model_profile)
