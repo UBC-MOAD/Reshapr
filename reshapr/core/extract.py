@@ -503,12 +503,12 @@ def calc_output_coords(source_dataset, config, model_profile):
     The returned coordinates container has the following mapping of attributes to
     coordinate names:
 
-    * :kbd:`time`: :kbd:`time`
-    * :kbd:`depth`: :kbd:`depth`
-    * :kbd:`y_index`: :kbd:`gridY`
-    * :kbd:`x_index`: :kbd:`gridX`
+    * ``time``: ``time``
+    * ``depth``: ``depth``
+    * ``y_index``: ``gridY``
+    * ``x_index``: ``gridX``
 
-    except if :kbd:`extracted dataset: use model coords: True` is set in the
+    except if ``extracted dataset: use model coords: True`` is set in the
     extraction configuration, in which case the output coordinates will be the same as the
     model coordinates.
 
