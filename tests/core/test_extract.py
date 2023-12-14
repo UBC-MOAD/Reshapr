@@ -3473,6 +3473,39 @@ class TestCalcVarEncoding:
         }
         assert encoding == expected
 
+    def test_4d_var_climatology(self):
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {"climatology": {"group by": "month"}, "extracted dataset": {}}
+        model_profile = {
+            "time coord": {
+                "name": "time",
+            },
+        }
+        var = xarray.DataArray(
+            name="diatoms",
+            data=numpy.empty((12, 8, 9, 4), dtype=numpy.single),
+            coords={
+                "month": numpy.arange(12),
+                "depth": numpy.arange(0, 4, 0.5),
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
+            },
+        )
+
+        encoding = extract.calc_var_encoding(var, output_coords, config, model_profile)
+
+        expected = {
+            "dtype": numpy.single,
+            "chunksizes": (1, 8, 9, 4),
+            "zlib": True,
+        }
+        assert encoding == expected
+
     @pytest.mark.parametrize("deflate", (True, False))
     def test_2d_var(self, deflate):
         output_coords = {

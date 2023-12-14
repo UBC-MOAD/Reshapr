@@ -1076,18 +1076,21 @@ def calc_var_encoding(var, output_coords, config, model_profile):
     :return: netCDF4 encoding for coordinate
     :rtype: dict
     """
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
+    time_coord = "time" if not use_model_coords else model_profile["time coord"]["name"]
+    non_time_coords = [name for name in output_coords if name != time_coord]
+    if "climatology" in config:
+        time_coord = config["climatology"]["group by"]
     chunksizes = []
-    for name in output_coords:
+    if time_coord in var.coords:
+        chunksizes = [1]
+    for name in non_time_coords:
         try:
             chunksizes.append(var.coords[name].size)
         except KeyError:
             # Handle variables that have fewer than the full set of output coordinates;
             # e.g. lons and lats that only have gridY and gridX coordinates
             pass
-    use_model_coords = config["extracted dataset"].get("use model coords", False)
-    time_coord = "time" if not use_model_coords else model_profile["time coord"]["name"]
-    if time_coord in var.coords:
-        chunksizes[0] = 1
     return {
         "dtype": numpy.single,
         "chunksizes": tuple(chunksizes),
