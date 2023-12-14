@@ -3722,6 +3722,39 @@ class TestPrepNetcdfWrite:
         assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
         assert log_output.entries[0]["nc_format"] == "NETCDF4"
 
+    def test_climatology_no_unlimited_dim(self, log_output, tmp_path):
+        extracted_ds = xarray.Dataset(
+            attrs={"name": "test"},
+        )
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        dest_dir = tmp_path / "dest_dir"
+        dest_dir.mkdir()
+        config = {
+            "climatology": {
+                "group by": "month",
+            },
+            "extracted dataset": {
+                "dest dir": os.fspath(dest_dir),
+                "name": f"{extracted_ds.name}.nc",
+            },
+        }
+        model_profile = {}
+
+        _, _, _, unlimited_dim = extract.prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+
+        assert unlimited_dim is None
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
+        assert log_output.entries[0]["unlimited_dim"] is None
+
     def test_unlimited_dim_time(self, log_output, tmp_path):
         extracted_ds = xarray.Dataset(
             attrs={"name": "test"},
@@ -3750,7 +3783,7 @@ class TestPrepNetcdfWrite:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
-        assert log_output.entries[0]["nc_format"] == "NETCDF4"
+        assert log_output.entries[0]["unlimited_dim"] == "time"
 
     def test_unlimited_dim_model_coord(self, log_output, tmp_path):
         extracted_ds = xarray.Dataset(
@@ -3785,4 +3818,4 @@ class TestPrepNetcdfWrite:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
-        assert log_output.entries[0]["nc_format"] == "NETCDF4"
+        assert log_output.entries[0]["unlimited_dim"] == "time_counter"

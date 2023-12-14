@@ -1114,12 +1114,12 @@ def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
     :param dict model_profile: Model profile dictionary.
 
     :return: Tuple of parameters for write_netcdf();
-             :kbd:`nc_path`: File path and name to write netCDF4 file to,
-             :kbd:`encoding`: Encoding dict to use for netCDF4 file write,
-             :kbd:`nc_format`: Format to use for netCDF4 file write.
-                               Defaults to kbd:`NETCDF4`.
-             :kbd:`unlimited_dim`: Name of the time coordinate to set as the
-                                    unlimited dimension for netCDF4 file write.
+             ``nc_path``: File path and name to write netCDF4 file to,
+             ``encoding``: Encoding dict to use for netCDF4 file write,
+             ``nc_format``: Format to use for netCDF4 file write.
+                            Default is ``NETCDF4``.
+             ``unlimited_dim``: Name of the time coordinate to set as the
+                                unlimited dimension for netCDF4 file write.
     :rtype: 4-tuple
     """
     encoding = {}
@@ -1134,9 +1134,13 @@ def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
     nc_path = Path(config["extracted dataset"]["dest dir"]) / f"{extracted_ds.name}.nc"
     nc_format = config["extracted dataset"].get("format", "NETCDF4")
     use_model_coords = config["extracted dataset"].get("use model coords", False)
-    unlimited_dim = (
-        "time" if not use_model_coords else model_profile["time coord"]["name"]
-    )
+    if "climatology" in config:
+        # An unlimited time dimension doesn't make sense for climatology datasets
+        unlimited_dim = None
+    else:
+        unlimited_dim = (
+            "time" if not use_model_coords else model_profile["time coord"]["name"]
+        )
     logger.debug(
         "prepared netCDF4 write params",
         nc_path=nc_path,
@@ -1168,12 +1172,19 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format, unlimited_dim):
     :param str unlimited_dim: Name of the time coordinate to set as the unlimited dimension for
                               netCDF4 file write.
     """
-    extracted_ds.to_netcdf(
-        nc_path,
-        format=nc_format,
-        encoding=encoding,
-        unlimited_dims=unlimited_dim,
-    )
+    if unlimited_dim is None:
+        extracted_ds.to_netcdf(
+            nc_path,
+            format=nc_format,
+            encoding=encoding,
+        )
+    else:
+        extracted_ds.to_netcdf(
+            nc_path,
+            format=nc_format,
+            encoding=encoding,
+            unlimited_dims=unlimited_dim,
+        )
     logger.info("wrote netCDF4 file", nc_path=os.fspath(nc_path))
 
 
