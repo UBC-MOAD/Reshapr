@@ -1039,6 +1039,13 @@ def calc_coord_encoding(ds, coord, config, model_profile):
                 "zlib": config["extracted dataset"].get("deflate", True),
                 "_FillValue": None,
             }
+        case "month" | "day":
+            # climatology time coordinates
+            return {
+                "dtype": int,
+                "chunksizes": (1,),
+                "zlib": config["extracted dataset"].get("deflate", True),
+            }
         case "depth" | "deptht" | "depthu" | "depthv" | "depthw":
             return {
                 "dtype": numpy.single,

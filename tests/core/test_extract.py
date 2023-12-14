@@ -3245,6 +3245,36 @@ class TestCalcCoordEncoding:
         assert encoding == expected
 
     @pytest.mark.parametrize(
+        "time_base, coord_name, deflate",
+        (
+            ("month", "month", True),
+            ("month", "month", False),
+            ("day", "day", True),
+            ("day", "day", False),
+        ),
+    )
+    def test_climatology_time_coord(self, time_base, coord_name, deflate):
+        dataset = xarray.Dataset()
+        config = {
+            "dataset": {
+                "time base": time_base,
+            },
+            "extracted dataset": {"deflate": deflate},
+        }
+        model_profile = {}
+
+        encoding = extract.calc_coord_encoding(
+            dataset, coord_name, config, model_profile
+        )
+
+        expected = {
+            "dtype": int,
+            "chunksizes": (1,),
+            "zlib": deflate,
+        }
+        assert encoding == expected
+
+    @pytest.mark.parametrize(
         "coord_name, deflate",
         (
             ("depth", True),
