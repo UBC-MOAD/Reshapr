@@ -3181,6 +3181,59 @@ class TestCalcResampledTimeCoord:
         pandas.testing.assert_index_equal(resampled_time_coord, expected)
 
 
+class TestCalcClimatology:
+    """Unit test for _calc_climatology() function."""
+
+    def test_calc_climatology(self, log_output):
+        extracted_ds = xarray.Dataset(
+            coords={
+                "time": pandas.date_range(
+                    "2023-01-15",
+                    periods=12,
+                    freq=pandas.tseries.offsets.DateOffset(months=1),
+                ),
+                "depth": numpy.arange(0, 4, 0.5),
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
+            },
+            data_vars={
+                "diatoms": xarray.DataArray(
+                    name="diatoms",
+                    data=numpy.empty((12, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time": pandas.date_range(
+                            "2023-01-15",
+                            periods=12,
+                            freq=pandas.tseries.offsets.DateOffset(months=1),
+                        ),
+                        "depth": numpy.arange(0, 4, 0.5),
+                        "gridY": numpy.arange(9),
+                        "gridX": numpy.arange(4),
+                    },
+                )
+            },
+            attrs={
+                "name": "test_20230101_20231231",
+                "description": "Month-averaged diatoms biomass extracted from SalishSeaCast v202111 hindcast",
+            },
+        )
+        config = {"climatology": {"group by": "month"}, "extracted dataset": {}}
+        model_profile = {"time coord": "time"}
+
+        climatology_ds = extract._calc_climatology(extracted_ds, config, model_profile)
+
+        assert log_output.entries[0]["log_level"] == "info"
+        assert log_output.entries[0]["event"] == "calculating climatology"
+        assert log_output.entries[0]["groupby"] == "month"
+        assert log_output.entries[0]["aggregation"] == "mean"
+
+        assert log_output.entries[1]["log_level"] == "debug"
+        assert log_output.entries[1]["event"] == "climatology dataset metadata"
+        assert log_output.entries[1]["climatology_ds"] == climatology_ds
+
+        assert set(climatology_ds.coords) == {"month", "depth", "gridY", "gridX"}
+
+
 class TestCalcCoordEncoding:
     """Unit tests for calc_coord_encoding() function."""
 

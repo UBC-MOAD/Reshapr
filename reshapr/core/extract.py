@@ -74,6 +74,10 @@ def api_extract_netcdf(extract_config, extract_config_yaml):
         )
         if "resample" in extract_config:
             extracted_ds = _resample(extracted_ds, extract_config, model_profile)
+        if "climatology" in extract_config:
+            extracted_ds = _calc_climatology(
+                extracted_ds, extract_config, model_profile
+            )
         nc_path, encoding, nc_format, unlimited_dim = prep_netcdf_write(
             extracted_ds, output_coords, extract_config, model_profile
         )
@@ -128,6 +132,8 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
         )
         if "resample" in config:
             extracted_ds = _resample(extracted_ds, config, model_profile)
+        if "climatology" in config:
+            extracted_ds = _calc_climatology(extracted_ds, config, model_profile)
         nc_path, encoding, nc_format, unlimited_dim = prep_netcdf_write(
             extracted_ds, output_coords, config, model_profile
         )
@@ -1002,6 +1008,38 @@ def _calc_resampled_time_coord(resampled_time_index, freq):
     return pandas.DatetimeIndex(
         [timestamp + offsets[i] for i, timestamp in enumerate(resampled_time_index)]
     )
+
+
+def _calc_climatology(extracted_ds, config, model_profile):
+    """
+    :param :py:class:`xarray.Dataset` extracted_ds: Dataset to calculate climatology for.
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Calculated climatology dataset.
+    :rtype: :py:class:`xarray.Dataset`
+    """
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
+    time_coord_name = (
+        "time" if not use_model_coords else model_profile["time coord"]["name"]
+    )
+    climatology_time_group = config["climatology"]["group by"]
+    aggregation = config["climatology"].get("aggregation", "mean")
+    logger.info(
+        "calculating climatology",
+        groupby=climatology_time_group,
+        aggregation=aggregation,
+    )
+    grouped_ds = extracted_ds.groupby(f"{time_coord_name}.{climatology_time_group}")
+    climatology_ds = getattr(grouped_ds, aggregation)(time_coord_name)
+    time_coord = getattr(climatology_ds, climatology_time_group)
+    time_coord.attrs["standard_name"] = climatology_time_group
+    time_coord.attrs["long_name"] = climatology_time_group.title()
+    time_coord.attrs["units"] = "count"
+    logger.debug("climatology dataset metadata", climatology_ds=climatology_ds)
+    return climatology_ds
 
 
 def calc_coord_encoding(ds, coord, config, model_profile):
