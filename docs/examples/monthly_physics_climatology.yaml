@@ -1,0 +1,27 @@
+# `reshapr extract` config to calculate monthly climatology of physics variables
+
+dataset:
+  model profile: SalishSeaCast-202111-month-avg-salish.yaml
+  time base: month
+  variables group: physics tracers
+
+dask cluster: salish_cluster.yaml
+
+start date: 2007-01-01
+end date: 2023-08-31
+
+extract variables:
+  - sossheig
+  - votemper
+  - vosaline
+  - sigma_theta
+  - e3t
+
+climatology:
+  group by: month
+  aggregation: mean
+
+extracted dataset:
+  name: SalishSeaCast_month_climatology_grid_T
+  description: Monthly climatology of physics variables extracted from SalishSeaCast v202111 hindcast
+  dest dir: /results2/SalishSea/month-avg.202111/
