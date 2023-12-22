@@ -48,6 +48,49 @@ class TestCliExtract:
         )
         assert log_output.entries[0]["event"] == "config file not found"
 
+    def test_climatology_resample_conflict(self, log_output, tmp_path):
+        config_yaml = tmp_path / "test_extract_config.yaml"
+        config_yaml.write_text(
+            textwrap.dedent(
+                f"""\
+                dataset:
+                  model profile: {tmp_path / "test_profile.yaml"}
+                  time base: hour
+                  variables group: biology
+
+                dask cluster: unit_test_cluster.yaml
+
+                start date: 2015-04-01
+                end date: 2015-04-01
+
+                extract variables:
+                  - diatoms
+
+                resample:
+                  time interval: 1D
+
+                climatology:
+                  group by: 1D
+
+                extracted dataset:
+                  name: SalishSeaCast_1d_diatoms
+                  description: Day-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
+                  dest dir: {tmp_path}
+                """
+            )
+        )
+
+        with pytest.raises(SystemExit) as exc_info:
+            extract.cli_extract(config_yaml, "", "")
+
+        assert exc_info.value.code == 2
+        assert log_output.entries[1]["log_level"] == "error"
+        assert log_output.entries[1]["config_file"] == os.fspath(config_yaml)
+        expected = (
+            "`resample` and `climatology` in the same extraction is not supported"
+        )
+        assert log_output.entries[1]["event"] == expected
+
     def test_cli_extract(self, tmp_path):
         test_ds = xarray.Dataset(
             coords={
@@ -3138,6 +3181,59 @@ class TestCalcResampledTimeCoord:
         pandas.testing.assert_index_equal(resampled_time_coord, expected)
 
 
+class TestCalcClimatology:
+    """Unit test for _calc_climatology() function."""
+
+    def test_calc_climatology(self, log_output):
+        extracted_ds = xarray.Dataset(
+            coords={
+                "time": pandas.date_range(
+                    "2023-01-15",
+                    periods=12,
+                    freq=pandas.tseries.offsets.DateOffset(months=1),
+                ),
+                "depth": numpy.arange(0, 4, 0.5),
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
+            },
+            data_vars={
+                "diatoms": xarray.DataArray(
+                    name="diatoms",
+                    data=numpy.empty((12, 8, 9, 4), dtype=numpy.single),
+                    coords={
+                        "time": pandas.date_range(
+                            "2023-01-15",
+                            periods=12,
+                            freq=pandas.tseries.offsets.DateOffset(months=1),
+                        ),
+                        "depth": numpy.arange(0, 4, 0.5),
+                        "gridY": numpy.arange(9),
+                        "gridX": numpy.arange(4),
+                    },
+                )
+            },
+            attrs={
+                "name": "test_20230101_20231231",
+                "description": "Month-averaged diatoms biomass extracted from SalishSeaCast v202111 hindcast",
+            },
+        )
+        config = {"climatology": {"group by": "month"}, "extracted dataset": {}}
+        model_profile = {"time coord": "time"}
+
+        climatology_ds = extract._calc_climatology(extracted_ds, config, model_profile)
+
+        assert log_output.entries[0]["log_level"] == "info"
+        assert log_output.entries[0]["event"] == "calculating climatology"
+        assert log_output.entries[0]["groupby"] == "month"
+        assert log_output.entries[0]["aggregation"] == "mean"
+
+        assert log_output.entries[1]["log_level"] == "debug"
+        assert log_output.entries[1]["event"] == "climatology dataset metadata"
+        assert log_output.entries[1]["climatology_ds"] == climatology_ds
+
+        assert set(climatology_ds.coords) == {"month", "depth", "gridY", "gridX"}
+
+
 class TestCalcCoordEncoding:
     """Unit tests for calc_coord_encoding() function."""
 
@@ -3198,6 +3294,36 @@ class TestCalcCoordEncoding:
             "chunksizes": (1,),
             "zlib": False,
             "_FillValue": None,
+        }
+        assert encoding == expected
+
+    @pytest.mark.parametrize(
+        "time_base, coord_name, deflate",
+        (
+            ("month", "month", True),
+            ("month", "month", False),
+            ("day", "day", True),
+            ("day", "day", False),
+        ),
+    )
+    def test_climatology_time_coord(self, time_base, coord_name, deflate):
+        dataset = xarray.Dataset()
+        config = {
+            "dataset": {
+                "time base": time_base,
+            },
+            "extracted dataset": {"deflate": deflate},
+        }
+        model_profile = {}
+
+        encoding = extract.calc_coord_encoding(
+            dataset, coord_name, config, model_profile
+        )
+
+        expected = {
+            "dtype": int,
+            "chunksizes": (1,),
+            "zlib": deflate,
         }
         assert encoding == expected
 
@@ -3388,6 +3514,39 @@ class TestCalcVarEncoding:
                 "deptht": numpy.arange(0, 4, 0.5),
                 "y": numpy.arange(9),
                 "x": numpy.arange(4),
+            },
+        )
+
+        encoding = extract.calc_var_encoding(var, output_coords, config, model_profile)
+
+        expected = {
+            "dtype": numpy.single,
+            "chunksizes": (1, 8, 9, 4),
+            "zlib": True,
+        }
+        assert encoding == expected
+
+    def test_4d_var_climatology(self):
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        config = {"climatology": {"group by": "month"}, "extracted dataset": {}}
+        model_profile = {
+            "time coord": {
+                "name": "time",
+            },
+        }
+        var = xarray.DataArray(
+            name="diatoms",
+            data=numpy.empty((12, 8, 9, 4), dtype=numpy.single),
+            coords={
+                "month": numpy.arange(12),
+                "depth": numpy.arange(0, 4, 0.5),
+                "gridY": numpy.arange(9),
+                "gridX": numpy.arange(4),
             },
         )
 
@@ -3616,6 +3775,39 @@ class TestPrepNetcdfWrite:
         assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
         assert log_output.entries[0]["nc_format"] == "NETCDF4"
 
+    def test_climatology_no_unlimited_dim(self, log_output, tmp_path):
+        extracted_ds = xarray.Dataset(
+            attrs={"name": "test"},
+        )
+        output_coords = {
+            "time": numpy.arange(2),
+            "depth": numpy.arange(0, 4, 0.5),
+            "gridY": numpy.arange(9),
+            "gridX": numpy.arange(4),
+        }
+        dest_dir = tmp_path / "dest_dir"
+        dest_dir.mkdir()
+        config = {
+            "climatology": {
+                "group by": "month",
+            },
+            "extracted dataset": {
+                "dest dir": os.fspath(dest_dir),
+                "name": f"{extracted_ds.name}.nc",
+            },
+        }
+        model_profile = {}
+
+        _, _, _, unlimited_dim = extract.prep_netcdf_write(
+            extracted_ds, output_coords, config, model_profile
+        )
+
+        assert unlimited_dim is None
+
+        assert log_output.entries[0]["log_level"] == "debug"
+        assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
+        assert log_output.entries[0]["unlimited_dim"] is None
+
     def test_unlimited_dim_time(self, log_output, tmp_path):
         extracted_ds = xarray.Dataset(
             attrs={"name": "test"},
@@ -3644,7 +3836,7 @@ class TestPrepNetcdfWrite:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
-        assert log_output.entries[0]["nc_format"] == "NETCDF4"
+        assert log_output.entries[0]["unlimited_dim"] == "time"
 
     def test_unlimited_dim_model_coord(self, log_output, tmp_path):
         extracted_ds = xarray.Dataset(
@@ -3679,4 +3871,4 @@ class TestPrepNetcdfWrite:
 
         assert log_output.entries[0]["log_level"] == "debug"
         assert log_output.entries[0]["event"] == "prepared netCDF4 write params"
-        assert log_output.entries[0]["nc_format"] == "NETCDF4"
+        assert log_output.entries[0]["unlimited_dim"] == "time_counter"

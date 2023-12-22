@@ -49,6 +49,10 @@ def api_extract_netcdf(extract_config, extract_config_yaml):
     :return: File path and name that netCDF4 file was written to.
     :rtype: :py:class:`pathlib.Path`
     """
+    if "climatology" in extract_config and "resample" in extract_config:
+        msg = "`resample` and `climatology` in the same extraction is not supported"
+        logger.error(msg, config_file=os.fspath(extract_config_yaml))
+        raise ValueError(msg)
     model_profile = _load_model_profile(
         Path(extract_config["dataset"]["model profile"])
     )
@@ -70,6 +74,10 @@ def api_extract_netcdf(extract_config, extract_config_yaml):
         )
         if "resample" in extract_config:
             extracted_ds = _resample(extracted_ds, extract_config, model_profile)
+        if "climatology" in extract_config:
+            extracted_ds = _calc_climatology(
+                extracted_ds, extract_config, model_profile
+            )
         nc_path, encoding, nc_format, unlimited_dim = prep_netcdf_write(
             extracted_ds, output_coords, extract_config, model_profile
         )
@@ -99,6 +107,12 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
     except FileNotFoundError:
         logger.error("config file not found", config_file=os.fspath(config_yaml))
         raise SystemExit(2)
+    if "climatology" in config and "resample" in config:
+        logger.error(
+            "`resample` and `climatology` in the same extraction is not supported",
+            config_file=os.fspath(config_yaml),
+        )
+        raise SystemExit(2)
     model_profile = _load_model_profile(Path(config["dataset"]["model profile"]))
     ds_paths = calc_ds_paths(config, model_profile)
     chunk_size = calc_ds_chunk_size(config, model_profile)
@@ -118,6 +132,8 @@ def cli_extract(config_yaml, cli_start_date, cli_end_date):
         )
         if "resample" in config:
             extracted_ds = _resample(extracted_ds, config, model_profile)
+        if "climatology" in config:
+            extracted_ds = _calc_climatology(extracted_ds, config, model_profile)
         nc_path, encoding, nc_format, unlimited_dim = prep_netcdf_write(
             extracted_ds, output_coords, config, model_profile
         )
@@ -493,12 +509,12 @@ def calc_output_coords(source_dataset, config, model_profile):
     The returned coordinates container has the following mapping of attributes to
     coordinate names:
 
-    * :kbd:`time`: :kbd:`time`
-    * :kbd:`depth`: :kbd:`depth`
-    * :kbd:`y_index`: :kbd:`gridY`
-    * :kbd:`x_index`: :kbd:`gridX`
+    * ``time``: ``time``
+    * ``depth``: ``depth``
+    * ``y_index``: ``gridY``
+    * ``x_index``: ``gridX``
 
-    except if :kbd:`extracted dataset: use model coords: True` is set in the
+    except if ``extracted dataset: use model coords: True`` is set in the
     extraction configuration, in which case the output coordinates will be the same as the
     model coordinates.
 
@@ -994,6 +1010,38 @@ def _calc_resampled_time_coord(resampled_time_index, freq):
     )
 
 
+def _calc_climatology(extracted_ds, config, model_profile):
+    """
+    :param :py:class:`xarray.Dataset` extracted_ds: Dataset to calculate climatology for.
+
+    :param dict config: Extraction processing configuration dictionary.
+
+    :param dict model_profile: Model profile dictionary.
+
+    :return: Calculated climatology dataset.
+    :rtype: :py:class:`xarray.Dataset`
+    """
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
+    time_coord_name = (
+        "time" if not use_model_coords else model_profile["time coord"]["name"]
+    )
+    climatology_time_group = config["climatology"]["group by"]
+    aggregation = config["climatology"].get("aggregation", "mean")
+    logger.info(
+        "calculating climatology",
+        groupby=climatology_time_group,
+        aggregation=aggregation,
+    )
+    grouped_ds = extracted_ds.groupby(f"{time_coord_name}.{climatology_time_group}")
+    climatology_ds = getattr(grouped_ds, aggregation)(time_coord_name)
+    time_coord = getattr(climatology_ds, climatology_time_group)
+    time_coord.attrs["standard_name"] = climatology_time_group
+    time_coord.attrs["long_name"] = climatology_time_group.title()
+    time_coord.attrs["units"] = "count"
+    logger.debug("climatology dataset metadata", climatology_ds=climatology_ds)
+    return climatology_ds
+
+
 def calc_coord_encoding(ds, coord, config, model_profile):
     """Construct the netCDF4 encoding dictionary for a coordinate.
 
@@ -1029,6 +1077,13 @@ def calc_coord_encoding(ds, coord, config, model_profile):
                 "zlib": config["extracted dataset"].get("deflate", True),
                 "_FillValue": None,
             }
+        case "month" | "day":
+            # climatology time coordinates
+            return {
+                "dtype": int,
+                "chunksizes": (1,),
+                "zlib": config["extracted dataset"].get("deflate", True),
+            }
         case "depth" | "deptht" | "depthu" | "depthv" | "depthw":
             return {
                 "dtype": numpy.single,
@@ -1059,18 +1114,21 @@ def calc_var_encoding(var, output_coords, config, model_profile):
     :return: netCDF4 encoding for coordinate
     :rtype: dict
     """
+    use_model_coords = config["extracted dataset"].get("use model coords", False)
+    time_coord = "time" if not use_model_coords else model_profile["time coord"]["name"]
+    non_time_coords = [name for name in output_coords if name != time_coord]
+    if "climatology" in config:
+        time_coord = config["climatology"]["group by"]
     chunksizes = []
-    for name in output_coords:
+    if time_coord in var.coords:
+        chunksizes = [1]
+    for name in non_time_coords:
         try:
             chunksizes.append(var.coords[name].size)
         except KeyError:
             # Handle variables that have fewer than the full set of output coordinates;
             # e.g. lons and lats that only have gridY and gridX coordinates
             pass
-    use_model_coords = config["extracted dataset"].get("use model coords", False)
-    time_coord = "time" if not use_model_coords else model_profile["time coord"]["name"]
-    if time_coord in var.coords:
-        chunksizes[0] = 1
     return {
         "dtype": numpy.single,
         "chunksizes": tuple(chunksizes),
@@ -1094,12 +1152,12 @@ def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
     :param dict model_profile: Model profile dictionary.
 
     :return: Tuple of parameters for write_netcdf();
-             :kbd:`nc_path`: File path and name to write netCDF4 file to,
-             :kbd:`encoding`: Encoding dict to use for netCDF4 file write,
-             :kbd:`nc_format`: Format to use for netCDF4 file write.
-                               Defaults to kbd:`NETCDF4`.
-             :kbd:`unlimited_dim`: Name of the time coordinate to set as the
-                                    unlimited dimension for netCDF4 file write.
+             ``nc_path``: File path and name to write netCDF4 file to,
+             ``encoding``: Encoding dict to use for netCDF4 file write,
+             ``nc_format``: Format to use for netCDF4 file write.
+                            Default is ``NETCDF4``.
+             ``unlimited_dim``: Name of the time coordinate to set as the
+                                unlimited dimension for netCDF4 file write.
     :rtype: 4-tuple
     """
     encoding = {}
@@ -1114,9 +1172,13 @@ def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
     nc_path = Path(config["extracted dataset"]["dest dir"]) / f"{extracted_ds.name}.nc"
     nc_format = config["extracted dataset"].get("format", "NETCDF4")
     use_model_coords = config["extracted dataset"].get("use model coords", False)
-    unlimited_dim = (
-        "time" if not use_model_coords else model_profile["time coord"]["name"]
-    )
+    if "climatology" in config:
+        # An unlimited time dimension doesn't make sense for climatology datasets
+        unlimited_dim = None
+    else:
+        unlimited_dim = (
+            "time" if not use_model_coords else model_profile["time coord"]["name"]
+        )
     logger.debug(
         "prepared netCDF4 write params",
         nc_path=nc_path,
@@ -1148,12 +1210,19 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format, unlimited_dim):
     :param str unlimited_dim: Name of the time coordinate to set as the unlimited dimension for
                               netCDF4 file write.
     """
-    extracted_ds.to_netcdf(
-        nc_path,
-        format=nc_format,
-        encoding=encoding,
-        unlimited_dims=unlimited_dim,
-    )
+    if unlimited_dim is None:
+        extracted_ds.to_netcdf(
+            nc_path,
+            format=nc_format,
+            encoding=encoding,
+        )
+    else:
+        extracted_ds.to_netcdf(
+            nc_path,
+            format=nc_format,
+            encoding=encoding,
+            unlimited_dims=unlimited_dim,
+        )
     logger.info("wrote netCDF4 file", nc_path=os.fspath(nc_path))
 
 
