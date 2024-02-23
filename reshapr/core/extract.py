@@ -18,6 +18,7 @@
 """Extract model variable time series from model products.
 """
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -971,7 +972,8 @@ def _resample(extracted_ds, config, model_profile):
     resampled_ds[time_coord] = _calc_resampled_time_coord(
         resampled_ds.get_index(time_coord), freq
     )
-    resample_quantum = freq[-1]
+    result = re.search("[MD]", freq)
+    resample_quantum = result.group() if result else None
     match resample_quantum:
         case "D":
             time_base = "day"
@@ -996,6 +998,8 @@ def _calc_resampled_time_coord(resampled_time_index, freq):
 
     :rtype:  :py:class:`pandas.DatetimeIndex`
     """
+    # pandas 2.2.0 deprecated the M, Q & Y frequency aliases in favour of ME, QE & YE
+    # We interpreted M to mean MS. Now we accept both for backward compatibility.
     if not freq.endswith(("M", "MS")):
         offsets = pandas.tseries.frequencies.to_offset(freq) / 2
         return resampled_time_index + offsets

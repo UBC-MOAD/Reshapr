@@ -2931,7 +2931,17 @@ class TestResample:
         assert log_output.entries[1]["log_level"] == "debug"
         assert log_output.entries[1]["event"] == "resampled dataset metadata"
 
-    def test_resample_month_average(self, log_output, monkeypatch):
+    @pytest.mark.parametrize(
+        "time_interval",
+        (
+            "1MS",
+            # pandas 2.2.0 deprecated the M, Q & Y frequency aliases in favour of ME, QE & YE
+            # We interpreted M to mean MS. This tests confirms that we continue to do that for
+            # backward compatibility.
+            "1M",
+        ),
+    )
+    def test_resample_month_average(self, time_interval, log_output, monkeypatch):
         extracted_ds = xarray.Dataset(
             coords={
                 "time": pandas.date_range(
@@ -2969,7 +2979,7 @@ class TestResample:
             "start date": datetime.date(2015, 4, 1),
             "end date": datetime.date(2015, 4, 30),
             "resample": {
-                "time interval": "1M",
+                "time interval": time_interval,
             },
             "extracted dataset": {},
         }
@@ -2979,7 +2989,7 @@ class TestResample:
 
         assert log_output.entries[0]["log_level"] == "info"
         assert log_output.entries[0]["event"] == "resampling dataset"
-        assert log_output.entries[0]["resampling_time_interval"] == "1M"
+        assert log_output.entries[0]["resampling_time_interval"] == time_interval
         assert log_output.entries[0]["aggregation"] == "mean"
 
         assert resampled_ds.name == "test_20150401_20150430"
@@ -3019,7 +3029,19 @@ class TestResample:
         assert log_output.entries[1]["log_level"] == "debug"
         assert log_output.entries[1]["event"] == "resampled dataset metadata"
 
-    def test_resample_month_average_model_coords(self, log_output, monkeypatch):
+    @pytest.mark.parametrize(
+        "time_interval",
+        (
+            "1MS",
+            # pandas 2.2.0 deprecated the M, Q & Y frequency aliases in favour of ME, QE & YE
+            # We interpreted M to mean MS. This tests confirms that we continue to do that for
+            # backward compatibility.
+            "1M",
+        ),
+    )
+    def test_resample_month_average_model_coords(
+        self, time_interval, log_output, monkeypatch
+    ):
         extracted_ds = xarray.Dataset(
             coords={
                 "time_counter": pandas.date_range(
@@ -3057,7 +3079,7 @@ class TestResample:
             "start date": datetime.date(2015, 4, 1),
             "end date": datetime.date(2015, 4, 30),
             "resample": {
-                "time interval": "1M",
+                "time interval": time_interval,
             },
             "extracted dataset": {
                 "use model coords": True,
@@ -3074,7 +3096,7 @@ class TestResample:
 
         assert log_output.entries[0]["log_level"] == "info"
         assert log_output.entries[0]["event"] == "resampling dataset"
-        assert log_output.entries[0]["resampling_time_interval"] == "1M"
+        assert log_output.entries[0]["resampling_time_interval"] == time_interval
         assert log_output.entries[0]["aggregation"] == "mean"
 
         assert resampled_ds.name == "test_20150401_20150430"
@@ -3143,17 +3165,12 @@ class TestCalcResampledTimeCoord:
             ),
             (
                 pandas.DatetimeIndex(["2023-11-01"]),
-                "1M",
-                pandas.DatetimeIndex(["2023-11-15"]),
-            ),
-            (
-                pandas.DatetimeIndex(["2023-11-01"]),
                 "1MS",
                 pandas.DatetimeIndex(["2023-11-15"]),
             ),
             (
                 pandas.DatetimeIndex(["2023-11-01", "2023-12-01"]),
-                "1M",
+                "1MS",
                 pandas.DatetimeIndex(["2023-11-15", "2023-12-15 12:00:00"]),
             ),
             (
@@ -3163,13 +3180,21 @@ class TestCalcResampledTimeCoord:
             ),
             (
                 pandas.DatetimeIndex(["2023-02-01"]),
-                "1M",
+                "1MS",
                 pandas.DatetimeIndex(["2023-02-14"]),
             ),
             (
                 pandas.DatetimeIndex(["2024-02-01"]),
-                "1M",
+                "1MS",
                 pandas.DatetimeIndex(["2024-02-14 12:00:00"]),
+            ),
+            # pandas 2.2.0 deprecated the M, Q & Y frequency aliases in favour of ME, QE & YE
+            # We interpreted M to mean MS. This tests confirms that we continue to do that for
+            # backward compatibility.
+            (
+                pandas.DatetimeIndex(["2023-11-01"]),
+                "1M",
+                pandas.DatetimeIndex(["2023-11-15"]),
             ),
         ),
     )
