@@ -16,12 +16,12 @@ extract variables:
   - nitrate
 
 resample:
-  # A pandas time series frequency offset alias
-  # with an optional multiplier digit prefix
-  time interval: 1M
-  # An xarray dataset reduction method to use for aggregation.
-  # See the "resampling and grouped operations" sub-section in the Time Series Data
-  # section fo the xarray User Guide.
+  # A pandas time series frequency offset alias with an optional multiplier digit prefix
+  # For monthly resampling use MS so that time values are mid-month.
+  time interval: 1MS
+  # A xarray dataset reduction method to use for aggregation.
+  # See the "resampling and grouped operations" subsection in the Time Series Data
+  # section of the xarray User Guide.
   # default: mean
   aggregation: mean
 
