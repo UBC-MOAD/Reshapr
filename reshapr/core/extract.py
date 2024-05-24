@@ -478,7 +478,7 @@ def open_dataset(ds_paths, chunk_size, config):
     extract_vars = {var for var in config["extract variables"]}
     # Use 1st and last dataset paths to calculate the set of all variables
     # in the dataset, and from that the set of variables to drop.
-    # We need to use variables lists from 1st and last datasets in order to avoid issue #51.
+    # We need to use the variables lists from 1st and last datasets to avoid issue #51.
     for ds_path in (ds_paths[0], ds_paths[-1]):
         with xarray.open_dataset(ds_path, chunks=chunk_size, engine="h5netcdf") as ds:
             drop_vars.update(var for var in ds.data_vars)
