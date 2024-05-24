@@ -17,7 +17,7 @@ dependencies:
   - click
   - dask
   - flox
-  - netCDF4
+  - h5netcdf
   - pip
   - python
   - pyyaml
