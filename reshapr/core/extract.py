@@ -480,7 +480,7 @@ def open_dataset(ds_paths, chunk_size, config):
     # in the dataset, and from that the set of variables to drop.
     # We need to use variables lists from 1st and last datasets in order to avoid issue #51.
     for ds_path in (ds_paths[0], ds_paths[-1]):
-        with xarray.open_dataset(ds_path, chunks=chunk_size) as ds:
+        with xarray.open_dataset(ds_path, chunks=chunk_size, engine="h5netcdf") as ds:
             drop_vars.update(var for var in ds.data_vars)
     drop_vars -= extract_vars
     parallel_read = config.get("parallel read", False)
@@ -1226,6 +1226,7 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format, unlimited_dim):
             format=nc_format,
             encoding=encoding,
             unlimited_dims=unlimited_dim,
+            engine="h5netcdf",
         )
     logger.info("wrote netCDF4 file", nc_path=os.fspath(nc_path))
 
