@@ -38,7 +38,7 @@ class TestBasicInfo:
     """
 
     @pytest.mark.parametrize(
-        "pkg, line", (("reshapr", 0), ("xarray", 1), ("dask", 2), ("netcdf4", 3))
+        "pkg, line", (("reshapr", 0), ("xarray", 1), ("dask", 2), ("h5netcdf", 3))
     )
     def test_pkg_version(self, pkg, line, capsys):
         info.info(cluster_or_model="", time_interval="", vars_group="")

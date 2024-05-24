@@ -66,7 +66,7 @@ def _basic_info(console):
     :param :py:class:`rich.console.Console` console:
     """
     versions = {
-        pkg: metadata.version(pkg) for pkg in ("reshapr", "xarray", "dask", "netcdf4")
+        pkg: metadata.version(pkg) for pkg in ("reshapr", "xarray", "dask", "h5netcdf")
     }
     for pkg, version in versions.items():
         console.print(f"{pkg}, version [magenta]{version}", highlight=False)
