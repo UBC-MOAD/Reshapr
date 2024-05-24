@@ -44,7 +44,7 @@ dependencies = [
     "click",
     "dask",
     "flox",
-    "netCDF4",
+    "h5netcdf",
     "pyyaml",
     "rich",
     "structlog",
