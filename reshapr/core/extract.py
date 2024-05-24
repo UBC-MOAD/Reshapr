@@ -483,7 +483,7 @@ def open_dataset(ds_paths, chunk_size, config):
         with xarray.open_dataset(ds_path, chunks=chunk_size, engine="h5netcdf") as ds:
             drop_vars.update(var for var in ds.data_vars)
     drop_vars -= extract_vars
-    parallel_read = config.get("parallel read", False)
+    parallel_read = config.get("parallel read", True)
     ds = xarray.open_mfdataset(
         ds_paths,
         chunks=chunk_size,
