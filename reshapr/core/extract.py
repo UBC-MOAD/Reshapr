@@ -1226,7 +1226,7 @@ def write_netcdf(extracted_ds, nc_path, encoding, nc_format, unlimited_dim):
             format=nc_format,
             encoding=encoding,
             unlimited_dims=unlimited_dim,
-            engine="h5netcdf",
+            engine="netcdf4",
         )
     logger.info("wrote netCDF4 file", nc_path=os.fspath(nc_path))
 

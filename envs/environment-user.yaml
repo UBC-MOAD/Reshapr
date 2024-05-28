@@ -18,6 +18,7 @@ dependencies:
   - dask
   - flox
   - h5netcdf
+  - netCDF4
   - pip
   - python=3.12
   - pyyaml
