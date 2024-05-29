@@ -38,7 +38,8 @@ class TestBasicInfo:
     """
 
     @pytest.mark.parametrize(
-        "pkg, line", (("reshapr", 0), ("xarray", 1), ("dask", 2), ("h5netcdf", 3))
+        "pkg, line",
+        (("reshapr", 0), ("xarray", 1), ("dask", 2), ("h5netcdf", 3), ("netcdf4", 4)),
     )
     def test_pkg_version(self, pkg, line, capsys):
         info.info(cluster_or_model="", time_interval="", vars_group="")
@@ -51,7 +52,7 @@ class TestBasicInfo:
 
         stdout_lines = capsys.readouterr().out.splitlines()
         expected = {"salish_cluster.yaml"}
-        assert set(line.strip() for line in stdout_lines[6:7]) == expected
+        assert set(line.strip() for line in stdout_lines[7:8]) == expected
 
     def test_model_profiles(self, capsys):
         info.info(cluster_or_model="", time_interval="", vars_group="")
@@ -69,7 +70,7 @@ class TestBasicInfo:
             "HRDPS-2.5km-operational.yaml",
         }
         assert (
-            set(line.strip() for line in stdout_lines[9 : len(expected) + 9])
+            set(line.strip() for line in stdout_lines[10 : len(expected) + 10])
             == expected
         )
 
