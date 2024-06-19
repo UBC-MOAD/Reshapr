@@ -159,6 +159,7 @@ class TestExtractNetcdf:
             format="NETCDF4",
             encoding=encoding,
             unlimited_dims="time_counter",
+            engine="netcdf4",
         )
 
         model_profile_yaml = tmp_path / "test_profile.yaml"
@@ -296,6 +297,7 @@ class TestExtractNetcdf:
             format="NETCDF4",
             encoding=encoding,
             unlimited_dims="time_counter",
+            engine="netcdf4",
         )
 
         model_profile_yaml = tmp_path / "test_profile.yaml"
