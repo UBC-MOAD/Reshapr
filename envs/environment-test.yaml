@@ -17,6 +17,7 @@ dependencies:
   - click
   - dask
   - flox
+  - h5netcdf
   - netCDF4
   - pip
   - python

@@ -163,6 +163,7 @@ class TestCliExtract:
             format="NETCDF4",
             encoding=encoding,
             unlimited_dims="time_counter",
+            engine="netcdf4",
         )
 
         model_profile_yaml = tmp_path / "test_profile.yaml"
@@ -298,6 +299,7 @@ class TestCliExtract:
             format="NETCDF4",
             encoding=encoding,
             unlimited_dims="time_counter",
+            engine="netcdf4",
         )
 
         model_profile_yaml = tmp_path / "test_profile.yaml"
@@ -1009,7 +1011,7 @@ class TestOpenDataset:
     def test_open_dataset(self, source_dataset, log_output, tmp_path):
         results_archive = tmp_path / "results_archive"
         results_archive.mkdir()
-        source_dataset.to_netcdf(results_archive / "test_dataset.nc")
+        source_dataset.to_netcdf(results_archive / "test_dataset.nc", engine="netcdf4")
         ds_paths = [results_archive / "test_dataset.nc"]
         chunk_size = {
             "time_counter": 4,
@@ -1033,7 +1035,7 @@ class TestOpenDataset:
     def test_open_dataset_parallel_read(self, source_dataset, log_output, tmp_path):
         results_archive = tmp_path / "results_archive"
         results_archive.mkdir()
-        source_dataset.to_netcdf(results_archive / "test_dataset.nc")
+        source_dataset.to_netcdf(results_archive / "test_dataset.nc", engine="netcdf4")
         ds_paths = [results_archive / "test_dataset.nc"]
         chunk_size = {
             "time_counter": 4,
@@ -1064,7 +1066,7 @@ class TestOpenDataset:
         """
         results_archive = tmp_path / "results_archive"
         results_archive.mkdir()
-        source_dataset.to_netcdf(results_archive / "test_dataset.nc")
+        source_dataset.to_netcdf(results_archive / "test_dataset.nc", engine="netcdf4")
         ds_paths = [results_archive / "test_dataset.nc"]
         chunk_size = {
             "time_counter": 4,
