@@ -34,9 +34,24 @@ results archive:
       biology:
         file pattern: "SalishSeaCast_1m_biol_T_{yyyymm01}_{yyyymm_end}.nc"
         depth coord: depth
+      biology growth rates:
+        file pattern: "SalishSeaCast_1m_prod_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
       chemistry:
         file pattern: "SalishSeaCast_1m_chem_T_{yyyymm01}_{yyyymm_end}.nc"
         depth coord: depth
+      grazing:
+        file pattern: "SalishSeaCast_1m_graz_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      light:
+        file pattern: "SalishSeaCast_1m_chem_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      mortality:
+        file pattern: "SalishSeaCast_1m_graz_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
       physics tracers:
+        file pattern: "SalishSeaCast_1m_grid_T_{yyyymm01}_{yyyymm_end}.nc"
+        depth coord: depth
+      vvl grid:
         file pattern: "SalishSeaCast_1m_grid_T_{yyyymm01}_{yyyymm_end}.nc"
         depth coord: depth

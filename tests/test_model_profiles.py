@@ -664,11 +664,31 @@ class TestSalishSeaCast202111MonthAvg:
                 "SalishSeaCast_1m_biol_T_{yyyymm01}_{yyyymm_end}.nc",
             ),
             (
+                "biology growth rates",
+                "SalishSeaCast_1m_prod_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
                 "chemistry",
                 "SalishSeaCast_1m_chem_T_{yyyymm01}_{yyyymm_end}.nc",
             ),
             (
+                "grazing",
+                "SalishSeaCast_1m_graz_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
+                "light",
+                "SalishSeaCast_1m_chem_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
+                "mortality",
+                "SalishSeaCast_1m_graz_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
                 "physics tracers",
+                "SalishSeaCast_1m_grid_T_{yyyymm01}_{yyyymm_end}.nc",
+            ),
+            (
+                "vvl grid",
                 "SalishSeaCast_1m_grid_T_{yyyymm01}_{yyyymm_end}.nc",
             ),
         ),
