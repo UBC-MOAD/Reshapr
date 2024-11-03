@@ -123,7 +123,7 @@ class TestClusterInfo:
                 name: salish dask cluster
                 processes: True
                 number of workers: 4
-                threads per worker: 4
+                threads per worker: 1
             """
         ).splitlines()
         assert [line.strip() for line in stdout_lines[1:7]] == expected

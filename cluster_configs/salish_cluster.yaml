@@ -3,5 +3,5 @@
 name: salish dask cluster
 processes: True
 number of workers: 4
-threads per worker: 4
+threads per worker: 1
 memory limit: auto
