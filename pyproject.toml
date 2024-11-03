@@ -45,6 +45,7 @@ dependencies = [
     "dask",
     "flox",
     "h5netcdf",
+    "netcdf4",
     "pyyaml",
     "rich",
     "structlog",
