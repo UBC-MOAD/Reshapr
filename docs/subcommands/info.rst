@@ -90,7 +90,7 @@ Example:
       name: salish dask cluster
       processes: True
       number of workers: 4
-      threads per worker: 4
+      threads per worker: 1
 
     Please use reshapr info --help to learn how to get other information,
     or reshapr --help to learn about other sub-commands.
