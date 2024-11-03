@@ -53,7 +53,7 @@ you can create and activate an environment called :kbd:`reshapr` that will have
 all of the Python packages necessary use :py:obj:`Reshapr`,
 and install the package with the commands below.
 
-.. _Conda: https://conda.io/en/latest/
+.. _Conda: https://docs.conda.io/en/latest/
 .. _Miniconda3: https://docs.conda.io/en/latest/miniconda.html
 
 .. code-block:: bash
