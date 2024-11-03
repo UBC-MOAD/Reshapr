@@ -42,7 +42,7 @@ The parameters of the SalishSeaCast datasets to be provided to the students are:
    and Richard A. Feely.
    "Marine CO2 patterns in the northern Salish Sea."
    Frontiers in Marine Science 5 (2019): 536.
-   https://www.frontiersin.org/articles/10.3389/fmars.2018.00536/full
+   https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2018.00536/full
 
 
 Execution

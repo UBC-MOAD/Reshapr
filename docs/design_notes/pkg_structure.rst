@@ -58,7 +58,7 @@ Coming soon...
 must be registered,
 and the :py:func:`reshapr.add_command` calls to register the sub-commands.
 
-.. _Click commands group: https://click.palletsprojects.com/en/8.0.x/quickstart/#nesting-commands
+.. _Click commands group: https://click.palletsprojects.com/en/stable/quickstart/#nesting-commands
 
 It is also where configuration of the `structlog logging framework`_ happens.
 All console output from the sub-commands is done via that logging.
@@ -69,7 +69,7 @@ The other modules in :file:`reshapr/cli/` contain the `Click`_ command-line inte
 functions for each of the sub-commands;
 e.g. :py:func:`reshapr.cli.extract.extract`.
 
-.. _Click: https://click.palletsprojects.com
+.. _Click: https://click.palletsprojects.com/en/stable/
 
 
 :file:`reshapr/core/`

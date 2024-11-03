@@ -57,8 +57,8 @@ that maps especially well to handling NetCDF-4 model results.
 Dask provides a flexible parallel computing framework for operating on extremely large
 datasets without loading them into memory.
 
-.. _converged on: https://pangeo.io/packages.html#why-xarray-and-dask
-.. _Pangeo: https://pangeo.io
+.. _converged on: https://www.pangeo.io/#ecosystem
+.. _Pangeo: https://www.pangeo.io/
 .. _Xarray: https://docs.xarray.dev/en/stable/
 .. _Dask: https://docs.dask.org/en/latest/
 
