@@ -1194,7 +1194,7 @@ def prep_netcdf_write(extracted_ds, output_coords, config, model_profile):
 
 
 def write_netcdf(extracted_ds, nc_path, encoding, nc_format, unlimited_dim):
-    """WRite the extracted variable(s) dataset to disk.
+    """Write the extracted variable(s) dataset to disk.
 
     This function triggers the main dask task graph execution of the extraction process.
 
