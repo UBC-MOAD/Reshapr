@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Tests for date formatter functions.
-"""
+"""Tests for date formatter functions."""
 import arrow
 import pytest
 

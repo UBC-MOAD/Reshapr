@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Unit tests for core.info module.
-"""
+"""Unit tests for core.info module."""
 import os
 import textwrap
 from importlib import metadata

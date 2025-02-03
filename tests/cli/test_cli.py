@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Unit tests for command-line interface modules.
-"""
+"""Unit tests for command-line interface modules."""
 import os
 import textwrap
 

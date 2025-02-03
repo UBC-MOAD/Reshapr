@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Unit tests for core.extract module.
-"""
+"""Unit tests for core.extract module."""
 import datetime
 import os
 import textwrap

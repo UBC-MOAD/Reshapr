@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Fixtures for Reshapr test suite.
-"""
+"""Fixtures for Reshapr test suite."""
 import pytest
 import structlog
 

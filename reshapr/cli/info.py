@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Command-line interface for the info sub-command.
-"""
+"""Command-line interface for the info sub-command."""
 import click
 
 import reshapr.core.info

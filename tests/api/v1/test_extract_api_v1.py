@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Unit test for v1 extraction API functions.
-"""
+"""Unit test for v1 extraction API functions."""
 import datetime
 import os
 import textwrap

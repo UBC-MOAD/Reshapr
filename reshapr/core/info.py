@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Provide information about reshapr, dask clusters, and model profiles.
-"""
+"""Provide information about reshapr, dask clusters, and model profiles."""
 import sys
 import textwrap
 from importlib import metadata

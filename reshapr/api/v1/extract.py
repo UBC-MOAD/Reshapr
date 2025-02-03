@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""v1 extraction API.
-"""
+"""v1 extraction API."""
 from reshapr.core import extract
 
 
