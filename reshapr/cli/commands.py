@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Command-line interface setup and sub-commands registry.
-"""
+"""Command-line interface setup and sub-commands registry."""
 import logging
 
 import click

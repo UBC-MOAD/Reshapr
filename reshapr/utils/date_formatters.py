@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Date formatter functions.
-"""
+"""Date formatter functions."""
 
 
 def ddmmmyy(arrow_date):

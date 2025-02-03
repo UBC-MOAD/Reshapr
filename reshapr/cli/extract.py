@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Command-line interface for the extract sub-command.
-"""
+"""Command-line interface for the extract sub-command."""
 from pathlib import Path
 
 import click

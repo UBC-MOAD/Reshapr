@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Unit test for get_dask_client() function.
-"""
+"""Unit test for get_dask_client() function."""
 import os
 import textwrap
 from pathlib import Path

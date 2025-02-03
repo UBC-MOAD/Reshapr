@@ -15,8 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-"""Tests for package-supplied model profile YAML files.
-"""
+"""Tests for package-supplied model profile YAML files."""
 from pathlib import Path
 
 import arrow
