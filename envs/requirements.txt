@@ -97,7 +97,7 @@ Reshapr==24.1.dev0
 rich==13.9.4
 scipy==1.14.1
 SecretStorage==3.3.3
-setuptools==75.6.0
+setuptools==78.1.1
 shellingham==1.5.4
 six==1.17.0
 sniffio==1.3.1
