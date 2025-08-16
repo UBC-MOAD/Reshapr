@@ -32,7 +32,7 @@
 |                            |     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL                                                                                                             |
 |                            |     :alt: CodeQL analysis                                                                                                                                                                  |
 +----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **Documentation**          | .. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest                                                                                                                  |
+| **Documentation**          | .. image:: https://app.readthedocs.org/projects/reshapr/badge/?version=latest                                                                                                              |
 |                            |     :target: https://reshapr.readthedocs.io/en/latest/                                                                                                                                     |
 |                            |     :alt: Documentation Status                                                                                                                                                             |
 |                            | .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg                                                                                           |
@@ -202,7 +202,7 @@ and run :command:`pre-commit install`:
 Building the Documentation
 ==========================
 
-.. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest
+.. image:: https://app.readthedocs.org/projects/reshapr/badge/?version=latest
     :target: https://reshapr.readthedocs.io/en/latest/
     :alt: Documentation Status
 
@@ -388,7 +388,7 @@ The output looks something like:
         (    installation: line   39) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#copyyourpublicsshkeytogithub
         (    installation: line   39) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#secureremoteaccess
         (           index: line   46) ok        https://www.apache.org/licenses/LICENSE-2.0
-        ( pkg_development: line   35) ok        https://readthedocs.org/projects/reshapr/badge/?version=latest
+        ( pkg_development: line   35) ok        https://app.readthedocs.org/projects/reshapr/badge/?version=latest
         (design_notes/motivation: line   53) ok        https://www.pangeo.io/
         (design_notes/motivation: line   53) ok        https://www.pangeo.io/#ecosystem
         ( pkg_development: line  209) ok        https://www.sphinx-doc.org/en/master/

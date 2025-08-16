@@ -13,7 +13,7 @@ Reshapr
 |                            |     :target: https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL                                                                                                             |
 |                            |     :alt: CodeQL analysis                                                                                                                                                                  |
 +----------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **Documentation**          | .. image:: https://readthedocs.org/projects/reshapr/badge/?version=latest                                                                                                                  |
+| **Documentation**          | .. image:: https://app.readthedocs.org/projects/reshapr/badge/?version=latest                                                                                                              |
 |                            |     :target: https://reshapr.readthedocs.io/en/latest/                                                                                                                                     |
 |                            |     :alt: Documentation Status                                                                                                                                                             |
 |                            | .. image:: https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg                                                                                           |
