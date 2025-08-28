@@ -24,7 +24,7 @@ Reshapr
 |                            |     :target: https://github.com/UBC-MOAD/Reshapr/releases                                                                                                                                  |
 |                            |     :alt: Releases                                                                                                                                                                         |
 |                            | .. image:: https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/UBC-MOAD/Reshapr/main/pyproject.toml&logo=Python&logoColor=gold&label=Python |
-|                            |      :target: https://docs.python.org/3.12/                                                                                                                                                |
+|                            |      :target: https://docs.python.org/3/                                                                                                                                                   |
 |                            |      :alt: Python Version from PEP 621 TOML                                                                                                                                                |
 |                            | .. image:: https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github                                                                                                               |
 |                            |     :target: https://github.com/UBC-MOAD/Reshapr/issues                                                                                                                                    |

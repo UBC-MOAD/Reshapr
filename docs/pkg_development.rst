@@ -43,7 +43,7 @@
 |                            |     :target: https://github.com/UBC-MOAD/Reshapr/releases                                                                                                                                  |
 |                            |     :alt: Releases                                                                                                                                                                         |
 |                            | .. image:: https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/UBC-MOAD/Reshapr/main/pyproject.toml&logo=Python&logoColor=gold&label=Python |
-|                            |      :target: https://docs.python.org/3.12/                                                                                                                                                |
+|                            |      :target: https://docs.python.org/3/                                                                                                                                                   |
 |                            |      :alt: Python Version from PEP 621 TOML                                                                                                                                                |
 |                            | .. image:: https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github                                                                                                               |
 |                            |     :target: https://github.com/UBC-MOAD/Reshapr/issues                                                                                                                                    |
@@ -77,10 +77,10 @@ Python Versions
 ===============
 
 .. image:: https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/UBC-MOAD/Reshapr/main/pyproject.toml&logo=Python&logoColor=gold&label=Python
-    :target: https://docs.python.org/3.12/
+    :target: https://docs.python.org/3/
     :alt: Python Version from PEP 621 TOML
 
-The :py:obj:`Reshapr` package is developed and tested using `Python`_ 3.12.
+The :py:obj:`Reshapr` package is developed and tested using `Python`_ 3.13.
 The package uses some Python language features that are not available in various earlier versions,
 in particular:
 
@@ -341,7 +341,7 @@ The output looks something like:
         ( pkg_development: line  402) ok        https://docs.pytest.org/en/latest/
         (             api: line    3) ok        https://docs.python.org/3/library/constants.html#None
         (             api: line   40) ok        https://docs.python.org/3/library/pathlib.html#pathlib.Path
-        ( pkg_development: line   22) ok        https://docs.python.org/3.12/
+        ( pkg_development: line   22) ok        https://docs.python.org/3/
         (             api: line   22) ok        https://docs.python.org/3/library/exceptions.html#ValueError
         (             api: line   31) ok        https://docs.python.org/3/library/stdtypes.html#str
         ( pkg_development: line   87) ok        https://docs.python.org/3/reference/lexical_analysis.html#f-strings
@@ -425,11 +425,11 @@ The output looks something like:
 .. code-block:: text
 
         =============================== test session starts ================================
-        platform linux -- Python 3.12.7, pytest-8.3.3, pluggy-1.5.0
-        Using --randomly-seed=4293710901
+        platform linux -- Python 3.13.5, pytest-8.4.1, pluggy-1.6.0
+        Using --randomly-seed=3596862623
         rootdir: /media/doug/warehouse/MOAD/Reshapr
         configfile: pyproject.toml
-        plugins: randomly-3.15.0, cov-6.0.0, anyio-4.6.2.post1
+        plugins: randomly-3.15.0, cov-6.2.1, anyio-4.10.0
         collected 303 items
 
         tests/api/v1/test_extract_api_v1.py .........                                   [  2%]
