@@ -20,7 +20,7 @@ dependencies:
   - h5netcdf
   - netCDF4
   - pip
-  - python=3.13
+  - python=3.14
   - pyyaml
   - rich
   - structlog
