@@ -90,6 +90,9 @@ in particular:
 
 * `structural pattern matching`_
 
+The minimum supported Python version is 3.12.
+The :ref:`ReshaprContinuousIntegration` workflow on GitHub ensures that the package is tested for all versions of Python>=3.12.
+
 .. _Python: https://www.python.org/
 .. _formatted string literals: https://docs.python.org/3/reference/lexical_analysis.html#f-strings
 .. _structural pattern matching: https://peps.python.org/pep-0636/
@@ -474,7 +477,7 @@ to produce an HTML report that you can view in your browser by opening
 :file:`Reshapr/htmlcov/index.html`.
 
 
-.. _SalishSeaNowcastContinuousIntegration:
+.. _ReshaprContinuousIntegration:
 
 Continuous Integration
 ----------------------
