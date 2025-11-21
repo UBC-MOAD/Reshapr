@@ -80,7 +80,7 @@ Python Versions
     :target: https://docs.python.org/3/
     :alt: Python Version from PEP 621 TOML
 
-The :py:obj:`Reshapr` package is developed and tested using `Python`_ 3.13.
+The :py:obj:`Reshapr` package is developed and tested using `Python`_ 3.14.
 The package uses some Python language features that are not available in various earlier versions,
 in particular:
 
@@ -228,44 +228,44 @@ The output looks something like:
 
 .. code-block:: text
 
-        Removing everything under '_build'...
-        Running Sphinx v8.1.3
-        loading translations [en]... done
-        making output directory... done
-        loading intersphinx inventory 'arrow' from https://arrow.readthedocs.io/en/latest/objects.inv ...
-        loading intersphinx inventory 'dask' from https://docs.dask.org/en/stable/objects.inv ...
-        loading intersphinx inventory 'moaddocs' from https://ubc-moad-docs.readthedocs.io/en/latest/objects.inv ...
-        loading intersphinx inventory 'python' from https://docs.python.org/3/objects.inv ...
-        loading intersphinx inventory 'salishseanowcast' from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv ...
-        loading intersphinx inventory 'xarray' from https://docs.xarray.dev/en/stable/objects.inv ...
-        building [mo]: targets for 0 po files that are out of date
-        writing output...
-        building [html]: targets for 21 source files that are out of date
-        updating environment: [new config] 21 added, 0 changed, 0 removed
-        reading sources... [100%] subcommands/info
-        looking for now-outdated files... none found
-        pickling environment... done
-        checking consistency... done
-        preparing documents... done
-        copying assets...
-        copying static files...
-        Writing evaluated template result to /media/doug/warehouse/MOAD/Reshapr/docs/_build/html/_static/language_data.js
-        Writing evaluated template result to /media/doug/warehouse/MOAD/Reshapr/docs/_build/html/_static/basic.css
-        Writing evaluated template result to /media/doug/warehouse/MOAD/Reshapr/docs/_build/html/_static/documentation_options.js
-        Writing evaluated template result to /media/doug/warehouse/MOAD/Reshapr/docs/_build/html/_static/js/versions.js
-        copying static files: done
-        copying extra files...
-        copying extra files: done
-        copying assets: done
-        writing output... [100%] subcommands/info
-        generating indices... genindex py-modindex done
-        highlighting module code... [100%] reshapr.utils.date_formatters
-        writing additional pages... search done
-        dumping search index in English (code: en)... done
-        dumping object inventory... done
-        build succeeded, 1 warning.
+    Removing everything under '_build'...
+    Running Sphinx v8.1.3
+    loading translations [en]... done
+    making output directory... done
+    loading intersphinx inventory 'arrow' from https://arrow.readthedocs.io/en/latest/objects.inv ...
+    loading intersphinx inventory 'dask' from https://docs.dask.org/en/stable/objects.inv ...
+    loading intersphinx inventory 'moaddocs' from https://ubc-moad-docs.readthedocs.io/en/latest/objects.inv ...
+    loading intersphinx inventory 'python' from https://docs.python.org/3/objects.inv ...
+    loading intersphinx inventory 'salishseanowcast' from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv ...
+    loading intersphinx inventory 'xarray' from https://docs.xarray.dev/en/stable/objects.inv ...
+    building [mo]: targets for 0 po files that are out of date
+    writing output...
+    building [html]: targets for 20 source files that are out of date
+    updating environment: [new config] 20 added, 0 changed, 0 removed
+    reading sources... [100%] subcommands/info
+    looking for now-outdated files... none found
+    pickling environment... done
+    checking consistency... done
+    preparing documents... done
+    copying assets...
+    copying static files...
+    Writing evaluated template result to /media/doug/warehouse/MOAD/Reshapr/docs/_build/html/_static/language_data.js
+    Writing evaluated template result to /media/doug/warehouse/MOAD/Reshapr/docs/_build/html/_static/documentation_options.js
+    Writing evaluated template result to /media/doug/warehouse/MOAD/Reshapr/docs/_build/html/_static/basic.css
+    Writing evaluated template result to /media/doug/warehouse/MOAD/Reshapr/docs/_build/html/_static/js/versions.js
+    copying static files: done
+    copying extra files...
+    copying extra files: done
+    copying assets: done
+    writing output... [100%] subcommands/info
+    generating indices... genindex py-modindex done
+    highlighting module code... [100%] reshapr.utils.date_formatters
+    writing additional pages... search done
+    dumping search index in English (code: en)... done
+    dumping object inventory... done
+    build succeeded.
 
-        The HTML pages are in _build/html.
+    The HTML pages are in _build/html.
 
 The HTML rendering of the docs ends up in :file:`docs/_build/html/`.
 You can open the :file:`index.html` file in that directory tree in your browser
@@ -299,109 +299,111 @@ use:
 .. code-block:: bash
 
     (reshapr-dev))$ cd Reshapr/docs/
-    (reshapr-dev)) docs$ make linkcheck
+    (reshapr-dev)) docs$ make clean linkcheck
 
 The output looks something like:
 
 .. code-block:: text
 
-        Removing everything under '_build'...
-        Running Sphinx v8.1.3
-        loading translations [en]... done
-        making output directory... done
-        loading intersphinx inventory 'arrow' from https://arrow.readthedocs.io/en/latest/objects.inv ...
-        loading intersphinx inventory 'dask' from https://docs.dask.org/en/stable/objects.inv ...
-        loading intersphinx inventory 'moaddocs' from https://ubc-moad-docs.readthedocs.io/en/latest/objects.inv ...
-        loading intersphinx inventory 'python' from https://docs.python.org/3/objects.inv ...
-        loading intersphinx inventory 'salishseanowcast' from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv ...
-        loading intersphinx inventory 'xarray' from https://docs.xarray.dev/en/stable/objects.inv ...
-        building [mo]: targets for 0 po files that are out of date
-        writing output...
-        building [linkcheck]: targets for 21 source files that are out of date
-        updating environment: [new config] 21 added, 0 changed, 0 removed
-        reading sources... [100%] subcommands/info
-        looking for now-outdated files... none found
-        pickling environment... done
-        checking consistency... done
-        preparing documents... done
-        copying assets...
-        copying assets: done
-        writing output... [100%] subcommands/info
+    Removing everything under '_build'...
+    Running Sphinx v8.1.3
+    loading translations [en]... done
+    making output directory... done
+    loading intersphinx inventory 'arrow' from https://arrow.readthedocs.io/en/latest/objects.inv ...
+    loading intersphinx inventory 'dask' from https://docs.dask.org/en/stable/objects.inv ...
+    loading intersphinx inventory 'moaddocs' from https://ubc-moad-docs.readthedocs.io/en/latest/objects.inv ...
+    loading intersphinx inventory 'python' from https://docs.python.org/3/objects.inv ...
+    loading intersphinx inventory 'salishseanowcast' from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv ...
+    loading intersphinx inventory 'xarray' from https://docs.xarray.dev/en/stable/objects.inv ...
+    building [mo]: targets for 0 po files that are out of date
+    writing output...
+    building [linkcheck]: targets for 20 source files that are out of date
+    updating environment: [new config] 20 added, 0 changed, 0 removed
+    reading sources... [100%] subcommands/info
+    looking for now-outdated files... none found
+    pickling environment... done
+    checking consistency... done
+    preparing documents... done
+    copying assets...
+    copying assets: done
+    writing output... [100%] subcommands/info
 
-        (design_notes/pkg_structure: line   68) ok        https://click.palletsprojects.com/en/stable/
-        ( pkg_development: line   22) ok        https://black.readthedocs.io/en/stable/
-        (design_notes/pkg_structure: line   57) ok        https://click.palletsprojects.com/en/stable/quickstart/#nesting-commands
-        (             api: line   31) ok        https://arrow.readthedocs.io/en/latest/api-guide.html#arrow.arrow.Arrow
-        ( pkg_development: line   22) ok        https://app.codecov.io/gh/UBC-MOAD/Reshapr
-        (    installation: line   50) ok        https://docs.conda.io/en/latest/
-        ( pkg_development: line  440) ok        https://coverage.readthedocs.io/en/latest/
-        ( pkg_development: line   28) ok        https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
-        (    installation: line   50) ok        https://docs.conda.io/en/latest/miniconda.html
-        ( pkg_development: line  493) ok        https://docs.github.com/en/actions
-        (  model_profiles: line  221) ok        https://docs.dask.org/en/latest/array-chunks.html
-        (    installation: line   39) ok        https://docs.github.com/en/authentication/connecting-to-github-with-ssh
-        (design_notes/motivation: line   53) ok        https://docs.dask.org/en/latest/
-        ( pkg_development: line  402) ok        https://docs.pytest.org/en/latest/
-        (             api: line    3) ok        https://docs.python.org/3/library/constants.html#None
-        (             api: line   40) ok        https://docs.python.org/3/library/pathlib.html#pathlib.Path
-        ( pkg_development: line   22) ok        https://docs.python.org/3/
-        (             api: line   22) ok        https://docs.python.org/3/library/exceptions.html#ValueError
-        (             api: line   31) ok        https://docs.python.org/3/library/stdtypes.html#str
-        ( pkg_development: line   87) ok        https://docs.python.org/3/reference/lexical_analysis.html#f-strings
-        (             api: line   40) ok        https://docs.python.org/3/library/stdtypes.html#dict
-        (design_notes/motivation: line   53) ok        https://docs.xarray.dev/en/stable/
-        ( pkg_development: line  508) ok        https://git-scm.com/
-        (design_notes/motivation: line   65) ok        https://docs.xarray.dev/en/stable/generated/xarray.open_mfdataset.html#xarray.open_mfdataset
-        (examples/iona_wastewater_discharge_analysis: line   99) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/extract_biology.yaml
-        (design_notes/history: line   52) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.py
-        (design_notes/history: line   25) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb
-        (examples/2xrez_physics_ONC_SCVIP: line   44) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb
-        (design_notes/history: line   46) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.ipynb
-        ( pkg_development: line   31) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
-        (examples/iona_wastewater_discharge_analysis: line   95) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/model_profiles/SalishSeaCast-202111-wastewater-salish.yaml
-        ( pkg_development: line   25) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg
-        (design_notes/motivation: line  129) ok        https://github.com/UBC-MOAD/Reshapr
-        ( pkg_development: line   38) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg
-        ( pkg_development: line  480) ok        https://github.com/UBC-MOAD/Reshapr/actions
-        ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/issues
-        ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
-        ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage
-        ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
-        ( pkg_development: line   64) ok        https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
-        ( pkg_development: line   61) ok        https://img.shields.io/badge/code%20style-black-000000.svg
-        (           index: line   48) ok        https://img.shields.io/badge/license-Apache%202-cb2533.svg
-        ( pkg_development: line   58) ok        https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
-        ( pkg_development: line   55) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
-        ( pkg_development: line   42) ok        https://img.shields.io/github/v/release/UBC-MOAD/Reshapr?logo=github
-        ( pkg_development: line   22) ok        https://github.com/pypa/hatch
-        ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/releases
-        ( pkg_development: line   45) ok        https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/UBC-MOAD/Reshapr/main/pyproject.toml&logo=Python&logoColor=gold&label=Python
-        (examples/2xrez_physics_ONC_SCVIP: line   43) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb
-        ( pkg_development: line   48) ok        https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
-        (design_notes/history: line   46) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.ipynb
-        (design_notes/history: line   25) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb
-        ( pkg_development: line   91) ok        https://peps.python.org/pep-0636/
-        (    installation: line   65) ok        https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
-        ( pkg_development: line  480) ok        https://github.com/UBC-MOAD/Reshapr/commits/main
-        ( pkg_development: line  440) ok        https://pytest-cov.readthedocs.io/en/latest/
-        ( pkg_development: line   22) ok        https://reshapr.readthedocs.io/en/latest/
-        ( pkg_development: line   22) ok        https://pre-commit.com
-        (examples/iona_wastewater_discharge_analysis: line   47) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#module-nowcast.workers.split_results
-        ( pkg_development: line  176) ok        https://pre-commit.com/
-        (    installation: line   39) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#copyyourpublicsshkeytogithub
-        (    installation: line   39) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#secureremoteaccess
-        (           index: line   46) ok        https://www.apache.org/licenses/LICENSE-2.0
-        ( pkg_development: line   35) ok        https://app.readthedocs.org/projects/reshapr/badge/?version=latest
-        (design_notes/motivation: line   53) ok        https://www.pangeo.io/
-        (design_notes/motivation: line   53) ok        https://www.pangeo.io/#ecosystem
-        ( pkg_development: line  209) ok        https://www.sphinx-doc.org/en/master/
-        ( pkg_development: line  209) ok        https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
-        (design_notes/pkg_structure: line   63) ok        https://www.structlog.org/en/stable/index.html
-        ( pkg_development: line   83) ok        https://www.python.org/
-        (examples/prodigy_model_obs_assignment: line   40) ok        https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2018.00536/full
-        build succeeded, 1 warning.
+    (             api: line   31) ok        https://arrow.readthedocs.io/en/latest/api-guide.html#arrow.arrow.Arrow
+    ( pkg_development: line   22) ok        https://black.readthedocs.io/en/stable/
+    (design_notes/pkg_structure: line   68) ok        https://click.palletsprojects.com/en/stable/
+    (design_notes/pkg_structure: line   57) ok        https://click.palletsprojects.com/en/stable/quickstart/#nesting-commands
+    ( pkg_development: line  452) ok        https://coverage.readthedocs.io/en/latest/
+    ( pkg_development: line   28) ok        https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
+    ( pkg_development: line   22) ok        https://app.codecov.io/gh/UBC-MOAD/Reshapr
+    ( pkg_development: line   35) ok        https://app.readthedocs.org/projects/reshapr/badge/?version=latest
+    (design_notes/motivation: line   53) ok        https://docs.dask.org/en/latest/
+    (  model_profiles: line  221) ok        https://docs.dask.org/en/latest/array-chunks.html
+    ( pkg_development: line  505) ok        https://docs.github.com/en/actions
+    (    installation: line   39) ok        https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+    ( pkg_development: line   22) ok        https://docs.python.org/3/
+    (    installation: line   50) ok        https://docs.conda.io/en/latest/miniconda.html
+    (    installation: line   50) ok        https://docs.conda.io/en/latest/
+    (             api: line    3) ok        https://docs.python.org/3/library/constants.html#None
+    (             api: line   22) ok        https://docs.python.org/3/library/exceptions.html#ValueError
+    (             api: line   40) ok        https://docs.python.org/3/library/pathlib.html#pathlib.Path
+    ( pkg_development: line  412) ok        https://docs.pytest.org/en/latest/
+    (             api: line   31) ok        https://docs.python.org/3/library/stdtypes.html#str
+    (design_notes/motivation: line   53) ok        https://docs.xarray.dev/en/stable/
+    ( pkg_development: line   87) ok        https://docs.python.org/3/reference/lexical_analysis.html#f-strings
+    (             api: line   40) ok        https://docs.python.org/3/library/stdtypes.html#dict
+    ( pkg_development: line  520) ok        https://git-scm.com/
+    (design_notes/motivation: line   65) ok        https://docs.xarray.dev/en/stable/generated/xarray.open_mfdataset.html#xarray.open_mfdataset
+    -rate limited-   https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/extract_biology.yaml | sleeping...
+    (design_notes/history: line   25) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb
+    (examples/2xrez_physics_ONC_SCVIP: line   44) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb
+    (design_notes/history: line   52) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.py
+    (design_notes/history: line   46) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.ipynb
+    ( pkg_development: line   31) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
+    ( pkg_development: line   25) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg
+    (design_notes/motivation: line  129) ok        https://github.com/UBC-MOAD/Reshapr
+    ( pkg_development: line   38) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg
+    ( pkg_development: line  492) ok        https://github.com/UBC-MOAD/Reshapr/actions
+    ( pkg_development: line  492) ok        https://github.com/UBC-MOAD/Reshapr/commits/main
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/issues
+    ( pkg_development: line   64) ok        https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
+    ( pkg_development: line   61) ok        https://img.shields.io/badge/code%20style-black-000000.svg
+    (           index: line   48) ok        https://img.shields.io/badge/license-Apache%202-cb2533.svg
+    ( pkg_development: line   58) ok        https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+    ( pkg_development: line   55) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
+    ( pkg_development: line   48) ok        https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
+    ( pkg_development: line   42) ok        https://img.shields.io/github/v/release/UBC-MOAD/Reshapr?logo=github
+    ( pkg_development: line   22) ok        https://github.com/pypa/hatch
+    ( pkg_development: line   45) ok        https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/UBC-MOAD/Reshapr/main/pyproject.toml&logo=Python&logoColor=gold&label=Python
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/releases
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage
+    (design_notes/motivation: line   53) ok        https://pangeo.io/
+    (design_notes/motivation: line   53) ok        https://pangeo.io/#ecosystem
+    (    installation: line   65) ok        https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
+    ( pkg_development: line   91) ok        https://peps.python.org/pep-0636/
+    ( pkg_development: line  179) ok        https://pre-commit.com/
+    ( pkg_development: line   22) ok        https://pre-commit.com
+    ( pkg_development: line  452) ok        https://pytest-cov.readthedocs.io/en/latest/
+    (examples/iona_wastewater_discharge_analysis: line   47) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#module-nowcast.workers.split_results
+    (    installation: line   39) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#copyyourpublicsshkeytogithub
+    (    installation: line   39) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#secureremoteaccess
+    (           index: line   46) ok        https://www.apache.org/licenses/LICENSE-2.0
+    ( pkg_development: line   22) ok        https://reshapr.readthedocs.io/en/latest/
+    ( pkg_development: line   83) ok        https://www.python.org/
+    ( pkg_development: line  212) ok        https://www.sphinx-doc.org/en/master/
+    ( pkg_development: line  212) ok        https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
+    (examples/prodigy_model_obs_assignment: line   40) ok        https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2018.00536/full
+    (design_notes/pkg_structure: line   63) ok        https://www.structlog.org/en/stable/index.html
+    (design_notes/history: line   46) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.ipynb
+    (examples/2xrez_physics_ONC_SCVIP: line   43) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb
+    (design_notes/history: line   25) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb
+    -rate limited-   https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/extract_biology.yaml | sleeping...
+    (examples/iona_wastewater_discharge_analysis: line   99) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/extract_biology.yaml
+    (examples/iona_wastewater_discharge_analysis: line   95) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/model_profiles/SalishSeaCast-202111-wastewater-salish.yaml
+    build succeeded.
 
-        Look for any errors in the above output or in _build/linkcheck/output.txt
+    Look for any errors in the above output or in _build/linkcheck/output.txt
 
 
 .. _ReshaprRunningTheUnitTests:
@@ -427,27 +429,27 @@ The output looks something like:
 
 .. code-block:: text
 
-        =============================== test session starts ================================
-        platform linux -- Python 3.13.5, pytest-8.4.1, pluggy-1.6.0
-        Using --randomly-seed=3596862623
-        rootdir: /media/doug/warehouse/MOAD/Reshapr
-        configfile: pyproject.toml
-        plugins: randomly-3.15.0, cov-6.2.1, anyio-4.10.0
-        collected 303 items
+    =============================== test session starts ================================
+    platform linux -- Python 3.14.0, pytest-9.0.1, pluggy-1.6.0
+    Using --randomly-seed=614873902
+    rootdir: /media/doug/warehouse/MOAD/Reshapr
+    configfile: pyproject.toml
+    plugins: cov-7.0.0, anyio-4.11.0, randomly-3.15.0
+    collected 303 items
 
-        tests/api/v1/test_extract_api_v1.py .........                                   [  2%]
-        tests/core/test_info.py ...............................                         [ 13%]
-        tests/core/test_dask_cluster.py .........                                       [ 16%]
-        tests/utils/test_date_formatters.py ...........                                 [ 19%]
-        tests/test_cluster_configs.py .....                                             [ 21%]
-        tests/test_model_profiles.py .........................................................
-        ...............................                                                 [ 50%]
-        tests/cli/test_cli.py ..                                                        [ 51%]
-        tests/core/test_extract.py ...........................................................
-        ......................................................................................
-        ...                                                                             [100%]
+    tests/api/v1/test_extract_api_v1.py .........                                   [  2%]
+    tests/core/test_info.py ...............................                         [ 13%]
+    tests/core/test_dask_cluster.py .........                                       [ 16%]
+    tests/utils/test_date_formatters.py ...........                                 [ 19%]
+    tests/test_cluster_configs.py .....                                             [ 21%]
+    tests/test_model_profiles.py .........................................................
+    ...............................                                                 [ 50%]
+    tests/cli/test_cli.py ..                                                        [ 51%]
+    tests/core/test_extract.py ...........................................................
+    ......................................................................................
+    ...                                                                             [100%]
 
-        =============================== 303 passed in 8.42s ================================
+    =============================== 303 passed in 8.42s ================================
 
 You can monitor what lines of code the test suite exercises using the `coverage.py`_
 and `pytest-cov`_ tools with the command:
