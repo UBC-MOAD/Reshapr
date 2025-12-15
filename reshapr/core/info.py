@@ -16,7 +16,7 @@
 
 
 """Provide information about reshapr, dask clusters, and model profiles."""
-
+import os
 import sys
 import textwrap
 from importlib import metadata
@@ -108,7 +108,7 @@ def _cluster_info(cluster, console):
     """
     cluster = cluster if cluster.endswith(".yaml") else f"{cluster}.yaml"
     console.print(f"[green]{cluster}:")
-    syntax = Syntax.from_path(CLUSTER_CONFIGS_PATH / cluster)
+    syntax = Syntax.from_path(os.fspath(CLUSTER_CONFIGS_PATH / cluster))
     console.print(Padding(syntax, (0, 2)))
 
     console.print(
