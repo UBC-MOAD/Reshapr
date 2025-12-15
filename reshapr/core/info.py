@@ -192,7 +192,7 @@ def _model_profile_info(profile, time_interval, vars_group, console):
 
 def _vars_list(model_profile, time_interval, vars_group, console):
     """
-    :param str model_profile:
+    :param dict model_profile:
     :param str time_interval:
     :param str vars_group:
     :param :py:class:`rich.console.Console` console:
