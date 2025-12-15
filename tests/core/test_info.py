@@ -270,7 +270,7 @@ class TestUnrecognizedClusterOrModelProfile:
 
 
 class TestVarsList:
-    """Unit tests for core.info._vars_list() function."""
+    """Unit tests for the core.info._vars_list() function."""
 
     def test_bad_results_archive_path(self, log_output):
         model_profile = {
