@@ -1,0 +1,40 @@
+description: Jose's SalishSeaCast v202111 NEMO SHEM config results stored on nibi.
+             26feb18-02jul18 tuning pred_flag run.
+
+time coord:
+  name: time_counter
+y coord:
+  name: y
+x coord:
+  name: x
+
+# Chunking scheme used for the netCDF4 files
+# Note that coordinate names (keys) are conceptual here.
+# They are replaced with actual coordinate names in files in the code;
+# e.g. time is replaced by time_counter for dataset loading
+chunk size:
+  time: 1
+  depth: 40
+  y: 898
+  x: 398
+
+geo ref dataset:
+  path: https://salishsea.eos.ubc.ca/erddap/griddap/ubcSSnBathymetryV21-08
+  y coord: gridY
+  x coord: gridX
+
+extraction time origin: 2018-02-26
+
+results archive:
+  path: /scratch/jvalenti/run_SHEM/tuning/pred_flag/
+  datasets:
+    day:
+      biology:
+        file pattern: "{ddmmmyy}/SHEM_1d_20180226_20180702_biol_T.nc"
+        depth coord: deptht
+      biology growth rates:
+        file pattern: "{ddmmmyy}/SHEM_1d_20180226_20180702_prod_T.nc"
+        depth coord: deptht
+      grazing:
+        file pattern: "{ddmmmyy}/SHEM_1d_20180226_20180702_graz_T.nc"
+        depth coord: deptht
