@@ -16,6 +16,7 @@
 
 
 """Unit test for get_dask_client() function."""
+
 import os
 import textwrap
 from pathlib import Path
@@ -32,16 +33,12 @@ class TestGetDaskClient:
 
     def test_load_cluster_config_from_path(self, log_output, tmp_path):
         dask_config_yaml = tmp_path / "test_cluster.yaml"
-        dask_config_yaml.write_text(
-            textwrap.dedent(
-                """\
+        dask_config_yaml.write_text(textwrap.dedent("""\
                 name: test dask cluster
                 processes: True
                 number of workers: 1
                 threads per worker: 1
-                """
-            )
-        )
+                """))
 
         client = get_dask_client(dask_config_yaml)
         client.close()

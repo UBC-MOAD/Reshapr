@@ -16,6 +16,7 @@
 
 
 """Unit tests for core.info module."""
+
 import os
 import textwrap
 from importlib import metadata
@@ -115,16 +116,14 @@ class TestClusterInfo:
         info.info("salish_cluster.yaml", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
-        expected = textwrap.dedent(
-            """\
+        expected = textwrap.dedent("""\
                 # Configuration for a dask cluster on salish
 
                 name: salish dask cluster
                 processes: True
                 number of workers: 4
                 threads per worker: 1
-            """
-        ).splitlines()
+            """).splitlines()
         assert [line.strip() for line in stdout_lines[1:7]] == expected
 
 

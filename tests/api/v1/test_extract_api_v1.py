@@ -16,6 +16,7 @@
 
 
 """Unit test for v1 extraction API functions."""
+
 import datetime
 import os
 import textwrap
@@ -43,9 +44,7 @@ class TestExtractNetcdf:
 
     def test_climatology_resample_conflict(self, log_output, tmp_path):
         config_yaml = tmp_path / "test_extract_config.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        config_yaml.write_text(textwrap.dedent(f"""\
                 dataset:
                   model profile: {tmp_path / "test_profile.yaml"}
                   time base: hour
@@ -69,9 +68,7 @@ class TestExtractNetcdf:
                   name: SalishSeaCast_1d_diatoms
                   description: Day-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
                   dest dir: {tmp_path}
-                """
-            )
-        )
+                """))
         with config_yaml.open("rt") as f:
             config = yaml.safe_load(f)
 
@@ -162,9 +159,7 @@ class TestExtractNetcdf:
         )
 
         model_profile_yaml = tmp_path / "test_profile.yaml"
-        model_profile_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        model_profile_yaml.write_text(textwrap.dedent(f"""\
                 description: model profile for test
 
                 time coord:
@@ -189,14 +184,10 @@ class TestExtractNetcdf:
                       biology:
                         file pattern: "SalishSea_1h_{{yyyymmdd}}_{{yyyymmdd}}_biol_T.nc"
                         depth coord: deptht
-                """
-            )
-        )
+                """))
 
         config_yaml = tmp_path / "test_extract_config.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        config_yaml.write_text(textwrap.dedent(f"""\
                 dataset:
                   model profile: {tmp_path / "test_profile.yaml"}
                   time base: hour
@@ -214,9 +205,7 @@ class TestExtractNetcdf:
                   name: SalishSeaCast_1h_diatoms
                   description: Hour-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
                   dest dir: {tmp_path}
-                """
-            )
-        )
+                """))
         with config_yaml.open("rt") as f:
             config = yaml.safe_load(f)
 
@@ -300,9 +289,7 @@ class TestExtractNetcdf:
         )
 
         model_profile_yaml = tmp_path / "test_profile.yaml"
-        model_profile_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        model_profile_yaml.write_text(textwrap.dedent(f"""\
                 description: model profile for test
 
                 time coord:
@@ -327,14 +314,10 @@ class TestExtractNetcdf:
                       biology:
                         file pattern: "SalishSea_1h_{{yyyymmdd}}_{{yyyymmdd}}_biol_T.nc"
                         depth coord: deptht
-                """
-            )
-        )
+                """))
 
         config_yaml = tmp_path / "test_extract_config.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        config_yaml.write_text(textwrap.dedent(f"""\
                 dataset:
                   model profile: {tmp_path / "test_profile.yaml"}
                   time base: hour
@@ -356,9 +339,7 @@ class TestExtractNetcdf:
                   name: SalishSeaCast_1d_diatoms
                   description: Day-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
                   dest dir: {tmp_path}
-                """
-            )
-        )
+                """))
         with config_yaml.open("rt") as f:
             config = yaml.safe_load(f)
 
@@ -372,9 +353,7 @@ class TestLoadExtractionConfig:
 
     def test_load_extraction_config(self, tmp_path):
         config_yaml = tmp_path / "test_extract_config.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                """\
+        config_yaml.write_text(textwrap.dedent("""\
                 dataset:
                   model profile: SalishSeaCast-202111-salish.yaml
                   time base: hour
@@ -392,9 +371,7 @@ class TestLoadExtractionConfig:
                   name: SalishSeaCast_1h_nitrate
                   description: Hour-averaged nitrate extracted from SalishSeaCast v202111 hindcast
                   dest dir: /ocean/dlatorne/
-                """
-            )
-        )
+                """))
 
         config = extract.load_extraction_config(config_yaml)
 
@@ -442,14 +419,10 @@ class TestLoadExtractionConfig:
         self, start_date, end_date, expected_start_date, expected_end_date, tmp_path
     ):
         config_yaml = tmp_path / "test_extract_config.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                """\
+        config_yaml.write_text(textwrap.dedent("""\
                 start date: 2007-01-01
                 end date: 2007-01-31
-                """
-            )
-        )
+                """))
 
         config = extract.load_extraction_config(config_yaml, start_date, end_date)
 

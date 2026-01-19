@@ -16,6 +16,7 @@
 
 
 """Unit tests for command-line interface modules."""
+
 import os
 import textwrap
 
@@ -36,14 +37,10 @@ class TestExtract:
         that occurred when click.Path() was not converting CLI arg to :py:class:`Path` instance.
         """
         config_yaml = tmp_path / "foo.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                """\
+        config_yaml.write_text(textwrap.dedent("""\
                 dataset:
                   model profile: bar
-                """
-            )
-        )
+                """))
 
         runner = CliRunner()
         with runner.isolated_filesystem(temp_dir=tmp_path):
@@ -73,14 +70,10 @@ class TestExtract:
         )
 
         config_yaml = tmp_path / "foo.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                """\
+        config_yaml.write_text(textwrap.dedent("""\
                 dataset:
                   model profile: bar
-                """
-            )
-        )
+                """))
 
         runner = CliRunner()
         with runner.isolated_filesystem(temp_dir=tmp_path):

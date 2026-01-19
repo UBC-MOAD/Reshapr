@@ -16,6 +16,7 @@
 
 
 """Unit tests for core.extract module."""
+
 import datetime
 import os
 import textwrap
@@ -49,9 +50,7 @@ class TestCliExtract:
 
     def test_climatology_resample_conflict(self, log_output, tmp_path):
         config_yaml = tmp_path / "test_extract_config.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        config_yaml.write_text(textwrap.dedent(f"""\
                 dataset:
                   model profile: {tmp_path / "test_profile.yaml"}
                   time base: hour
@@ -75,9 +74,7 @@ class TestCliExtract:
                   name: SalishSeaCast_1d_diatoms
                   description: Day-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
                   dest dir: {tmp_path}
-                """
-            )
-        )
+                """))
 
         with pytest.raises(SystemExit) as exc_info:
             extract.cli_extract(config_yaml, "", "")
@@ -166,9 +163,7 @@ class TestCliExtract:
         )
 
         model_profile_yaml = tmp_path / "test_profile.yaml"
-        model_profile_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        model_profile_yaml.write_text(textwrap.dedent(f"""\
                 description: model profile for test
 
                 time coord:
@@ -193,14 +188,10 @@ class TestCliExtract:
                       biology:
                         file pattern: "SalishSea_1h_{{yyyymmdd}}_{{yyyymmdd}}_biol_T.nc"
                         depth coord: deptht
-                """
-            )
-        )
+                """))
 
         config_yaml = tmp_path / "test_extract_config.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        config_yaml.write_text(textwrap.dedent(f"""\
                 dataset:
                   model profile: {tmp_path / "test_profile.yaml"}
                   time base: hour
@@ -218,9 +209,7 @@ class TestCliExtract:
                   name: SalishSeaCast_1h_diatoms
                   description: Hour-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
                   dest dir: {tmp_path}
-                """
-            )
-        )
+                """))
 
         extract.cli_extract(config_yaml, "", "")
 
@@ -302,9 +291,7 @@ class TestCliExtract:
         )
 
         model_profile_yaml = tmp_path / "test_profile.yaml"
-        model_profile_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        model_profile_yaml.write_text(textwrap.dedent(f"""\
                 description: model profile for test
 
                 time coord:
@@ -329,14 +316,10 @@ class TestCliExtract:
                       biology:
                         file pattern: "SalishSea_1h_{{yyyymmdd}}_{{yyyymmdd}}_biol_T.nc"
                         depth coord: deptht
-                """
-            )
-        )
+                """))
 
         config_yaml = tmp_path / "test_extract_config.yaml"
-        config_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        config_yaml.write_text(textwrap.dedent(f"""\
                 dataset:
                   model profile: {tmp_path / "test_profile.yaml"}
                   time base: hour
@@ -358,9 +341,7 @@ class TestCliExtract:
                   name: SalishSeaCast_1d_diatoms
                   description: Day-averaged diatoms extracted from v202111 SalishSea_1h_*_biol_T.nc
                   dest dir: {tmp_path}
-                """
-            )
-        )
+                """))
 
         extract.cli_extract(config_yaml, "", "")
 
@@ -383,16 +364,12 @@ class TestLoadConfig:
         self, start_date_override, end_date_override, log_output, tmp_path
     ):
         extract_config_yaml = tmp_path / "extract_config.yaml"
-        extract_config_yaml.write_text(
-            textwrap.dedent(
-                """\
+        extract_config_yaml.write_text(textwrap.dedent("""\
                 dask cluster: docs/subcommands/salish_cluster.yaml
 
                 start date: 2007-01-01
                 end date: 2007-01-10
-                """
-            )
-        )
+                """))
 
         config = extract.load_config(
             extract_config_yaml, start_date_override, end_date_override
@@ -454,16 +431,12 @@ class TestLoadConfig:
         tmp_path,
     ):
         extract_config_yaml = tmp_path / "extract_config.yaml"
-        extract_config_yaml.write_text(
-            textwrap.dedent(
-                """\
+        extract_config_yaml.write_text(textwrap.dedent("""\
                 dask cluster: docs/subcommands/salish_cluster.yaml
 
                 start date: 2007-01-01
                 end date: 2007-01-10
-                """
-            )
-        )
+                """))
 
         config = extract.load_config(
             extract_config_yaml, start_date_override, end_date_override
@@ -585,16 +558,12 @@ class TestLoadModelProfile:
         model_results_archive = tmp_path / "model_results/"
         model_results_archive.mkdir()
         model_profile_yaml = tmp_path / "model_profile.yaml"
-        model_profile_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        model_profile_yaml.write_text(textwrap.dedent(f"""\
                 name: SomeModel
 
                 results archive:
                   path: {os.fspath(model_results_archive)}
-                """
-            )
-        )
+                """))
 
         model_profile = extract._load_model_profile(model_profile_yaml)
 
@@ -657,16 +626,12 @@ class TestLoadModelProfile:
     def test_no_results_archive(self, log_output, tmp_path):
         nonexistent_path = Path("/this/path/does/not/exist/")
         model_profile_yaml = tmp_path / "model_profile.yaml"
-        model_profile_yaml.write_text(
-            textwrap.dedent(
-                f"""\
+        model_profile_yaml.write_text(textwrap.dedent(f"""\
                 name: SomeModel
 
                 results archive:
                   path: {os.fspath(nonexistent_path)}
-                """
-            )
-        )
+                """))
 
         with pytest.raises(SystemExit) as exc_info:
             extract._load_model_profile(model_profile_yaml)

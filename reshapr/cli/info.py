@@ -16,6 +16,7 @@
 
 
 """Command-line interface for the info sub-command."""
+
 import click
 
 import reshapr.core.info
