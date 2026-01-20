@@ -16,6 +16,7 @@
 
 
 """Tests for date formatter functions."""
+
 import arrow
 import pytest
 

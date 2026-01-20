@@ -16,6 +16,7 @@
 
 
 """Command-line interface for the extract sub-command."""
+
 from pathlib import Path
 
 import click

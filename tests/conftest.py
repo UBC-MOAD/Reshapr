@@ -16,6 +16,7 @@
 
 
 """Fixtures for Reshapr test suite."""
+
 import pytest
 import structlog
 

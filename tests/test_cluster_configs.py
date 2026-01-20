@@ -16,6 +16,7 @@
 
 
 """Tests for package-supplied dask cluster configuration YAML files."""
+
 from pathlib import Path
 
 import pytest

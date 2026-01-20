@@ -16,6 +16,7 @@
 
 
 """Command-line interface setup and sub-commands registry."""
+
 import logging
 
 import click
@@ -25,11 +26,9 @@ from reshapr.cli.extract import extract
 from reshapr.cli.info import info
 
 
-@click.group(
-    help="""
+@click.group(help="""
     Reshape model variable arrays from model products like SalishSeaCast, HRDPS & CANESM2/CGCM4.
-    """
-)
+    """)
 @click.version_option()
 @click.option(
     "-v",
