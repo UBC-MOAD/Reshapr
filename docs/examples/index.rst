@@ -29,3 +29,4 @@ Examples of Use
    2xrez_physics_ONC_SCVIP
    iona_wastewater_discharge_analysis
    climatology_calculations
+   nibi_research_run_extraction

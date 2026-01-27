@@ -17,6 +17,7 @@
 
 """Provide information about reshapr, dask clusters, and model profiles."""
 
+import os
 import sys
 import textwrap
 from importlib import metadata
@@ -108,7 +109,7 @@ def _cluster_info(cluster, console):
     """
     cluster = cluster if cluster.endswith(".yaml") else f"{cluster}.yaml"
     console.print(f"[green]{cluster}:")
-    syntax = Syntax.from_path(CLUSTER_CONFIGS_PATH / cluster)
+    syntax = Syntax.from_path(os.fspath(CLUSTER_CONFIGS_PATH / cluster))
     console.print(Padding(syntax, (0, 2)))
 
     console.print(
@@ -192,7 +193,7 @@ def _model_profile_info(profile, time_interval, vars_group, console):
 
 def _vars_list(model_profile, time_interval, vars_group, console):
     """
-    :param str model_profile:
+    :param dict model_profile:
     :param str time_interval:
     :param str vars_group:
     :param :py:class:`rich.console.Console` console:
