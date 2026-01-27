@@ -25,6 +25,7 @@ dependencies:
   - flox
   - h5netcdf
   - netCDF4
+  - pandas<3.0.0
   - pip
   - python=3.14
   - pyyaml
