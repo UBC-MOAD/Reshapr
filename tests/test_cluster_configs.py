@@ -23,7 +23,11 @@ import pytest
 import yaml
 
 CLUSTER_CONFIGS_DIR = Path(__file__).parent.parent / "cluster_configs"
-CLUSTER_CONFIGS = (Path("salish_cluster.yaml"), Path("unit_test_cluster.yaml"))
+CLUSTER_CONFIGS = (
+    Path("nibi_cluster.yaml"),
+    Path("salish_cluster.yaml"),
+    Path("unit_test_cluster.yaml"),
+)
 
 
 class TestClusterConfigs:
