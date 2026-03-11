@@ -1,8 +1,13 @@
 {
     "cSpell.words": [
         "gemlam",
+        "literalinclude",
+        "Marimo",
         "NEMO",
-        "Reshapr"
+        "Reshapr",
+        "salloc",
+        "sbatch",
+        "SHEM"
     ],
     "esbonio.sphinx.confDir": ""
 }

@@ -51,8 +51,8 @@ class TestBasicInfo:
         info.info(cluster_or_model="", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
-        expected = {"salish_cluster.yaml"}
-        assert set(line.strip() for line in stdout_lines[7:8]) == expected
+        expected = {"nibi_cluster.yaml", "salish_cluster.yaml"}
+        assert set(line.strip() for line in stdout_lines[7:9]) == expected
 
     def test_model_profiles(self, capsys):
         info.info(cluster_or_model="", time_interval="", vars_group="")
@@ -70,7 +70,7 @@ class TestBasicInfo:
             "HRDPS-2.5km-operational.yaml",
         }
         assert (
-            set(line.strip() for line in stdout_lines[10 : len(expected) + 10])
+            set(line.strip() for line in stdout_lines[11 : len(expected) + 11])
             == expected
         )
 
@@ -112,7 +112,7 @@ class TestClusterInfo:
         stdout_lines = capsys.readouterr().out.splitlines()
         assert stdout_lines[0] == expected
 
-    def test_cluster_file_contents(self, capsys):
+    def test_salish_cluster_file_contents(self, capsys):
         info.info("salish_cluster.yaml", time_interval="", vars_group="")
 
         stdout_lines = capsys.readouterr().out.splitlines()
@@ -270,7 +270,7 @@ class TestUnrecognizedClusterOrModelProfile:
 
 
 class TestVarsList:
-    """Unit tests for core.info._vars_list() function."""
+    """Unit tests for the core.info._vars_list() function."""
 
     def test_bad_results_archive_path(self, log_output):
         model_profile = {
