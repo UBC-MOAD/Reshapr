@@ -8,7 +8,7 @@ anyio==4.12.1
 arrow==1.4.0
 babel==2.18.0
 backports.tarfile==1.2.0
-black==26.1.0
+black==26.3.1
 bokeh==3.8.2
 Bottleneck==1.6.0
 Brotli==1.2.0
