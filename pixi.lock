@@ -15661,7 +15661,7 @@ packages:
 - pypi: ./
   name: reshapr
   version: 25.3.dev0
-  sha256: 58634edd2418377639dc51e882c7091719ab7d7c7b9c568007ddebd55c8f663a
+  sha256: 025616487a135b7301bbd3b8fbaea3762463e4dde932b406daa51d31ceeabfc3
   requires_dist:
   - arrow
   - bottleneck
