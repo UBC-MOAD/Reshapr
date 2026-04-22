@@ -416,12 +416,12 @@ The `pytest`_ tool is used for test parametrization and as the test runner for t
 
 .. _pytest: https://docs.pytest.org/en/latest/
 
-Use:
+To run the test suite in the most recent supported version of Python use:
 
 .. code-block:: bash
 
     $ cd Reshapr/
-    $ pixi run pytest
+    $ pixi run -e test pytest
 
 to run the test suite.
 The output looks something like:
@@ -458,7 +458,7 @@ and `pytest-cov`_ tools with the command:
 .. code-block:: bash
 
     $ cd Reshapr/
-    $ pixi run pytest-cov
+    $ pixi run -e test pytest-cov
 
 The test coverage report will be displayed below the test suite run output.
 
@@ -467,7 +467,7 @@ you can use:
 
 .. code-block:: bash
 
-    $ pixi run pytest-cov-html
+    $ pixi run -e test pytest-cov-html
 
 to produce an HTML report that you can view in your browser by opening
 :file:`Reshapr/htmlcov/index.html`.
