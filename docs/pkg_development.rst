@@ -416,13 +416,12 @@ The `pytest`_ tool is used for test parametrization and as the test runner for t
 
 .. _pytest: https://docs.pytest.org/en/latest/
 
-With your :kbd:`reshapr-dev` development environment activated,
-use:
+Use:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ cd Reshapr/
-    (reshapr-dev)$ pytest
+    $ cd Reshapr/
+    $ pixi run pytest
 
 to run the test suite.
 The output looks something like:
@@ -430,12 +429,11 @@ The output looks something like:
 .. code-block:: text
 
     =============================== test session starts ================================
-    platform linux -- Python 3.14.0, pytest-9.0.1, pluggy-1.6.0
-    Using --randomly-seed=614873902
+    platform linux -- Python 3.14.4, pytest-9.0.3, pluggy-1.6.0
+    Using --randomly-seed=852482656
     rootdir: /media/doug/warehouse/MOAD/Reshapr
     configfile: pyproject.toml
-    plugins: cov-7.0.0, anyio-4.11.0, randomly-3.15.0
-    collected 303 items
+    plugins: randomly-3.15.0, cov-7.1.0
 
     tests/api/v1/test_extract_api_v1.py .........                                   [  2%]
     tests/core/test_info.py ...............................                         [ 13%]
@@ -459,21 +457,17 @@ and `pytest-cov`_ tools with the command:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ cd Reshapr/
-    (reshapr-dev)$ pytest --cov=./
+    $ cd Reshapr/
+    $ pixi run pytest-cov
 
-and generate a test coverage report with:
+The test coverage report will be displayed below the test suite run output.
 
-.. code-block:: bash
-
-    (reshapr-dev)$ coverage report
-
-to produce a plain text report,
-or
+Alternatively,
+you can use:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ coverage html
+    $ pixi run pytest-cov-html
 
 to produce an HTML report that you can view in your browser by opening
 :file:`Reshapr/htmlcov/index.html`.

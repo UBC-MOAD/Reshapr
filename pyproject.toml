@@ -64,6 +64,7 @@ reshapr = "reshapr.cli.commands:reshapr"
 [tool.coverage.run]
 branch = true
 source = [ "reshapr", "tests"]
+omit = [ ".pixi/*" ]
 
 [tool.coverage.report]
 show_missing = true
@@ -102,3 +103,17 @@ pyyaml = ">=6.0.3,<7"
 rich = ">=15.0.0,<16"
 structlog = ">=25.5.0,<26"
 xarray = ">=2026.4.0,<2027"
+
+[tool.pixi.environments]
+test = { features = ["test"], solve-group = "default" }
+
+[tool.pixi.feature.test.dependencies]
+pytest = ">=9.0.3,<10"
+pytest-cov = ">=7.1.0,<8"
+pytest-randomly = ">=3.15.0,<4"
+tomli = ">=2.4.1,<3"
+
+[tool.pixi.feature.test.tasks]
+pytest = "pytest"
+pytest-cov = "pytest --cov=./"
+pytest-cov-html = "pytest --cov=./ --cov-report html"
