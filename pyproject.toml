@@ -79,14 +79,13 @@ include = [
 [tool.hatch.version]
 path = "reshapr/__about__.py"
 
+
 [tool.pixi.workspace]
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64", "osx-64", "win-64", "osx-arm64"]
 
 [tool.pixi.pypi-dependencies]
 Reshapr = { path = ".", editable = true }
-
-[tool.pixi.tasks]
 
 [tool.pixi.dependencies]
 arrow = ">=1.4.0,<2"
@@ -97,6 +96,7 @@ flox = ">=0.11.2,<0.12"
 h5netcdf = ">=1.8.1,<2"
 netcdf4 = ">=1.7.4,<2"
 pandas = "<3.0.0"
+pixi-pycharm = ">=0.0.11,<0.0.12"
 python = "3.14.*"
 pyyaml = ">=6.0.3,<7"
 rich = ">=15.0.0,<16"
