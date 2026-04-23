@@ -82,6 +82,7 @@ path = "reshapr/__about__.py"
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
+exclude-newer = "14d"
 platforms = ["linux-64", "osx-arm64", "osx-64", "win-64", "osx-arm64"]
 
 [tool.pixi.pypi-dependencies]
@@ -99,9 +100,9 @@ pandas = "<3.0.0"
 pixi-pycharm = ">=0.0.11,<0.0.12"
 python = "*"
 pyyaml = ">=6.0.3,<7"
-rich = ">=15.0.0,<16"
+rich = ">=14.3.3,<15"
 structlog = ">=25.5.0,<26"
-xarray = ">=2026.4.0,<2027"
+xarray = ">=2026.2.0,<2027"
 
 [tool.pixi.environments]
 test = { features = ["test"], solve-group = "default" }
