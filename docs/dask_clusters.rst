@@ -75,8 +75,7 @@ a ``bash`` loop to resample day-averaged datasets to get month-averaged datasets
 
    .. code-block:: bash
 
-       $ conda activate reshapr
-       (reshapr)$ dask-scheduler
+       $ pixi run dask scheduler
 
    Use :kbd:`Control-b ,` to rename the ``tmux`` terminal to ``dask-scheduler``.
 
@@ -98,8 +97,7 @@ a ``bash`` loop to resample day-averaged datasets to get month-averaged datasets
 
    .. code-block:: bash
 
-       $ conda activate reshapr
-       (reshapr)$ dask-worker --nworkers=1 --nthreads=1 142.103.36.12:8786 &
+       $ pixi fun dask worker --nworkers=1 --nthreads=1 142.103.36.12:8786 &
 
    Use :kbd:`Control-b ,` to rename the ``tmux`` terminal to ``dask-workers``.
 

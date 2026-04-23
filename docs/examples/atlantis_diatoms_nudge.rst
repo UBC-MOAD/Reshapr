@@ -78,7 +78,7 @@ server :kbd:`salish` with the command:
 
 .. code-block:: bash
 
-    (reshapr)$ reshapr extract Reshapr/docs/examples/extract_atlantis_diatoms.yaml
+    $ pixi run reshapr extract Reshapr/docs/examples/extract_atlantis_diatoms.yaml
 
 where :file:`Reshapr/docs/examples/extract_atlantis_diatoms.yaml`
 is an extraction processing configuration YAML file containing:
