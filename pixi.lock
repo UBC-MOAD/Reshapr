@@ -17350,7 +17350,7 @@ packages:
 - pypi: ./
   name: reshapr
   version: 25.3.dev0
-  sha256: dbaadbfdb2acc96919d261aa0d255e075c644ccf1f8fb0445f278f569e3624b7
+  sha256: 218db9ae2db1f565b32301a7a0ee9690b31aab7018bbb987f823eb2608c36239
   requires_dist:
   - arrow
   - bottleneck

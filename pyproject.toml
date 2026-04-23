@@ -35,7 +35,6 @@ authors = [
     { name = "Doug Latornell", email= "dlatornell@eoas.ubc.ca" }
 ]
 dependencies = [
-    # see envs/requirements.txt for package versions used during recent development
     "arrow",
     "bottleneck",
     "click",
@@ -163,6 +162,9 @@ commonmark = "0.9.1.*"
 recommonmark = "0.7.1.*"
 mock = "5.2.0.*"
 pillow = "12.2.0.*"
+
+[tool.pixi.feature.dev.tasks]
+update-reqs = "python -m pip list --format=freeze >> requirements.txt"
 
 
 [dependency-groups]
