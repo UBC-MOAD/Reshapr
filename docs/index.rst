@@ -21,6 +21,15 @@ Reshapr Documentation
 
 This is the documentation for the :py:obj:`Reshapr` Python package.
 
+:py:obj:`Reshapr` is a Python package and command-line tool designed to efficiently extract time series
+and perform analysis on large-scale ocean and climate model datasets.
+Built on top of :py:obj:`Xarray` and :py:obj:`Dask`,
+it simplifies the process of working with multi-gigabyte NetCDF-4 files that often exceed available system memory.
+:py:obj:`Reshapr` codifies best practices for data chunking and parallel computing,
+providing an optimized workflow for handling results from models like SalishSeaCast,
+HRDPS,
+and CANESM2 across various computing platforms—from local workstations to HPC clusters.
+
 .. toctree::
    :caption: Contents:
    :maxdepth: 2
