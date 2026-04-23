@@ -83,6 +83,9 @@ channels = ["conda-forge"]
 exclude-newer = "14d"
 platforms = ["linux-64", "osx-arm64", "osx-64", "win-64", "osx-arm64"]
 
+[tool.pixi.exclude-newer]
+Reshapr = "0d"
+
 [tool.pixi.pypi-dependencies]
 Reshapr = { path = ".", editable = true }
 
