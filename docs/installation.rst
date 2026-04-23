@@ -81,6 +81,19 @@ and other important information with:
 
     $ pixi run reshapr info
 
+A common use-case is to execute the :command:`reshapr extract` command in the directory containing
+your extraction configuration YAML file.
+To accomplish that,
+you have to tell Pixi where to find the :file:`Reshapr/` directory so that it can use the
+correct environment.
+You do that by using the ``-m`` or ``--manifest`` option of :command:`pixi run`.
+Example:
+
+.. code-block:: console
+
+    $ cd $HOME/MEOPAR/analysis-doug/notebooks/SHEM/
+    $ pixi run -m $HOME/MOAD/Reshapr reshapr extract extract_SHEM_heterotrophic_bacteria.yaml
+
 For doing development,
 testing,
 and documentation of the :py:obj:`Reshapr` package,
