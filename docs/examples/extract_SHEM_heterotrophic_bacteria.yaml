@@ -1,0 +1,21 @@
+# Reshapr configuration to extract heterotrophic bacteria from
+# Jose's SHEM tuning/pred_flag research run
+
+dataset:
+  model profile: /home/dlatorne/MEOPAR/analysis-doug/notebooks/SHEM/model_profiles/Jose-SHEM-tuning-pred_flag.yaml
+  time base: day
+  variables group: biology
+
+dask cluster: nibi_cluster.yaml
+
+start date: 2018-02-26
+end date: 2018-07-02
+
+extract variables:
+  - heterotrophic_bacteria
+
+extracted dataset:
+  name: SHEM_day_tuning_pred_flag_heterotrophic_bacteria
+  description: Daily heterotrophic bacteria extracted from SHEM tuning/pred_flag run;
+               all depths
+  dest dir: /scratch/dlatorne/test-reshapr/
