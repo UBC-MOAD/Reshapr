@@ -17349,8 +17349,8 @@ packages:
   timestamp: 1774894783063
 - pypi: ./
   name: reshapr
-  version: '26.1'
-  sha256: 218db9ae2db1f565b32301a7a0ee9690b31aab7018bbb987f823eb2608c36239
+  version: 26.2.dev0
+  sha256: 2e292ea04195c7e50795751bbdf0df9894876a76838d6f6f453c982985742231
   requires_dist:
   - arrow
   - bottleneck
