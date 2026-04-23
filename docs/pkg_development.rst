@@ -134,34 +134,45 @@ from the :guilabel:`Code` button on the `repository`_ page.
 Development Environment
 =======================
 
-Setting up an isolated development environment using `Conda`_ is recommended.
-Assuming that you have `Miniconda3`_ installed,
-you can create and activate an environment called :kbd:`reshapr-dev` that will have
-all of the Python packages necessary for development,
-testing,
-and building the documentation with the commands below.
+:py:obj:`Reshapr` uses Pixi_ for package and environment management.
+If you don't already have Pixi_ installed,
+please follow its `installation instructions`_ to do so.
 
-.. _Conda: https://docs.conda.io/en/latest/
-.. _Miniconda3: https://docs.conda.io/en/latest/miniconda.html
+.. _Pixi: https://pixi.prefix.dev/latest/
+.. _`installation instructions`: https://pixi.prefix.dev/latest/installation/
 
-.. code-block:: bash
+Most commands are executed using :command:`pixi run` in the :file:`Reshapr/` directory
+(or a sub-directory).
+Dependencies will be downloaded and linked in to environments when you use :command:`pixi run`
+for the first time.
 
-    $ cd Reshapr
-    $ conda env create -f envs/environment-dev.yaml
-    $ conda activate reshapr-dev
+* The ``default`` environment has the packages installed that are required to run the
+  :py:obj:`Reshapr` command-line interface;
+  e.g. :command:`pixi run reshapr help`
 
-:py:obj:`Reshapr` is installed in `editable install mode`_ as part of the conda environment
-creation process.
-That means that the package is installed from the cloned repo via symlinks so that
-it will be automatically updated as the repo evolves.
+* Other environments used by commands in the sections below have addition packages for running
+  the test suite,
+  building and link checking the documentation,
+  etc.
+
+* If you are using an integrated development environment like VSCode or PyCharm
+  where you need a Python interpreter to support coding assistance features,
+  run development tasks,
+  etc.,
+  use the interpreter in the ``dev`` environment.
+  You can get its full path with :command:`pixi run -e dev which python`
+
+To get detailed information about the environments,
+the packages installed in them,
+`Pixi`_ tasks that are defined for them,
+etc.,
+use :command:`pixi info`.
+
+:py:obj:`Reshapr` is installed in `editable install mode`_ in all of the environments that
+`Pixi`_ creates.
+That means that changes you make to the code are immediately reflected in the environments.
 
 .. _editable install mode: https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
-
-To deactivate the environment use:
-
-.. code-block:: bash
-
-    (reshapr-dev)$ conda deactivate
 
 
 .. _ReshaprCodingStyle:
@@ -190,8 +201,7 @@ and run :command:`pre-commit install`:
 .. code-block:: bash
 
     $ cd Reshapr
-    $ conda activate reshapr-dev
-    (reshapr-dev)$ pre-commit install
+    $ pixi run -e dev pre-commit install
 
 .. note::
     You only need to install the hooks once immediately after you make a new clone of the
