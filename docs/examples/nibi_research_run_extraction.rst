@@ -122,8 +122,7 @@ request an interactive session with
   a value for ``--time`` of tens of minutes to a few hours should be sufficient for most extractions.
 
 Once your interactive session starts,
-activate your ``reshapr`` conda environment and run your extraction with the
-:command:`reshapr extract` command.
+run your extraction with the :command:`pixi run -m $HOME/MOAD/Reshapr reshapr extract` command.
 An example of doing that looks like:
 
 .. code-block:: text
@@ -136,8 +135,7 @@ An example of doing that looks like:
     salloc: Granted job allocation 7615270
     salloc: Waiting for resource configuration
     salloc: Nodes c205 are ready for job
-    analysis-doug$ conda activate reshapr
-    (/home/dlatorne/conda_envs/reshapr) analysis-doug$ reshapr extract extract_SHEM_heterotrophic_bacteria.yaml
+    analysis-doug$ pixi run -m $HOME/MOAD/Reshapr reshapr extract extract_SHEM_heterotrophic_bacteria.yaml
     2026-01-26 14:43:35 [info     ] loaded config                  config_file=extract_SHEM_heterotrophic_bacteria.yaml
     2026-01-26 14:43:35 [info     ] loaded model profile           model_profile_yaml=/home/dlatorne/MEOPAR/analysis-doug/notebooks/SHEM/model_profiles/Jose-SHEM-tuning-pred_flag.yaml
     2026-01-26 14:43:40 [info     ] dask cluster dashboard         dashboard_link=http://127.0.0.1:8787/status dask_config_yaml=nibi_cluster.yaml
@@ -146,7 +144,7 @@ An example of doing that looks like:
     2026-01-26 14:44:48 [info     ] total time                     t_total=67.281958341598511
 
 Be sure to use the path
-(relative or absolute) to your extraction YAML file in the :command:`reshapr extract` command.
+(relative or absolute) to your extraction YAML file in the :command:`pixi run -m $HOME/MOAD/Reshapr reshapr extract` command.
 
 
 .. _SHEM-DayAvgModelProfile:
@@ -207,7 +205,7 @@ For example:
 
 .. code-block:: text
 
-    reshapr info ~/MEOPAR/analysis-doug/notebooks/SHEM/model_profiles/Jose-SHEM-tuning-pred_flag.yaml
+    pixi run -m $HOME/MOAD/Reshapr reshapr info ~/MEOPAR/analysis-doug/notebooks/SHEM/model_profiles/Jose-SHEM-tuning-pred_flag.yaml
     /home/dlatorne/MEOPAR/analysis-doug/notebooks/SHEM/model_profiles/Jose-SHEM-tuning-pred_flag.yaml:
       Jose's SalishSeaCast v202111 NEMO SHEM config results stored on
       nibi. 26feb18-02jul18 tuning pred_flag run.
@@ -231,7 +229,7 @@ with:
 
 .. code-block:: text
 
-    reshapr info ~/MEOPAR/analysis-doug/notebooks/SHEM/model_profiles/Jose-SHEM-tuning-pred_flag.yaml day biology
+    pixi run -m $HOME/MOAD/Reshapr reshapr info ~/MEOPAR/analysis-doug/notebooks/SHEM/model_profiles/Jose-SHEM-tuning-pred_flag.yaml day biology
     /home/dlatorne/MEOPAR/analysis-doug/notebooks/SHEM/model_profiles/Jose-SHEM-tuning-pred_flag.yaml:
       Jose's SalishSeaCast v202111 NEMO SHEM config results stored on
       nibi. 26feb18-02jul18 tuning pred_flag run.

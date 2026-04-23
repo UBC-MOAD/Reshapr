@@ -55,6 +55,9 @@
 |                            | .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github                                                                                                         |
 |                            |     :target: https://github.com/UBC-MOAD/Reshapr                                                                                                                                           |
 |                            |     :alt: Git on GitHub                                                                                                                                                                    |
+|                            | .. image:: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json                                                                 |
+|                            |     :target: https://pixi.prefix.dev/latest/                                                                                                                                               |
+|                            |     :alt: Pixi                                                                                                                                                                             |
 |                            | .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white                                                                                    |
 |                            |     :target: https://pre-commit.com                                                                                                                                                        |
 |                            |     :alt: pre-commit                                                                                                                                                                       |
@@ -134,34 +137,49 @@ from the :guilabel:`Code` button on the `repository`_ page.
 Development Environment
 =======================
 
-Setting up an isolated development environment using `Conda`_ is recommended.
-Assuming that you have `Miniconda3`_ installed,
-you can create and activate an environment called :kbd:`reshapr-dev` that will have
-all of the Python packages necessary for development,
-testing,
-and building the documentation with the commands below.
+.. image:: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json
+    :target: https://pixi.prefix.dev/latest/
+    :alt: Pixi
 
-.. _Conda: https://docs.conda.io/en/latest/
-.. _Miniconda3: https://docs.conda.io/en/latest/miniconda.html
+:py:obj:`Reshapr` uses Pixi_ for package and environment management.
+If you don't already have Pixi_ installed,
+please follow its `installation instructions`_ to do so.
 
-.. code-block:: bash
+.. _Pixi: https://pixi.prefix.dev/latest/
+.. _`installation instructions`: https://pixi.prefix.dev/latest/installation/
 
-    $ cd Reshapr
-    $ conda env create -f envs/environment-dev.yaml
-    $ conda activate reshapr-dev
+Most commands are executed using :command:`pixi run` in the :file:`Reshapr/` directory
+(or a sub-directory).
+Dependencies will be downloaded and linked in to environments when you use :command:`pixi run`
+for the first time.
 
-:py:obj:`Reshapr` is installed in `editable install mode`_ as part of the conda environment
-creation process.
-That means that the package is installed from the cloned repo via symlinks so that
-it will be automatically updated as the repo evolves.
+* The ``default`` environment has the packages installed that are required to run the
+  :py:obj:`Reshapr` command-line interface;
+  e.g. :command:`pixi run reshapr help`
+
+* Other environments used by commands in the sections below have addition packages for running
+  the test suite,
+  building and link checking the documentation,
+  etc.
+
+* If you are using an integrated development environment like VSCode or PyCharm
+  where you need a Python interpreter to support coding assistance features,
+  run development tasks,
+  etc.,
+  use the interpreter in the ``dev`` environment.
+  You can get its full path with :command:`pixi run -e dev which python`
+
+To get detailed information about the environments,
+the packages installed in them,
+`Pixi`_ tasks that are defined for them,
+etc.,
+use :command:`pixi info`.
+
+:py:obj:`Reshapr` is installed in `editable install mode`_ in all of the environments that
+`Pixi`_ creates.
+That means that changes you make to the code are immediately reflected in the environments.
 
 .. _editable install mode: https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
-
-To deactivate the environment use:
-
-.. code-block:: bash
-
-    (reshapr-dev)$ conda deactivate
 
 
 .. _ReshaprCodingStyle:
@@ -190,8 +208,7 @@ and run :command:`pre-commit install`:
 .. code-block:: bash
 
     $ cd Reshapr
-    $ conda activate reshapr-dev
-    (reshapr-dev)$ pre-commit install
+    $ pixi run -e dev pre-commit install
 
 .. note::
     You only need to install the hooks once immediately after you make a new clone of the
@@ -213,23 +230,23 @@ The documentation for the :py:obj:`Reshapr` package is written in `reStructuredT
 and converted to HTML using `Sphinx`_.
 Creating a :ref:`ReshaprDevelopmentEnvironment` as described above includes the installation of Sphinx.
 Building the documentation is driven by the :file:`docs/Makefile`.
-With your :kbd:`reshapr-dev` development environment activated,
-use:
+To do a clean build of the documentation use:
 
 .. _reStructuredText: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
 .. _Sphinx: https://www.sphinx-doc.org/en/master/
 
 .. code-block:: bash
 
-    (reshapr-dev)$ (cd docs && make clean html)
+    $ cd Reshapr
+    $ pixi run docs
 
-to do a clean build of the documentation.
 The output looks something like:
 
 .. code-block:: text
 
+    ✨ Pixi task (docs in docs): make clean html
     Removing everything under '_build'...
-    Running Sphinx v8.1.3
+    Running Sphinx v9.1.0
     loading translations [en]... done
     making output directory... done
     loading intersphinx inventory 'arrow' from https://arrow.readthedocs.io/en/latest/objects.inv ...
@@ -240,8 +257,8 @@ The output looks something like:
     loading intersphinx inventory 'xarray' from https://docs.xarray.dev/en/stable/objects.inv ...
     building [mo]: targets for 0 po files that are out of date
     writing output...
-    building [html]: targets for 20 source files that are out of date
-    updating environment: [new config] 20 added, 0 changed, 0 removed
+    building [html]: targets for 22 source files that are out of date
+    updating environment: [new config] 22 added, 0 changed, 0 removed
     reading sources... [100%] subcommands/info
     looking for now-outdated files... none found
     pickling environment... done
@@ -275,7 +292,7 @@ you can probably accomplish that with:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ firefox docs/_build/html/index.html
+    $ firefox docs/_build/html/index.html
 
 If you have write access to the `repository`_ on GitHub,
 whenever you push changes to GitHub the documentation is automatically re-built
@@ -293,32 +310,32 @@ Link Checking the Documentation
 
 Sphinx also provides a link checker utility which can be run to find
 broken or redirected links in the docs.
-With your :kbd:`reshapr-dev)` environment activated,
-use:
+Run the link checker with:
 
 .. code-block:: bash
 
-    (reshapr-dev))$ cd Reshapr/docs/
-    (reshapr-dev)) docs$ make clean linkcheck
+    $ cd Reshapr
+    $ pixi run linkcheck
 
 The output looks something like:
 
 .. code-block:: text
 
+    ✨ Pixi task (linkcheck in docs): make clean linkcheck
     Removing everything under '_build'...
-    Running Sphinx v8.1.3
+    Running Sphinx v9.1.0
     loading translations [en]... done
     making output directory... done
     loading intersphinx inventory 'arrow' from https://arrow.readthedocs.io/en/latest/objects.inv ...
     loading intersphinx inventory 'dask' from https://docs.dask.org/en/stable/objects.inv ...
-    loading intersphinx inventory 'moaddocs' from https://ubc-moad-docs.readthedocs.io/en/latest/objects.inv ...
     loading intersphinx inventory 'python' from https://docs.python.org/3/objects.inv ...
+    loading intersphinx inventory 'moaddocs' from https://ubc-moad-docs.readthedocs.io/en/latest/objects.inv ...
     loading intersphinx inventory 'salishseanowcast' from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv ...
     loading intersphinx inventory 'xarray' from https://docs.xarray.dev/en/stable/objects.inv ...
     building [mo]: targets for 0 po files that are out of date
     writing output...
-    building [linkcheck]: targets for 20 source files that are out of date
-    updating environment: [new config] 20 added, 0 changed, 0 removed
+    building [linkcheck]: targets for 22 source files that are out of date
+    updating environment: [new config] 22 added, 0 changed, 0 removed
     reading sources... [100%] subcommands/info
     looking for now-outdated files... none found
     pickling environment... done
@@ -328,79 +345,81 @@ The output looks something like:
     copying assets: done
     writing output... [100%] subcommands/info
 
-    (             api: line   31) ok        https://arrow.readthedocs.io/en/latest/api-guide.html#arrow.arrow.Arrow
-    ( pkg_development: line   22) ok        https://black.readthedocs.io/en/stable/
     (design_notes/pkg_structure: line   68) ok        https://click.palletsprojects.com/en/stable/
-    (design_notes/pkg_structure: line   57) ok        https://click.palletsprojects.com/en/stable/quickstart/#nesting-commands
-    ( pkg_development: line  452) ok        https://coverage.readthedocs.io/en/latest/
-    ( pkg_development: line   28) ok        https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
-    ( pkg_development: line   22) ok        https://app.codecov.io/gh/UBC-MOAD/Reshapr
+    ( pkg_development: line   22) ok        https://black.readthedocs.io/en/stable/
+    (             api: line   31) ok        https://arrow.readthedocs.io/en/latest/api-guide.html#arrow.arrow.Arrow
     ( pkg_development: line   35) ok        https://app.readthedocs.org/projects/reshapr/badge/?version=latest
-    (design_notes/motivation: line   53) ok        https://docs.dask.org/en/latest/
-    (  model_profiles: line  221) ok        https://docs.dask.org/en/latest/array-chunks.html
-    ( pkg_development: line  505) ok        https://docs.github.com/en/actions
-    (    installation: line   39) ok        https://docs.github.com/en/authentication/connecting-to-github-with-ssh
-    ( pkg_development: line   22) ok        https://docs.python.org/3/
+    (design_notes/pkg_structure: line   57) ok        https://click.palletsprojects.com/en/stable/quickstart/#nesting-commands
     (    installation: line   50) ok        https://docs.conda.io/en/latest/miniconda.html
+    ( pkg_development: line   22) ok        https://app.codecov.io/gh/UBC-MOAD/Reshapr
+    ( pkg_development: line  452) ok        https://coverage.readthedocs.io/en/latest/
     (    installation: line   50) ok        https://docs.conda.io/en/latest/
+    ( pkg_development: line   28) ok        https://codecov.io/gh/UBC-MOAD/Reshapr/branch/main/graph/badge.svg
+    (  model_profiles: line  221) ok        https://docs.dask.org/en/latest/array-chunks.html
+    (design_notes/motivation: line   53) ok        https://docs.dask.org/en/latest/
     (             api: line    3) ok        https://docs.python.org/3/library/constants.html#None
-    (             api: line   22) ok        https://docs.python.org/3/library/exceptions.html#ValueError
+    ( pkg_development: line   22) ok        https://docs.python.org/3/
+    ( pkg_development: line  414) ok        https://docs.pytest.org/en/latest/
     (             api: line   40) ok        https://docs.python.org/3/library/pathlib.html#pathlib.Path
-    ( pkg_development: line  412) ok        https://docs.pytest.org/en/latest/
+    (             api: line   22) ok        https://docs.python.org/3/library/exceptions.html#ValueError
     (             api: line   31) ok        https://docs.python.org/3/library/stdtypes.html#str
-    (design_notes/motivation: line   53) ok        https://docs.xarray.dev/en/stable/
-    ( pkg_development: line   87) ok        https://docs.python.org/3/reference/lexical_analysis.html#f-strings
     (             api: line   40) ok        https://docs.python.org/3/library/stdtypes.html#dict
-    ( pkg_development: line  520) ok        https://git-scm.com/
+    ( pkg_development: line   87) ok        https://docs.python.org/3/reference/lexical_analysis.html#f-strings
+    (design_notes/motivation: line   53) ok        https://docs.xarray.dev/en/stable/
+    ( pkg_development: line  516) ok        https://git-scm.com/
     (design_notes/motivation: line   65) ok        https://docs.xarray.dev/en/stable/generated/xarray.open_mfdataset.html#xarray.open_mfdataset
-    -rate limited-   https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/extract_biology.yaml | sleeping...
-    (design_notes/history: line   25) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb
-    (examples/2xrez_physics_ONC_SCVIP: line   44) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb
+    (    installation: line   39) ok        https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+    -rate limited-   https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb | sleeping...
+    -rate limited-   https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb | sleeping...
     (design_notes/history: line   52) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.py
     (design_notes/history: line   46) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.ipynb
-    ( pkg_development: line   31) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
-    ( pkg_development: line   25) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg
     (design_notes/motivation: line  129) ok        https://github.com/UBC-MOAD/Reshapr
+    ( pkg_development: line   31) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/codeql-analysis.yaml/badge.svg
+    ( pkg_development: line  501) ok        https://docs.github.com/en/actions
+    ( pkg_development: line   25) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/pytest-with-coverage.yaml/badge.svg
     ( pkg_development: line   38) ok        https://github.com/UBC-MOAD/Reshapr/actions/workflows/sphinx-linkcheck.yaml/badge.svg
-    ( pkg_development: line  492) ok        https://github.com/UBC-MOAD/Reshapr/actions
-    ( pkg_development: line  492) ok        https://github.com/UBC-MOAD/Reshapr/commits/main
-    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
+    ( pkg_development: line  488) ok        https://github.com/UBC-MOAD/Reshapr/actions
+    ( pkg_development: line  488) ok        https://github.com/UBC-MOAD/Reshapr/commits/main
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/issues
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
     ( pkg_development: line   64) ok        https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
     ( pkg_development: line   61) ok        https://img.shields.io/badge/code%20style-black-000000.svg
     (           index: line   48) ok        https://img.shields.io/badge/license-Apache%202-cb2533.svg
     ( pkg_development: line   58) ok        https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
-    ( pkg_development: line   55) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
-    ( pkg_development: line   48) ok        https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
-    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:sphinx-linkcheck
-    ( pkg_development: line   42) ok        https://img.shields.io/github/v/release/UBC-MOAD/Reshapr?logo=github
     ( pkg_development: line   22) ok        https://github.com/pypa/hatch
-    ( pkg_development: line   45) ok        https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/UBC-MOAD/Reshapr/main/pyproject.toml&logo=Python&logoColor=gold&label=Python
+    ( pkg_development: line   55) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
+    ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:CodeQL
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/releases
+    ( pkg_development: line   45) ok        https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/UBC-MOAD/Reshapr/main/pyproject.toml&logo=Python&logoColor=gold&label=Python
+    ( pkg_development: line   48) ok        https://img.shields.io/github/issues/UBC-MOAD/Reshapr?logo=github
     ( pkg_development: line   22) ok        https://github.com/UBC-MOAD/Reshapr/actions?query=workflow:pytest-with-coverage
+    ( pkg_development: line   42) ok        https://img.shields.io/github/v/release/UBC-MOAD/Reshapr?logo=github
     (design_notes/motivation: line   53) ok        https://pangeo.io/
     (design_notes/motivation: line   53) ok        https://pangeo.io/#ecosystem
     (    installation: line   65) ok        https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
     ( pkg_development: line   91) ok        https://peps.python.org/pep-0636/
-    ( pkg_development: line  179) ok        https://pre-commit.com/
     ( pkg_development: line   22) ok        https://pre-commit.com
+    ( pkg_development: line  179) ok        https://pre-commit.com/
+    (design_notes/history: line   46) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.ipynb
     ( pkg_development: line  452) ok        https://pytest-cov.readthedocs.io/en/latest/
+    ( pkg_development: line   22) ok        https://reshapr.readthedocs.io/en/latest/
+    (examples/2xrez_physics_ONC_SCVIP: line   43) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb
     (examples/iona_wastewater_discharge_analysis: line   47) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#module-nowcast.workers.split_results
     (    installation: line   39) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#copyyourpublicsshkeytogithub
     (    installation: line   39) ok        https://ubc-moad-docs.readthedocs.io/en/latest/ssh_access.html#secureremoteaccess
-    (           index: line   46) ok        https://www.apache.org/licenses/LICENSE-2.0
-    ( pkg_development: line   22) ok        https://reshapr.readthedocs.io/en/latest/
     ( pkg_development: line   83) ok        https://www.python.org/
     ( pkg_development: line  212) ok        https://www.sphinx-doc.org/en/master/
     ( pkg_development: line  212) ok        https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
-    (examples/prodigy_model_obs_assignment: line   40) ok        https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2018.00536/full
     (design_notes/pkg_structure: line   63) ok        https://www.structlog.org/en/stable/index.html
-    (design_notes/history: line   46) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/atlantis_nudge_diatoms.ipynb
-    (examples/2xrez_physics_ONC_SCVIP: line   43) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb
+    (           index: line   46) ok        https://www.apache.org/licenses/LICENSE-2.0
+    (examples/prodigy_model_obs_assignment: line   40) ok        https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2018.00536/full
     (design_notes/history: line   25) ok        https://nbviewer.org/github/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb
-    -rate limited-   https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/extract_biology.yaml | sleeping...
+    -rate limited-   https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb | sleeping...
     (examples/iona_wastewater_discharge_analysis: line   99) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/extract_biology.yaml
+    -rate limited-   https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb | sleeping...
     (examples/iona_wastewater_discharge_analysis: line   95) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/wastewater/model_profiles/SalishSeaCast-202111-wastewater-salish.yaml
+    (examples/2xrez_physics_ONC_SCVIP: line   44) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/2xrez-2017/DeepWaterRenewal.ipynb
+    (design_notes/history: line   25) ok        https://github.com/SalishSeaCast/analysis-doug/blob/main/notebooks/dask-expts/dask_expts.ipynb
     build succeeded.
 
     Look for any errors in the above output or in _build/linkcheck/output.txt
@@ -416,13 +435,12 @@ The `pytest`_ tool is used for test parametrization and as the test runner for t
 
 .. _pytest: https://docs.pytest.org/en/latest/
 
-With your :kbd:`reshapr-dev` development environment activated,
-use:
+To run the test suite in the most recent supported version of Python use:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ cd Reshapr/
-    (reshapr-dev)$ pytest
+    $ cd Reshapr/
+    $ pixi run -e test pytest
 
 to run the test suite.
 The output looks something like:
@@ -430,12 +448,11 @@ The output looks something like:
 .. code-block:: text
 
     =============================== test session starts ================================
-    platform linux -- Python 3.14.0, pytest-9.0.1, pluggy-1.6.0
-    Using --randomly-seed=614873902
+    platform linux -- Python 3.14.4, pytest-9.0.3, pluggy-1.6.0
+    Using --randomly-seed=852482656
     rootdir: /media/doug/warehouse/MOAD/Reshapr
     configfile: pyproject.toml
-    plugins: cov-7.0.0, anyio-4.11.0, randomly-3.15.0
-    collected 303 items
+    plugins: randomly-3.15.0, cov-7.1.0
 
     tests/api/v1/test_extract_api_v1.py .........                                   [  2%]
     tests/core/test_info.py ...............................                         [ 13%]
@@ -459,21 +476,17 @@ and `pytest-cov`_ tools with the command:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ cd Reshapr/
-    (reshapr-dev)$ pytest --cov=./
+    $ cd Reshapr/
+    $ pixi run -e test pytest-cov
 
-and generate a test coverage report with:
+The test coverage report will be displayed below the test suite run output.
 
-.. code-block:: bash
-
-    (reshapr-dev)$ coverage report
-
-to produce a plain text report,
-or
+Alternatively,
+you can use:
 
 .. code-block:: bash
 
-    (reshapr-dev)$ coverage html
+    $ pixi run -e test pytest-cov-html
 
 to produce an HTML report that you can view in your browser by opening
 :file:`Reshapr/htmlcov/index.html`.
@@ -571,26 +584,34 @@ completed.
 
 The release process steps are:
 
-#. Use :command:`hatch version release` to bump the version from ``.devn`` to the next release
+#. Use :command:`pixi run -e dev hatch version release` to bump the version from ``.devn`` to the next release
    version identifier;
-   e.g. ``23.1.dev0`` to ``23.1``
+   e.g. ``25.2.dev0`` to ``26.1``
+
+#. Use :command:`pixi update` to update the lock file to reflect the new version identifier
 
 #. Commit the version bump
 
 #. Create an annotated tag for the release with :guilabel:`Git -> New Tag...` in PyCharm
    or :command:`git tag -e -a vyy.n`;
-   :command:`git tag -e -a v23.1`
+   :command:`git tag -e -a v26.1`
 
 #. Push the version bump commit and tag to GitHub
 
 #. Use the GitHub web interface to create a release,
    editing the auto-generated release notes into sections:
 
-   * Features
-   * Bug Fixes
-   * Documentation
-   * Maintenance
-   * Dependency Updates
+   .. code-block:: markdown
+
+       ### Features
+
+       ### Bug Fixes
+
+       ### Documentation
+
+       ### Maintenance
+
+       ### Dependency Updates
 
 #. Use the GitHub :guilabel:`Issues -> Milestones` web interface to edit the release
    milestone:
@@ -603,10 +624,10 @@ The release process steps are:
 
    * Set the :guilabel:`Title` to the next release version,
      prepended with a ``v``;
-     e.g. ``v23.2``
+     e.g. ``v26.2``
    * Set the :guilabel:`Due date` to the end of the year of the next release
    * Set the :guilabel:`Description` to something like
-     ``v23.2 release - when it's ready :-)``
+     ``v26.2 release - when it's ready :-)``
    * Create the next release milestone
 
 #. Review the open issues,
@@ -615,8 +636,10 @@ The release process steps are:
 
 #. Close the milestone for the just released version.
 
-#. Use :command:`hatch version minor,dev` to bump the version for the next development cycle,
-   or use :command:`hatch version major,minor,dev` for a year rollover version bump
+#. Use :command:`pixi run -e dev hatch version minor,dev` to bump the version for the next development cycle,
+   or use :command:`pixi run -e dev hatch version major,minor,dev` for a year rollover version bump
+
+#. Use :command:`pixi update` to update the lock file to reflect the new version identifier
 
 #. Commit the version bump
 

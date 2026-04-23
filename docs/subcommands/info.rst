@@ -21,34 +21,40 @@
 
 The :command:`info` sub-command provides information about your installed version of ``Reshapr``
 and the ``dask`` clusters and model profiles that are included with it.
-Here is an example of the most basic level of output from :command:`reshapr info`:
+Here is an example of the most basic level of output from :command:`pixi run reshapr info`:
 
 .. code-block:: text
 
-    reshapr, version 22.1.dev0
-    xarray, version 0.21.1
-    dask, version 2022.2.0
-    netcdf4, version 1.5.8
+    reshapr, version 26.2.dev0
+    xarray, version 2026.2.0
+    dask, version 2026.3.0
+    h5netcdf, version 1.8.1
+    netcdf4, version 1.7.4
 
     dask cluster configurations included in this package:
+      nibi_cluster.yaml
       salish_cluster.yaml
 
     model profiles included in this package:
       SalishSeaCast-201905.yaml
+      SalishSeaCast-201905-month-avg-salish.yaml
       SalishSeaCast-201812.yaml
+      SalishSeaCast-202111-month-avg-salish.yaml
       HRDPS-2.5km-GEMLAM-22sep11onward.yaml
+      SalishSeaCast-202111-salish.yaml
       HRDPS-2.5km-GEMLAM-pre22sep11.yaml
+      SalishSeaCast-202111-2xrez-salish.yaml
       HRDPS-2.5km-operational.yaml
 
     Please use reshapr info --help to learn how to get deeper information,
     or reshapr --help to learn about other sub-commands.
 
-:command:`reshaper info --help` will show you how you can get other information to help you
+:command:`pixi run reshapr info --help` will show you how you can get other information to help you
 use ``Reshapr``:
 
 .. code-block:: text
 
-    Usage: reshapr info [OPTIONS] [CLUSTER_OR_MODEL]
+    Usage: reshapr info [OPTIONS] [CLUSTER_OR_MODEL] [TIME_INTERVAL] [VARS_GROUP]...
 
       Provide information about the installed Reshapr package.
 
@@ -61,8 +67,12 @@ use ``Reshapr``:
       * list of model profiles included in the package
 
       Specify a dask cluster configuration (e.g. `reshapr info salish_cluster`) or
-      a model profile (e.g. `reshpr info SalishSeaCast-201905`) to get information
-      about them.
+      a model profile (e.g. `reshapr info SalishSeaCast-201905`) to get
+      information about them.
+
+      Specify a model profile, time interval, and variable group (e.g. `reshapr
+      info SalishSeaCast-201905 hour biology`) to get the list of variables
+      available in that dataset.
 
     Options:
       --help  Show this message and exit.
@@ -71,7 +81,7 @@ use ``Reshapr``:
 :command:`info cluster`
 =======================
 
-:command:`reshaper info` followed by one of the dask cluster configurations shown in the
+:command:`pixi runm reshaper info` followed by one of the dask cluster configurations shown in the
 basic information list will show you the cluster settings.
 
 Please see :ref:`ReshaprDaskClusterYAMLFile` for details about cluster configs.
@@ -80,7 +90,7 @@ Example:
 
 .. code-block:: bash
 
-    (reshapr)$ reshapr info salish_cluster.yaml
+    $ pixi run reshapr info salish_cluster.yaml
 
 .. code-block:: text
 
@@ -91,6 +101,7 @@ Example:
       processes: True
       number of workers: 4
       threads per worker: 1
+      memory limit: auto
 
     Please use reshapr info --help to learn how to get other information,
     or reshapr --help to learn about other sub-commands.
@@ -99,7 +110,7 @@ Example:
 :command:`info model-profile`
 =============================
 
-:command:`reshaper info` followed by one of the model profiles shown in the
+:command:`pixi run reshaper info` followed by one of the model profiles shown in the
 basic information list will show you information about model product time intervals
 and variable groups.
 
@@ -109,11 +120,14 @@ Example:
 
 .. code-block:: bash
 
-    (reshapr)$ reshapr info SalishSeaCast-201905.yaml
+    $ pixi run reshapr info SalishSeaCast-201905.yaml
 
 .. code-block:: text
 
     SalishSeaCast-201905.yaml:
+      SalishSeaCast version 201905 NEMO results on storage accessible from
+      salish. 2007-01-01 onward.
+
     variable groups from time intervals in this model:
       day
         auxiliary
@@ -143,7 +157,7 @@ Example:
 :command:`info model-profile time-interval variable-group`
 ==========================================================
 
-:command:`reshaper info model-profile` followed by one of the time intervals,
+:command:`pixi run reshaper info model-profile` followed by one of the time intervals,
 and one of the variable group names for that time interval
 (shown in the model profile information output)
 will show you the list of model variables available in the variable group for
@@ -155,11 +169,14 @@ Example:
 
 .. code-block:: bash
 
-    (reshapr)$ reshapr info SalishSeaCast-201905.yaml hour biology
+    $ pixi run reshapr info SalishSeaCast-201905.yaml hour biology
 
 .. code-block:: text
 
     SalishSeaCast-201905.yaml:
+      SalishSeaCast version 201905 NEMO results on storage accessible from
+      salish. 2007-01-01 onward.
+
     hour-averaged variables in biology group:
       - nitrate : Nitrate Concentration [mmol m-3]
       - ammonium : Ammonium Concentration [mmol m-3]

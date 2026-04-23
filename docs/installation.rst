@@ -19,6 +19,14 @@
 Installation
 ************
 
+:py:obj:`Reshapr` uses Pixi_ for dependency and environment management.
+If you don't already have Pixi_ installed,
+please follow its `installation instructions`_ to do so.
+
+.. _Pixi: https://pixi.prefix.dev/latest/
+.. _`installation instructions`: https://pixi.prefix.dev/latest/installation/
+
+
 Get the Code
 ============
 
@@ -44,64 +52,52 @@ from the :guilabel:`Code` button on the `repository`_ page.
     .. _connecting to GitHub using SSH: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
 
 
-Conda Environment and Package Installation
-==========================================
+Package Installation
+====================
 
-Running :py:obj:`Reshapr` in an isolated `Conda`_ environment using is highly recommended.
-Assuming that you have `Miniconda3`_ installed,
-you can create and activate an environment called :kbd:`reshapr` that will have
-all of the Python packages necessary use :py:obj:`Reshapr`,
-and install the package with the commands below.
+Use Pixi to create an isolated environment for :py:obj:`Reshapr` to avoid conflicts with
+other Python packages installed on your system.
+That environment will have all of the Python packages necessary to use the :program:`reshapr`
+command that is provided by the :py:obj:`Reshapr` package.
 
-.. _Conda: https://docs.conda.io/en/latest/
-.. _Miniconda3: https://docs.conda.io/en/latest/miniconda.html
-
-.. code-block:: bash
+.. code-block:: console
 
     $ cd Reshapr
-    $ conda env create -f envs/environment-user.yaml
-    $ conda activate reshapr
+    $ pixi install
 
-:py:obj:`Reshapr` is installed in `editable install mode`_ as part of the conda environment
-creation process.
-That means that the package is installed from the cloned repo via symlinks so that
-it will be automatically updated as the repo evolves.
-Please see :ref:`ReshaprUpdateInstallation` for more details.
+When you are in the :file:`Reshapr/` directory
+(or a sub-directory)
+you can run the :program:`reshapr` command with with the :command:`pixi run` command.
+Example:
 
-.. _editable install mode: https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
+.. code-block:: console
 
-You can confirm that you have successfully installed :py:obj:`Reshapr`
-by typing :kbd:`reshapr` in your activated environment.
-You should see the top level command help information and the list of available
-:ref:`ReshaprSubcommands`.
+    $ pixi run reshapr help
 
 You can show the version of :py:obj:`Reshapr` that you have installed
 and other important information with:
 
 .. code-block:: bash
 
-    (reshapr)$ reshapr info
+    $ pixi run reshapr info
 
-To deactivate the environment use:
+A common use-case is to execute the :command:`reshapr extract` command in the directory containing
+your extraction configuration YAML file.
+To accomplish that,
+you have to tell Pixi where to find the :file:`Reshapr/` directory so that it can use the
+correct environment.
+You do that by using the ``-m`` or ``--manifest`` option of :command:`pixi run`.
+Example:
 
-.. code-block:: bash
+.. code-block:: console
 
-    (reshapr)$ conda deactivate
+    $ cd $HOME/MEOPAR/analysis-doug/notebooks/SHEM/
+    $ pixi run -m $HOME/MOAD/Reshapr reshapr extract extract_SHEM_heterotrophic_bacteria.yaml
 
-.. note::
-    If you want to make code changes in the :py:obj:`Reshapr` package,
-    please see :ref:`ReshaprPackagedDevelopment` for information on how to work in
-    the package development environment.
-
-If you want to use :py:obj:`Reshapr` in a different `Conda`_ environment,
-edit your environment description to include the packages listed in the
-:kbd:`dependencies:` section of :file:`envs/environment-user.yaml`,
-then update your environment and install :py:obj:`Reshapr` with:
-
-.. code-block:: bash
-
-    (your-env)$ conda env update -f your-env-yaml
-    (your-env)$ python3 -m pip install --editable path/to/Reshapr
+For doing development,
+testing,
+and documentation of the :py:obj:`Reshapr` package,
+please see the :ref:`ReshaprDevelopmentEnvironment` section.
 
 
 .. _ReshaprUpdateInstallation:
@@ -116,30 +112,15 @@ from GitHub:
 .. code-block:: bash
 
     $ cd Reshapr
-    $ conda activate reshapr
-    (reshapr)$ git pull
-
-You may also need to do:
-
-.. code-block:: bash
-
-    (reshapr)$ python3 -m pip install --editable .
-
-to complete the update if there have been new :ref:`ReshaprSubcommands` or options
-added since your last update.
+    $ git pull
+    $ pixi install
 
 
 Uninstalling
 ============
 
 If you want to uninstall :py:obj:`Reshapr`,
-you can remove the `Conda`_ environment with:
-
-.. code-block:: bash
-
-    $ conda env remove -n reshapr
-
-You can remove your clone of the `repository`_ with:
+you can remove your clone of the `repository`_ and the Pixi environment with:
 
 .. code-block:: bash
 

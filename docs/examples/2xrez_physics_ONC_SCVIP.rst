@@ -52,7 +52,7 @@ server :kbd:`salish` with the command:
 
 .. code-block:: bash
 
-    (reshapr)$ reshapr extract Reshapr/docs/examples/extract_ONC_SCVIP_physics_hour_avg.yaml
+    $ pixi run reshapr extract Reshapr/docs/examples/extract_ONC_SCVIP_physics_hour_avg.yaml
 
 where :file:`Reshapr/docs/examples/extract_ONC_SCVIP_physics_hour_avg.yaml`
 is an extraction processing configuration YAML file containing:
