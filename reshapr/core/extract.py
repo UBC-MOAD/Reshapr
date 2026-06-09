@@ -480,19 +480,27 @@ def open_dataset(ds_paths, chunk_size, config):
     # in the dataset, and from that the set of variables to drop.
     # We need to use the variables lists from 1st and last datasets to avoid issue #51.
     for ds_path in (ds_paths[0], ds_paths[-1]):
-        with xarray.open_dataset(ds_path, chunks=chunk_size, engine="h5netcdf") as ds:
-            drop_vars.update(var for var in ds.data_vars)
+        try:
+            with xarray.open_dataset(ds_path, chunks=chunk_size, engine="h5netcdf") as ds:
+                drop_vars.update(var for var in ds.data_vars)
+        except FileNotFoundError:
+            logger.error("dataset file not found", dataset_path=os.fspath(ds_path))
+            raise SystemExit(2)
     drop_vars -= extract_vars
     parallel_read = config.get("parallel read", True)
-    ds = xarray.open_mfdataset(
-        ds_paths,
-        chunks=chunk_size,
-        compat="override",
-        coords="minimal",
-        data_vars="minimal",
-        drop_variables=drop_vars,
-        parallel=parallel_read,
-    )
+    try:
+        ds = xarray.open_mfdataset(
+            ds_paths,
+            chunks=chunk_size,
+            compat="override",
+            coords="minimal",
+            data_vars="minimal",
+            drop_variables=drop_vars,
+            parallel=parallel_read,
+        )
+    except FileNotFoundError as exc:
+        logger.error("dataset file not found", error=str(exc))
+        raise SystemExit(2)
     if not ds.data_vars:
         logger.error(
             "no variables in source dataset",
