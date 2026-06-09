@@ -348,6 +348,23 @@ class TestCliExtract:
         assert (tmp_path / "SalishSeaCast_1d_diatoms_20150401_20150401.nc").exists()
 
 
+class TestOpenDatasetMissingFiles:
+    """Unit tests for missing dataset file handling in open_dataset()."""
+
+    def test_missing_first_dataset_path_exits_cleanly(self, log_output, tmp_path):
+        ds_paths = [tmp_path / "missing-first.nc"]
+        chunk_size = {"time_counter": 1}
+        config = {"extract variables": ["diatoms"]}
+
+        with pytest.raises(SystemExit) as exc_info:
+            extract.open_dataset(ds_paths, chunk_size, config)
+
+        assert exc_info.value.code == 2
+        assert log_output.entries[0]["log_level"] == "error"
+        assert log_output.entries[0]["dataset_path"] == os.fspath(ds_paths[0])
+        assert log_output.entries[0]["event"] == "dataset file not found"
+
+
 class TestLoadConfig:
     """Unit tests for core.extract._load_config() function."""
 
