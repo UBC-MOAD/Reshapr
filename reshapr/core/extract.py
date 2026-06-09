@@ -481,7 +481,9 @@ def open_dataset(ds_paths, chunk_size, config):
     # We need to use the variables lists from 1st and last datasets to avoid issue #51.
     for ds_path in (ds_paths[0], ds_paths[-1]):
         try:
-            with xarray.open_dataset(ds_path, chunks=chunk_size, engine="h5netcdf") as ds:
+            with xarray.open_dataset(
+                ds_path, chunks=chunk_size, engine="h5netcdf"
+            ) as ds:
                 drop_vars.update(var for var in ds.data_vars)
         except FileNotFoundError:
             logger.error("dataset file not found", dataset_path=os.fspath(ds_path))
