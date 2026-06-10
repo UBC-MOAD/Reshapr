@@ -1001,7 +1001,11 @@ def _calc_resampled_time_coord(resampled_time_index, freq):
     # pandas 2.2.0 deprecated the M, Q & Y frequency aliases in favour of ME, QE & YE
     # We interpreted M to mean MS. Now we accept both for backward compatibility.
     if not freq.endswith(("M", "MS")):
-        offsets = pandas.tseries.frequencies.to_offset(freq) / 2
+        offset = pandas.tseries.frequencies.to_offset(freq)
+        # pandas >= 3.0.0 removed support for dividing Day offsets
+        # Use anchor timestamp to compute half-offset duration safely
+        anchor = pandas.Timestamp("2000-01-01")
+        offsets = (anchor + offset - anchor) / 2
         return resampled_time_index + offsets
     offsets = [
         pandas.tseries.frequencies.to_offset(
