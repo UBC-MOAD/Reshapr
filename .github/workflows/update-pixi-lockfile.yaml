@@ -1,0 +1,20 @@
+# Updates the pixi lockfile and create a pull request containing the changes.
+
+name: update-pixi-lockfile
+
+on:
+  # Enable workflow to be triggered from GitHub CLI, browser, or via API
+  workflow_dispatch:
+
+  schedule:
+    - cron: 43 15 14 * *  # 15:43 UTC on the 14th day of each month
+
+permissions: {}
+
+jobs:
+  update-pixi-lockfile:
+    permissions:
+      contents: write
+      pull-requests: write
+
+    uses: UBC-MOAD/gha-workflows/.github/workflows/pixi-lockfile-updater.yaml@main
