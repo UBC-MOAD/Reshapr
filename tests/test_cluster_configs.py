@@ -62,7 +62,7 @@ class TestSalishCluster:
         assert cluster_config["processes"] is True
         assert cluster_config["number of workers"] == 4
         assert cluster_config["threads per worker"] == 1
-        assert cluster_config["memory limit"] == "auto"
+        assert cluster_config["memory limit"] == "64G"
 
 
 class TestUnitTestCluster:
