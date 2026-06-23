@@ -70,7 +70,7 @@ MarkupSafe==3.0.3
 mdurl==0.1.2
 mock==5.2.0
 more-itertools==11.0.2
-msgpack==1.1.2
+msgpack==1.2.1
 mypy_extensions==1.1.0
 narwhals==2.21.2
 netCDF4==1.7.4
