@@ -162,10 +162,6 @@ recommonmark = "0.7.1.*"
 mock = "5.2.0.*"
 pillow = "12.2.0.*"
 
-[tool.pixi.feature.dev.tasks]
-update-reqs = "python -m pip list --format=freeze >> requirements.txt"
-
-
 [dependency-groups]
 docs = ["sphinx-rtd-theme==3.1.0"]
 dev = ["sphinx-rtd-theme==3.1.0"]
