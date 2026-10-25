@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
   schedule:
-    - cron: 43 15 14 * *  # 15:43 UTC on the 14th day of each month
+    - cron: 43 6 4 * *  # 06:43 UTC on the 4th day of each month
 
 jobs:
   update-pixi-lockfile:
